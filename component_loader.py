@@ -84,12 +84,17 @@ def create_dynamic_class(input_nodes, output_nodes, workflow, prompt):
 
             input_mapping[input_label] = node
 
-            for input_link in input_links:
-                if input_link in node_config_map:
-                    node_config = node_config_map[input_link]
-                    input_types[input_label] = tuple(node_config)
-                else:
-                    input_types[input_label] = (input_type,)
+            if input_links is None:
+                # hide unconnected input
+                # input_types[input_label] = (input_type,)
+                pass
+            else:
+                for input_link in input_links:
+                    if input_link in node_config_map:
+                        node_config = node_config_map[input_link]
+                        input_types[input_label] = tuple(node_config)
+                    else:
+                        input_types[input_label] = (input_type,)
 
     return_types = []
     return_names = []
