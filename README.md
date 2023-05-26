@@ -23,3 +23,6 @@ There is a high possibility that the existing components created may not be comp
 
 ![component-use](misc/component-use.png)
 
+
+## Known Issues
+* There is a possibility of getting caught in an infinite loop if the node returns None.
