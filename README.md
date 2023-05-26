@@ -9,7 +9,6 @@ There is a high possibility that the existing components created may not be comp
 * Through the ComponentBuilder under the ComponentInput... node, specify the input interface of the component, and specify the output interface of the component through the ComponentOutput... node.
 * The slot name of the ComponentInput/Output... node is used as the external interface name of the component.
 * The order of the interface is determined by sorting the titles of the nodes in ascending order.
-* Currently, there is no functionality to automatically set the default value and range of the current input.
 
 ![component-menu](misc/menu.png)
 

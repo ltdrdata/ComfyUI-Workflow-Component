@@ -14,26 +14,82 @@ class ComponentBase:
     CATEGORY = "WorkflowComponents"
 
 
+def convert_nodes_to_dict(nodes):
+    nodes_dict = {}
+
+    for node in nodes:
+        node_id = node["id"]
+        nodes_dict[node_id] = node
+
+    return nodes_dict
+
+
+def convert_links_to_dict(links):
+    node_links_dict = {}
+
+    for link in links:
+        node_id = link[0]
+        node_links_dict[node_id] = link
+
+    return node_links_dict
+
+
+def get_linked_slots_widget_config(json_data):
+    linked_slots_widget_config = {}
+
+    # Extract nodes and links from JSON data
+    nodes = convert_nodes_to_dict(json_data["nodes"])
+    links = convert_links_to_dict(json_data["links"])
+
+    # Iterate over nodes
+    for node in nodes.values():
+        outputs = node["outputs"] if 'outputs' in node else []
+
+        for output in outputs:
+            if output["links"] is None:
+                continue
+
+            output_links = output["links"]
+
+            for link_id in output_links:
+                dest_node = links[link_id][3]
+                dest_slot = links[link_id][4]
+
+                if dest_node in nodes and "inputs" in nodes[dest_node]:
+                    inputs = nodes[dest_node]["inputs"]
+                    input_slot = inputs[dest_slot]
+
+                    if "widget" in input_slot:
+                        widget_config = input_slot["widget"].get("config")
+                        if widget_config is not None:
+                            linked_slots_widget_config[link_id] = widget_config
+
+    return linked_slots_widget_config
+
+
 def create_dynamic_class(input_nodes, output_nodes, workflow, prompt):
     input_types = {}
     input_mapping = {}
 
+    # get widget config infos for auto recognition of input setting
+    node_config_map = get_linked_slots_widget_config(workflow)
+
     sorted_nodes = sorted(input_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
     for i, node in enumerate(sorted_nodes):
-        input_type = node['outputs'][0]['type']
-        input_label = node['outputs'][0].get('label', f"{input_type}_{i}")
+        component_inputs = node['outputs']
+        if len(component_inputs) > 0:
+            input_type = component_inputs[0]['type']
+            input_label = component_inputs[0].get('label', f"{input_type}_{i}")
+            input_links = component_inputs[0]['links']
 
-        input_mapping[input_label] = node
+            input_mapping[input_label] = node
 
-        # TODO: recognize automatically based on workflow
-        if input_type == "STRING":
-            input_types[input_label] = (input_type, {'default': ""})
-        elif input_type == "INT":
-            input_types[input_label] = (input_type, {'default': "5"})
-        elif input_type == "FLOAT":
-            input_types[input_label] = (input_type, {'default': "0.5"})
-        else:
-            input_types[input_label] = (input_type,)
+            for input_link in input_links:
+                if input_link in node_config_map:
+                    node_config = node_config_map[input_link]
+                    input_types[input_label] = tuple(node_config)
+                else:
+                    input_types[input_label] = (input_type,)
 
     return_types = []
     return_names = []
