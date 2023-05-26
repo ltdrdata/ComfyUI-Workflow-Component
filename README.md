@@ -15,7 +15,6 @@ There is a high possibility that the existing components created may not be comp
 * Once all the component workflows have been created, you can save them through the "SaveAsComponent" option in the menu. The file extension will be .component.json.
 
 
-
 ## How To Use Component
 ![component-files](misc/component-files.png)
 
@@ -25,3 +24,5 @@ There is a high possibility that the existing components created may not be comp
 ![component-use](misc/component-use.png)
 
 
+## Known Issues
+* Issue of not removing execution data from memory when deleting a component
