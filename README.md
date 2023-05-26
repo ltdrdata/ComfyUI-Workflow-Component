@@ -14,7 +14,14 @@ There is a high possibility that the existing components created may not be comp
 
 * Once all the component workflows have been created, you can save them through the "SaveAsComponent" option in the menu. The file extension will be .component.json.
 
+
+
 ## How To Use Component
-![component-use](misc/component-use.png)
+![component-files](misc/component-files.png)
 
 * If you place the .components.json file, which is stored in the "components" subdirectory, and then restart ComfyUI, you will be able to add the corresponding component that starts with "##."
+![component-menu2](misc/menu2.png)
+
+![component-use](misc/component-use.png)
+
+
