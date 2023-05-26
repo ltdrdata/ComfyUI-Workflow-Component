@@ -23,6 +23,3 @@ There is a high possibility that the existing components created may not be comp
 
 ![component-use](misc/component-use.png)
 
-
-## Known Issues
-* Issue of not removing execution data from memory when deleting a component

@@ -1,8 +1,4 @@
-import execution
 from execution_experimental import *
-import json
-import zlib
-import torch
 
 class VirtualServer:
     def __init__(self):
@@ -14,6 +10,11 @@ class VirtualServer:
 
 vs = VirtualServer()
 executor_dict = {}
+
+
+def garbage_collect(keys):
+    global executor_dict
+    executor_dict = {key: value for key, value in executor_dict.items() if key in keys}
 
 
 def get_executor(node_id):
