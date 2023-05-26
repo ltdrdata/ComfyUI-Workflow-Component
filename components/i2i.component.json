@@ -56,46 +56,6 @@
       ]
     },
     {
-      "id": 10,
-      "type": "ComponentInputImage",
-      "pos": [
-        100,
-        350
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "#",
-          "type": "##IS_COMPONENT_INPUT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            14
-          ],
-          "shape": 3,
-          "slot_index": 0,
-          "label": "image"
-        }
-      ],
-      "title": "3.ComponentInput (Image)",
-      "properties": {
-        "Node name for S&R": "ComponentInputImage"
-      },
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 17,
       "type": "VAEEncode",
       "pos": [
@@ -194,15 +154,15 @@
       "id": 13,
       "type": "ComponentInputString",
       "pos": [
-        100,
-        590
+        120,
+        670
       ],
       "size": {
         "0": 210,
         "1": 26
       },
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "inputs": [
         {
@@ -223,7 +183,7 @@
           "label": "negative"
         }
       ],
-      "title": "5.ComponentInputString",
+      "title": "6.ComponentInputString",
       "properties": {
         "Node name for S&R": "ComponentInputString"
       },
@@ -234,15 +194,15 @@
       "id": 12,
       "type": "ComponentInputString",
       "pos": [
-        100,
-        470
+        120,
+        550
       ],
       "size": {
         "0": 210,
         "1": 26
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
@@ -263,130 +223,9 @@
           "label": "positive"
         }
       ],
-      "title": "4.ComponentInputString",
+      "title": "5.ComponentInputString",
       "properties": {
         "Node name for S&R": "ComponentInputString"
-      },
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 22,
-      "type": "ComponentInputClip",
-      "pos": [
-        100,
-        700
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "#",
-          "type": "##IS_COMPONENT_INPUT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            25,
-            26
-          ],
-          "shape": 3,
-          "slot_index": 0,
-          "label": "clip"
-        }
-      ],
-      "title": "6.ComponentInputClip",
-      "properties": {
-        "Node name for S&R": "ComponentInputClip"
-      },
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 24,
-      "type": "ComponentInputModel",
-      "pos": [
-        100,
-        100
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "#",
-          "type": "##IS_COMPONENT_INPUT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            28
-          ],
-          "shape": 3,
-          "label": "model"
-        }
-      ],
-      "title": "1.ComponentInputModel",
-      "properties": {
-        "Node name for S&R": "ComponentInputModel"
-      },
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 23,
-      "type": "ComponentInputVAE",
-      "pos": [
-        100,
-        220
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "#",
-          "type": "##IS_COMPONENT_INPUT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            24,
-            27
-          ],
-          "shape": 3,
-          "slot_index": 0,
-          "label": "vae"
-        }
-      ],
-      "title": "2.ComponentInputVAE",
-      "properties": {
-        "Node name for S&R": "ComponentInputVAE"
       },
       "color": "#322",
       "bgcolor": "#533"
@@ -544,11 +383,90 @@
       ]
     },
     {
+      "id": 24,
+      "type": "ComponentInputModel",
+      "pos": [
+        120,
+        160
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "#",
+          "type": "##IS_COMPONENT_INPUT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            28
+          ],
+          "shape": 3,
+          "label": "model"
+        }
+      ],
+      "title": "1.ComponentInputModel",
+      "properties": {
+        "Node name for S&R": "ComponentInputModel"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 10,
+      "type": "ComponentInputImage",
+      "pos": [
+        120,
+        460
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "#",
+          "type": "##IS_COMPONENT_INPUT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "label": "image"
+        }
+      ],
+      "title": "4.ComponentInput (Image)",
+      "properties": {
+        "Node name for S&R": "ComponentInputImage"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
       "id": 26,
       "type": "ComponentInputFloat",
       "pos": [
-        100,
-        820
+        120,
+        780
       ],
       "size": {
         "0": 210,
@@ -579,6 +497,88 @@
       "title": "7.ComponentInputFloat",
       "properties": {
         "Node name for S&R": "ComponentInputFloat"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 22,
+      "type": "ComponentInputClip",
+      "pos": [
+        120,
+        260
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "#",
+          "type": "##IS_COMPONENT_INPUT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            25,
+            26
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "label": "clip"
+        }
+      ],
+      "title": "2.ComponentInputClip",
+      "properties": {
+        "Node name for S&R": "ComponentInputClip"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 23,
+      "type": "ComponentInputVAE",
+      "pos": [
+        120,
+        360
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "#",
+          "type": "##IS_COMPONENT_INPUT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            24,
+            27
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "label": "vae"
+        }
+      ],
+      "title": "3.ComponentInputVAE",
+      "properties": {
+        "Node name for S&R": "ComponentInputVAE"
       },
       "color": "#322",
       "bgcolor": "#533"

@@ -1,13 +1,13 @@
 {
-  "last_node_id": 5,
-  "last_link_id": 5,
+  "last_node_id": 6,
+  "last_link_id": 11,
   "nodes": [
     {
       "id": 3,
       "type": "LoadImage",
       "pos": [
-        170,
-        280
+        200,
+        320
       ],
       "size": {
         "0": 315,
@@ -21,9 +21,10 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            1
+            6
           ],
-          "shape": 3
+          "shape": 3,
+          "slot_index": 0
         },
         {
           "name": "MASK",
@@ -41,36 +42,11 @@
       ]
     },
     {
-      "id": 4,
-      "type": "PreviewImage",
-      "pos": [
-        1010,
-        420
-      ],
-      "size": {
-        "0": 210,
-        "1": 246
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
-    },
-    {
       "id": 5,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        170,
-        700
+        200,
+        130
       ],
       "size": {
         "0": 315,
@@ -84,7 +60,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            5
+            7
           ],
           "shape": 3,
           "slot_index": 0
@@ -93,15 +69,16 @@
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            3
+            8
           ],
-          "shape": 3
+          "shape": 3,
+          "slot_index": 1
         },
         {
           "name": "VAE",
           "type": "VAE",
           "links": [
-            4
+            9
           ],
           "shape": 3,
           "slot_index": 2
@@ -115,41 +92,64 @@
       ]
     },
     {
-      "id": 2,
-      "type": "## i2i",
+      "id": 4,
+      "type": "PreviewImage",
       "pos": [
-        620,
-        390
+        1240,
+        290
       ],
       "size": {
-        "0": 315,
-        "1": 166
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 6,
+      "type": "## i2i",
+      "pos": [
+        730,
+        290
+      ],
+      "size": {
+        "0": 400,
+        "1": 210
       },
       "flags": {},
       "order": 2,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 1,
-          "slot_index": 0
+          "name": "model",
+          "type": "MODEL",
+          "link": 7
         },
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 5
+          "link": 8
         },
         {
           "name": "vae",
           "type": "VAE",
-          "link": 4
+          "link": 9
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 6
         }
       ],
       "outputs": [
@@ -157,7 +157,7 @@
           "name": "output",
           "type": "IMAGE",
           "links": [
-            2
+            11
           ],
           "shape": 3,
           "slot_index": 0
@@ -167,9 +167,9 @@
         "Node name for S&R": "## i2i"
       },
       "widgets_values": [
-        "nsfw",
-        "1girl is jumping",
-        0.8
+        "",
+        "",
+        1
       ],
       "color": "#323",
       "bgcolor": "#535"
@@ -177,44 +177,44 @@
   ],
   "links": [
     [
-      1,
+      6,
       3,
       0,
-      2,
-      0,
+      6,
+      3,
       "IMAGE"
     ],
     [
-      2,
-      2,
+      7,
+      5,
       0,
-      4,
+      6,
       0,
-      "IMAGE"
+      "MODEL"
     ],
     [
-      3,
+      8,
       5,
       1,
-      2,
+      6,
       1,
       "CLIP"
     ],
     [
-      4,
+      9,
       5,
       2,
+      6,
       2,
-      3,
       "VAE"
     ],
     [
-      5,
-      5,
+      11,
+      6,
       0,
-      2,
-      2,
-      "MODEL"
+      4,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [],
