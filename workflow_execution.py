@@ -34,14 +34,28 @@ def execute(prompt, workflow, input_mapping, output_mapping, *args, **kwargs):
     node_id = kwargs['unique_id']
     pe = get_executor(node_id)
 
+    changed_inputs = set()
+
     for key, value in kwargs.items():
         if key not in ["unique_id", "prompt", "extra_pnginfo"]:
             input_node = input_mapping[key]
             input_node_id = str(input_node['id'])
 
-            pe.outputs[input_node_id] = [[value]]  # TODO: check
+            if input_node_id not in pe.outputs or pe.outputs[input_node_id] != [[value]]:
+                pe.outputs[input_node_id] = [[value]]  # TODO: check
+                changed_inputs.add(input_node_id)
 
             pe.old_prompt[input_node_id] = prompt[input_node_id]  # prevent erasing of output cache
+
+    # remove output's old_prompt for regeneration of changed
+    for key, value in prompt.items():
+        inputs = value['inputs']
+        for x in inputs:
+            input_data = inputs[x]
+            if isinstance(input_data, list):
+                input_unique_id = input_data[0]
+                if input_unique_id in changed_inputs and key in pe.old_prompt:
+                    del pe.old_prompt[key]
 
     prompt_id = get_virtual_prompt_id()
 
