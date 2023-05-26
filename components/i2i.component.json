@@ -88,6 +88,7 @@
           "label": "image"
         }
       ],
+      "title": "3.ComponentInput (Image)",
       "properties": {
         "Node name for S&R": "ComponentInputImage"
       },
@@ -222,6 +223,7 @@
           "label": "negative"
         }
       ],
+      "title": "5.ComponentInputString",
       "properties": {
         "Node name for S&R": "ComponentInputString"
       },
@@ -261,6 +263,7 @@
           "label": "positive"
         }
       ],
+      "title": "4.ComponentInputString",
       "properties": {
         "Node name for S&R": "ComponentInputString"
       },
@@ -301,6 +304,7 @@
           "label": "clip"
         }
       ],
+      "title": "6.ComponentInputClip",
       "properties": {
         "Node name for S&R": "ComponentInputClip"
       },
@@ -339,6 +343,7 @@
           "label": "model"
         }
       ],
+      "title": "1.ComponentInputModel",
       "properties": {
         "Node name for S&R": "ComponentInputModel"
       },
@@ -379,6 +384,7 @@
           "label": "vae"
         }
       ],
+      "title": "2.ComponentInputVAE",
       "properties": {
         "Node name for S&R": "ComponentInputVAE"
       },
@@ -466,10 +472,10 @@
         870,
         380
       ],
-      "size": [
-        315,
-        262
-      ],
+      "size": {
+        "0": 315,
+        "1": 262
+      },
       "flags": {},
       "order": 10,
       "mode": 0,
@@ -570,6 +576,7 @@
           "label": "denoise"
         }
       ],
+      "title": "7.ComponentInputFloat",
       "properties": {
         "Node name for S&R": "ComponentInputFloat"
       },

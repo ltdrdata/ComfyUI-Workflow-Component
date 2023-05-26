@@ -17,7 +17,9 @@ class ComponentBase:
 def create_dynamic_class(input_nodes, output_nodes, workflow, prompt):
     input_types = {}
     input_mapping = {}
-    for i, node in enumerate(input_nodes):
+
+    sorted_nodes = sorted(input_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
+    for i, node in enumerate(sorted_nodes):
         input_type = node['outputs'][0]['type']
         input_label = node['outputs'][0].get('label', f"{input_type}_{i}")
 
@@ -37,7 +39,8 @@ def create_dynamic_class(input_nodes, output_nodes, workflow, prompt):
     return_names = []
     output_mapping = {}
 
-    for i, node in enumerate(output_nodes):
+    sorted_nodes = sorted(output_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
+    for i, node in enumerate(sorted_nodes):
         output_type = None
         output_label = None
 
