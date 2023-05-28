@@ -27,7 +27,7 @@ There is a high possibility that the existing components created may not be comp
 ## Todo
 - [ ] Efficient traversal
 - [ ] Interface node that is independent of the backend
-
+- [ ] Better internal error message
 
 ## Credit
 

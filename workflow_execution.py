@@ -32,7 +32,8 @@ class VirtualServer:
             self.occurred_event = event, data, sid
 
         elif event == "execution_error":
-            print(f"An error occurred in the '{data['node_type']}'(id={data['node_id']}) node within the component '## {self.component_name}'(id={self.node_id}).")
+            print(f"\nAn error occurred in the '{data['node_type']}'(id={data['node_id']}) node within the component '## {self.component_name}'(id={self.node_id}).")
+            print(f"ERROR MESSAGE: {data['exception_message']}\n")
             data['node_id'] = self.node_id
             data['executed'] = []
             self.occurred_event = event, data, sid
@@ -134,7 +135,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
         if pe.server.occurred_event[0] == "execution_interrupted":
             raise comfy.model_management.InterruptProcessingException()
         else:
-            raise Exception()
+            raise Exception(pe.server.occurred_event[1])
 
     results = []
     for key in output_mapping:
