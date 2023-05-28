@@ -84,12 +84,18 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
 
     changed_inputs = set()
 
+    def not_equal(a,b):
+        try:
+            return a != b
+        except:
+            return True
+
     for key, value in kwargs.items():
         if key not in ["unique_id", "prompt", "extra_pnginfo"]:
             input_node = input_mapping[key]
             input_node_id = str(input_node['id'])
 
-            if input_node_id not in pe.outputs or pe.outputs[input_node_id] != [[value]]:
+            if input_node_id not in pe.outputs.keys() or not_equal(pe.outputs[input_node_id], [[value]]):
                 pe.outputs[input_node_id] = [[value]]  # TODO: check
                 changed_inputs.add(input_node_id)
 

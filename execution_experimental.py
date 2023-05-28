@@ -21,19 +21,21 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
     will_execute = {}
 
     def add_work(item):
+        print(f"add work:{item}")
         worklist.put(item)
         cnt = will_execute.get(item, 0)
         will_execute[item] = cnt + 1
 
     def get_work():
-        item = str(worklist.get())
+        item = worklist.get()
+        print(f"get work:{item}")
         cnt = will_execute.get(item, 0)
         if cnt <= 0:
             del will_execute[item]
         else:
             will_execute[item] = cnt - 1
 
-        return item
+        return str(item)
 
     def get_progress():
         total = len(executed)+len(will_execute.keys())
