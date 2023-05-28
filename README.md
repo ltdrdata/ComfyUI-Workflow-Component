@@ -26,3 +26,9 @@ There is a high possibility that the existing components created may not be comp
 
 ## Known Issues
 * There is a possibility of getting caught in an infinite loop if the node returns None.
+
+
+## Credit
+
+ComfyUI/[ComfyUI](https://github.com/comfyanonymous/ComfyUI) - A powerful and modular stable diffusion GUI.
+pythongosssss/[ComfyUI-WD14-Tagger](https://github.com/pythongosssss/ComfyUI-WD14-Tagger) - A very cool badge-style progress came from here.

@@ -18,11 +18,31 @@ from queue import Queue
 def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_id, outputs_ui):
     worklist = Queue()
     executed = set()
+    will_execute = {}
 
-    worklist.put(current_item)
+    def add_work(item):
+        worklist.put(item)
+        cnt = will_execute.get(item, 0)
+        will_execute[item] = cnt + 1
+
+    def get_work():
+        item = str(worklist.get())
+        cnt = will_execute.get(item, 0)
+        if cnt <= 0:
+            del will_execute[item]
+        else:
+            will_execute[item] = cnt - 1
+
+        return item
+
+    def get_progress():
+        total = len(executed)+len(will_execute.keys())
+        return len(executed)/total
+
+    add_work(current_item)
 
     while not worklist.empty():
-        unique_id = str(worklist.get())
+        unique_id = get_work()
 
         if unique_id in executed:
             continue
@@ -42,18 +62,18 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
                 output_index = input_data[1]
                 if input_unique_id not in outputs:
                     if input_unique_id not in executed:
-                        worklist.put(input_unique_id)
+                        add_work(input_unique_id)
 
         try:
             input_data_all = get_input_data(inputs, class_def, unique_id, outputs, prompt, extra_data)
 
             if input_data_all is None:
-                worklist.put(unique_id)
+                add_work(unique_id)
                 continue
 
             if server.client_id is not None:
                 server.last_node_id = unique_id
-                server.send_sync("executing", {"node": unique_id, "prompt_id": prompt_id}, server.client_id)
+                server.send_sync("executing", {"node": unique_id, "prompt_id": prompt_id, "progress": get_progress()}, server.client_id)
             obj = class_def()
 
             output_data, output_ui = get_output_data(obj, input_data_all)

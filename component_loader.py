@@ -70,6 +70,10 @@ def get_linked_slots_widget_config(json_data):
 def create_dynamic_class(component_name, input_nodes, output_nodes, workflow, prompt):
     input_types = {}
     input_mapping = {}
+    internal_id_name_map = {}
+
+    for node in workflow['nodes']:
+        internal_id_name_map[str(node['id'])] = node['title'] if 'title' in node else node['type']
 
     # get widget config infos for auto recognition of input setting
     node_config_map = get_linked_slots_widget_config(workflow)
@@ -134,7 +138,8 @@ def create_dynamic_class(component_name, input_nodes, output_nodes, workflow, pr
         CATEGORY = "Workflow"
 
         def doit(self, *args, **kwargs):
-            return workflow_execution.execute(component_name, prompt, workflow, input_mapping, output_mapping, *args, **kwargs)
+            return workflow_execution.execute(component_name, prompt, workflow,
+                                              internal_id_name_map, input_mapping, output_mapping, *args, **kwargs)
 
     return DynamicClass
 

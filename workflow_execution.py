@@ -3,16 +3,27 @@ from server import PromptServer
 
 
 class VirtualServer:
-    def __init__(self, component_name, node_id):
-        self.client_id = None
+    def __init__(self, component_name, internal_id_name_map, node_id):
+        self.internal_id_name_map = internal_id_name_map
+        self.client_id = PromptServer.instance.client_id
         self.component_name = component_name
         self.node_id = node_id
         self.occurred_event = None
 
+    def update_node_status(self, text, progress=None):
+        if self.client_id is None:
+            return
+
+        PromptServer.instance.send_sync("component/update_status", {
+            "node_id": self.node_id,
+            "progress": progress,
+            "text": text
+        }, self.client_id)
+
     def send_sync(self, event, data, sid=None):
-        #print(f"event: {event}")
-        #print(f"data: {data}")
-        #print(f"sid: {sid}")
+        # print(f"event: {event}")
+        # print(f"data: {data}")
+        # print(f"sid: {sid}")
 
         if event == "execution_interrupted":
             print(f"An interrupt occurred while processing the workflow component '## {self.component_name}'(id={self.node_id})")
@@ -26,6 +37,19 @@ class VirtualServer:
             data['executed'] = []
             self.occurred_event = event, data, sid
 
+        elif event == "executing":
+            data['executed'] = []
+
+            if data['node'] is not None:
+                data['text'] = self.internal_id_name_map[data['node']]
+                data['node'] = self.node_id
+                PromptServer.instance.send_sync("component/update_status", data, sid)
+            else:
+                data['text'] = None
+                data['progress'] = None
+                data['node'] = self.node_id
+                PromptServer.instance.send_sync("component/update_status", data, sid)
+
         return PromptServer.instance.send_sync(event, data, sid)
 
 
@@ -37,9 +61,9 @@ def garbage_collect(keys):
     executor_dict = {key: value for key, value in executor_dict.items() if key in keys}
 
 
-def get_executor(component_name, node_id):
+def get_executor(component_name, internal_id_name_map, node_id):
     if node_id not in executor_dict:
-        vs = VirtualServer(component_name, node_id)
+        vs = VirtualServer(component_name, internal_id_name_map, node_id)
         executor_dict[node_id] = ExpPromptExecutor(vs)
 
     return executor_dict[node_id]
@@ -52,10 +76,11 @@ def get_virtual_prompt_id():
     return virtual_prompt_id
 
 
-def execute(component_name, prompt, workflow, input_mapping, output_mapping, *args, **kwargs):
+def execute(component_name, prompt, workflow, internal_id_name_map, input_mapping, output_mapping, *args, **kwargs):
     node_id = kwargs['unique_id']
-    pe = get_executor(component_name, node_id)
+    pe = get_executor(component_name, internal_id_name_map, node_id)
     pe.server.occurred_event = None
+    pe.server.update_node_status("Begin", 0)
 
     changed_inputs = set()
 
@@ -95,9 +120,11 @@ def execute(component_name, prompt, workflow, input_mapping, output_mapping, *ar
         if hasattr(class_def, "OUTPUT_NODE") and class_def.OUTPUT_NODE:
             execute_outputs.append(node['id'])
 
+    workflow['client_id'] = pe.server.client_id
     pe.execute(prompt, prompt_id, workflow, execute_outputs=execute_outputs)
 
     if pe.server.occurred_event is not None:
+        pe.server.update_node_status("Error", None)
         if pe.server.occurred_event[0] == "execution_interrupted":
             raise comfy.model_management.InterruptProcessingException()
         else:
