@@ -41,7 +41,7 @@ class VirtualServer:
             data['executed'] = []
 
             if data['node'] is not None:
-                data['text'] = self.internal_id_name_map[data['node']]
+                data['text'] = f"{self.internal_id_name_map[data['node']]} ({int(data['progress']*100)}%)"
                 data['node'] = self.node_id
                 PromptServer.instance.send_sync("component/update_status", data, sid)
             else:
@@ -80,7 +80,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
     node_id = kwargs['unique_id']
     pe = get_executor(component_name, internal_id_name_map, node_id)
     pe.server.occurred_event = None
-    pe.server.update_node_status("Begin", 0)
+    pe.server.update_node_status("Begin (0%)", 0)
 
     changed_inputs = set()
 
