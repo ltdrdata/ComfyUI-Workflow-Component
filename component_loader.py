@@ -67,7 +67,7 @@ def get_linked_slots_widget_config(json_data):
     return linked_slots_widget_config
 
 
-def create_dynamic_class(input_nodes, output_nodes, workflow, prompt):
+def create_dynamic_class(component_name, input_nodes, output_nodes, workflow, prompt):
     input_types = {}
     input_mapping = {}
 
@@ -134,7 +134,7 @@ def create_dynamic_class(input_nodes, output_nodes, workflow, prompt):
         CATEGORY = "Workflow"
 
         def doit(self, *args, **kwargs):
-            return workflow_execution.execute(prompt, workflow, input_mapping, output_mapping, *args, **kwargs)
+            return workflow_execution.execute(component_name, prompt, workflow, input_mapping, output_mapping, *args, **kwargs)
 
     return DynamicClass
 
@@ -148,7 +148,7 @@ def process_node(component_name, workflow):
     output_nodes = [node for node in nodes if
                     any(input_node['type'] == '##IS_COMPONENT_OUTPUT' for input_node in node['inputs'])]
 
-    NODE_CLASS_MAPPINGS[f"## {component_name}"] = create_dynamic_class(input_nodes, output_nodes, workflow, prompt)
+    NODE_CLASS_MAPPINGS[f"## {component_name}"] = create_dynamic_class(component_name, input_nodes, output_nodes, workflow, prompt)
 
 
 def load_all():

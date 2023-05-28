@@ -1,14 +1,34 @@
 from execution_experimental import *
+from server import PromptServer
+
 
 class VirtualServer:
-    def __init__(self):
+    def __init__(self, component_name, node_id):
         self.client_id = None
+        self.component_name = component_name
+        self.node_id = node_id
+        self.occurred_event = None
 
-    def send_sync(self):
-        pass
+    def send_sync(self, event, data, sid=None):
+        #print(f"event: {event}")
+        #print(f"data: {data}")
+        #print(f"sid: {sid}")
+
+        if event == "execution_interrupted":
+            print(f"An interrupt occurred while processing the workflow component '## {self.component_name}'(id={self.node_id})")
+            data['node_id'] = self.node_id
+            data['executed'] = []
+            self.occurred_event = event, data, sid
+
+        elif event == "execution_error":
+            print(f"An error occurred in the '{data['node_type']}'(id={data['node_id']}) node within the component '## {self.component_name}'(id={self.node_id}).")
+            data['node_id'] = self.node_id
+            data['executed'] = []
+            self.occurred_event = event, data, sid
+
+        return PromptServer.instance.send_sync(event, data, sid)
 
 
-vs = VirtualServer()
 executor_dict = {}
 
 
@@ -17,8 +37,9 @@ def garbage_collect(keys):
     executor_dict = {key: value for key, value in executor_dict.items() if key in keys}
 
 
-def get_executor(node_id):
-    if not node_id in executor_dict:
+def get_executor(component_name, node_id):
+    if node_id not in executor_dict:
+        vs = VirtualServer(component_name, node_id)
         executor_dict[node_id] = ExpPromptExecutor(vs)
 
     return executor_dict[node_id]
@@ -31,9 +52,10 @@ def get_virtual_prompt_id():
     return virtual_prompt_id
 
 
-def execute(prompt, workflow, input_mapping, output_mapping, *args, **kwargs):
+def execute(component_name, prompt, workflow, input_mapping, output_mapping, *args, **kwargs):
     node_id = kwargs['unique_id']
-    pe = get_executor(node_id)
+    pe = get_executor(component_name, node_id)
+    pe.server.occurred_event = None
 
     changed_inputs = set()
 
@@ -74,6 +96,12 @@ def execute(prompt, workflow, input_mapping, output_mapping, *args, **kwargs):
             execute_outputs.append(node['id'])
 
     pe.execute(prompt, prompt_id, workflow, execute_outputs=execute_outputs)
+
+    if pe.server.occurred_event is not None:
+        if pe.server.occurred_event[0] == "execution_interrupted":
+            raise comfy.model_management.InterruptProcessingException()
+        else:
+            raise Exception()
 
     results = []
     for key in output_mapping:
