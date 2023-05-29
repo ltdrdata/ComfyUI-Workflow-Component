@@ -119,6 +119,7 @@ app.registerExtension({
 				this.onConnectionsChange = function (type, index, connected, link_info) {
 					if (type === LiteGraph.INPUT) {			  
 					let inputType = null;
+					let inputName = null;
 					const input = this.inputs ? this.inputs[0].link || null : null;
 					let node = null;
 					let originSlot = null;
@@ -131,7 +132,8 @@ app.registerExtension({
 
 						node = app.graph.getNodeById(origin);
 						if (node) {
-							inputType = node.outputs[originSlot].type;	
+							inputType = node.outputs[originSlot].type;
+							inputName = node.outputs[originSlot].label?node.outputs[originSlot].label:null;
 						}					  
 					} else {
 					  // No inputs connected
@@ -143,10 +145,14 @@ app.registerExtension({
 				 	 // Update output properties
 					this.inputs[0].type = inputType;
 					this.__inputType = displayType;
-					this.inputs[0].name = inputType || "rename after connect";
+
+					// skip if name is assigned, already
+					if(this.inputs[0].name == "rename after connect") {
+						this.inputs[0].name = inputName || inputType || "rename after connect";
+						this.inputs[0].label = inputName;
+					}
 				  
 					const link = app.graph.links[this.inputs[0]];
-					console.log("link", link);
 				  
 					if (node !== null) {
 						node.outputs[originSlot].color = color;
@@ -182,6 +188,7 @@ app.registerExtension({
 					}
 				  
 					let outputType = null;
+					let outputName = null;
 					const outputs = this.outputs ? this.outputs[0].links || [] : [];
 				  	
 					// Iterate through output links to determine the output type
@@ -198,6 +205,13 @@ app.registerExtension({
 						  node.inputs[link.target_slot].type
 							? node.inputs[link.target_slot].type
 							: null;
+
+						outputName =
+						  node.inputs &&
+						  node.inputs[link?.target_slot] &&
+						  node.inputs[link.target_slot].name
+							? node.inputs[link.target_slot].name
+							: null;
 					  }
 					} else {
 					  // No outputs
@@ -209,7 +223,7 @@ app.registerExtension({
 				 	 // Update output properties
 					this.outputs[0].type = outputType;
 					this.__outputType = displayType;
-					this.outputs[0].name = outputType || "*";
+					this.outputs[0].name = outputName || "*";
 				  
 					const link = app.graph.links[this.outputs[0]];
 				  
@@ -223,17 +237,27 @@ app.registerExtension({
 			}
 		}
 
+		class ComponentInputOptionalNode extends ComponentInputNode {
+		}
+
 		LiteGraph.registerNodeType(
 			"ComponentInput",
 			Object.assign(ComponentInputNode, {
-				title: "ComponentInput",
+				title: "Component Input",
+			})
+		);
+
+		LiteGraph.registerNodeType(
+			"ComponentInputOptional",
+			Object.assign(ComponentInputOptionalNode, {
+				title: "Component Input (OPT)",
 			})
 		);
 
 		LiteGraph.registerNodeType(
 			"ComponentOutput",
 			Object.assign(ComponentOutputNode, {
-				title: "ComponentOutput",
+				title: "Component Output",
 			})
 		);
 

@@ -25,10 +25,13 @@ There is a high possibility that the existing components created may not be comp
 
 
 ## Todo
+- [x] Default interface name
+- [ ] Support of refresh combo (ex. ckpt, images, lora, ...)
 - [ ] Efficient traversal
 - [ ] Better internal error message
-- [ ] Default interface name
+- [ ] used components must be included into workflow
 - [ ] Hot loading
+- [ ] Report missing nodes in components when component is loaded
 
 ## Credit
 
