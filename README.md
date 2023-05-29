@@ -28,6 +28,7 @@ There is a high possibility that the existing components created may not be comp
 - [ ] Efficient traversal
 - [ ] Better internal error message
 - [ ] Default interface name
+- [ ] Hot loading
 
 ## Credit
 
