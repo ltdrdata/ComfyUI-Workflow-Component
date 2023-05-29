@@ -6,10 +6,9 @@ import shutil
 impact_path = os.path.dirname(__file__)
 sys.path.append(impact_path)
 
-from component_io_node import *
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.5) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.6) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -86,22 +85,9 @@ server.PromptServer.instance.app.router.add_post('/prompt', prompt_hook)
 
 
 NODE_CLASS_MAPPINGS = {
-    "ComponentInputImage": ComponentInputImage,
-    "ComponentInputModel": ComponentInputModel,
-    "ComponentInputClip": ComponentInputClip,
-    "ComponentInputVAE": ComponentInputVAE,
-
-    "ComponentInputString": ComponentInputString,
-    "ComponentInputFloat": ComponentInputFloat,
-    "ComponentInputInt": ComponentInputInt,
-
-    "ComponentOutputImage": ComponentOutputImage,
-    "ComponentOutputLatent": ComponentOutputLatent,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "ComponentInputImage": "ComponentInput (Image)",
-    "ComponentOutputImage": "ComponentOutput (Image)",
 }
 
 

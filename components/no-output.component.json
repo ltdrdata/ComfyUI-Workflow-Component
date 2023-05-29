@@ -1,50 +1,13 @@
 {
-  "last_node_id": 32,
-  "last_link_id": 36,
+  "last_node_id": 33,
+  "last_link_id": 37,
   "nodes": [
-    {
-      "id": 10,
-      "type": "ComponentInputImage",
-      "pos": [
-        200,
-        280
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "#",
-          "type": "##IS_COMPONENT_INPUT",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            32
-          ],
-          "shape": 3,
-          "slot_index": 0,
-          "label": "image"
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ComponentInputImage"
-      }
-    },
     {
       "id": 27,
       "type": "PreviewBridge",
       "pos": [
-        703,
-        321
+        400,
+        130
       ],
       "size": {
         "0": 315,
@@ -57,7 +20,7 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 32
+          "link": 37
         }
       ],
       "outputs": [
@@ -85,11 +48,65 @@
       ]
     },
     {
+      "id": 32,
+      "type": "PreviewImage",
+      "pos": [
+        1300,
+        130
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 36
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 33,
+      "type": "ComponentInput",
+      "pos": [
+        80,
+        130
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "rename after connect",
+          "type": "*",
+          "links": [
+            37
+          ],
+          "slot_index": 0,
+          "label": "images"
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
       "id": 29,
       "type": "PreviewBridge",
       "pos": [
-        1160,
-        328
+        860,
+        130
       ],
       "size": {
         "0": 315,
@@ -128,42 +145,9 @@
       "widgets_values": [
         "#placeholder"
       ]
-    },
-    {
-      "id": 32,
-      "type": "PreviewImage",
-      "pos": [
-        1632,
-        321
-      ],
-      "size": {
-        "0": 210,
-        "1": 26
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 36
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
     }
   ],
   "links": [
-    [
-      32,
-      10,
-      0,
-      27,
-      0,
-      "IMAGE"
-    ],
     [
       34,
       27,
@@ -179,6 +163,14 @@
       32,
       0,
       "IMAGE"
+    ],
+    [
+      37,
+      33,
+      0,
+      27,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [],
@@ -186,15 +178,11 @@
   "extra": {},
   "version": 0.4,
   "output": {
-    "10": {
-      "inputs": {},
-      "class_type": "ComponentInputImage"
-    },
     "27": {
       "inputs": {
         "image": "#placeholder",
         "images": [
-          "10",
+          "33",
           0
         ]
       },
@@ -218,6 +206,9 @@
         ]
       },
       "class_type": "PreviewImage"
+    },
+    "33": {
+      "inputs": {}
     }
   }
 }

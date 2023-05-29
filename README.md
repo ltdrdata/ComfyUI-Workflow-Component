@@ -6,8 +6,8 @@ There is a high possibility that the existing components created may not be comp
 ## How To Build Component
 ![component-build](misc/component-build.png)
 
-* Through the ComponentBuilder under the ComponentInput... node, specify the input interface of the component, and specify the output interface of the component through the ComponentOutput... node.
-* The slot name of the ComponentInput/Output... node is used as the external interface name of the component.
+* Through the ComponentBuilder under the ComponentInput node, specify the input interface of the component, and specify the output interface of the component through the ComponentOutput node.
+* The slot name of the ComponentInput/Output node is used as the external interface name of the component.
 * The order of the interface is determined by sorting the titles of the nodes in ascending order.
 
 ![component-menu](misc/menu.png)
@@ -26,8 +26,8 @@ There is a high possibility that the existing components created may not be comp
 
 ## Todo
 - [ ] Efficient traversal
-- [ ] Interface node that is independent of the backend
 - [ ] Better internal error message
+- [ ] Default interface name
 
 ## Credit
 

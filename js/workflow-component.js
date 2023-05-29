@@ -110,7 +110,41 @@ app.registerExtension({
 				};
 
 		menu.append(saveComponentButton);
-	}
+	},
+	registerCustomNodes() {
+		class ComponentOutputNode {
+			constructor() {
+				this.addInput("rename after connect", "*");
+				this.serialize_widgets = true;
+				this.isVirtualNode = false;
+			}
+		}
+
+		class ComponentInputNode {
+			constructor() {
+				this.addOutput("rename after connect", "*");
+				this.serialize_widgets = true;
+				this.isVirtualNode = false;
+			}
+		}
+
+		LiteGraph.registerNodeType(
+			"ComponentInput",
+			Object.assign(ComponentInputNode, {
+				title: "ComponentInput",
+			})
+		);
+
+		LiteGraph.registerNodeType(
+			"ComponentOutput",
+			Object.assign(ComponentOutputNode, {
+				title: "ComponentOutput",
+			})
+		);
+
+		ComponentOutputNode.category = "ComponentBuilder";
+		ComponentInputNode.category = "ComponentBuilder";
+	},
 });
 
 

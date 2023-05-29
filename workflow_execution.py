@@ -85,7 +85,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
 
     changed_inputs = set()
 
-    def not_equal(a,b):
+    def not_equal(a, b):
         try:
             return a != b
         except:
@@ -123,9 +123,12 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
     # this must be calculated on-demand due to custom node loading order
     for node in workflow['nodes']:
         class_type = node['type']
-        class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
-        if hasattr(class_def, "OUTPUT_NODE") and class_def.OUTPUT_NODE:
-            execute_outputs.append(node['id'])
+        if class_type in ["ComponentInput", "ComponentOutput"]:
+            pass
+        else:
+            class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
+            if hasattr(class_def, "OUTPUT_NODE") and class_def.OUTPUT_NODE:
+                execute_outputs.append(node['id'])
 
     workflow['client_id'] = pe.server.client_id
     pe.execute(prompt, prompt_id, workflow, execute_outputs=execute_outputs)
@@ -143,8 +146,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
         output_node_id = str(output_node['id'])
         inputs = prompt[output_node_id]['inputs']
 
-        class_type = output_node['type']
-        class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
+        class_def = DummyNode
 
         input_data_all = get_input_data(inputs, class_def, output_node_id, pe.outputs, prompt, workflow)
         _, value = next(iter(input_data_all.items()))

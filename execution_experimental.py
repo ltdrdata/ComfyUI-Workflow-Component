@@ -15,20 +15,35 @@ from execution import get_input_data, get_output_data, map_node_over_list, forma
 from queue import Queue
 
 
+class DummyNode:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {}}
+
+    RETURN_TYPES = ()
+    FUNCTION = "doit"
+
+    def doit(s, *args, **kwargs):
+        if len(kwargs) == 1:
+            key = list(kwargs.keys())[0]
+            output = kwargs[key]
+            return (output,)
+        else:
+            pass
+
+
 def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_id, outputs_ui):
     worklist = Queue()
     executed = set()
     will_execute = {}
 
     def add_work(item):
-        print(f"add work:{item}")
         worklist.put(item)
         cnt = will_execute.get(item, 0)
         will_execute[item] = cnt + 1
 
     def get_work():
         item = worklist.get()
-        print(f"get work:{item}")
         cnt = will_execute.get(item, 0)
         if cnt <= 0:
             del will_execute[item]
@@ -50,8 +65,11 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
             continue
 
         inputs = prompt[unique_id]['inputs']
-        class_type = prompt[unique_id]['class_type']
-        class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
+        if 'class_type' not in prompt[unique_id]:
+            class_def = DummyNode
+        else:
+            class_type = prompt[unique_id]['class_type']
+            class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
 
         if unique_id in outputs:
             continue
@@ -66,6 +84,7 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
                     if input_unique_id not in executed:
                         add_work(input_unique_id)
 
+        input_data_all = None
         try:
             input_data_all = get_input_data(inputs, class_def, unique_id, outputs, prompt, extra_data)
 
@@ -156,8 +175,11 @@ def worklist_output_delete_if_changed(prompt, old_prompt, outputs, current_item)
         unique_id = worklist.pop()
 
         inputs = prompt[unique_id]['inputs']
-        class_type = prompt[unique_id]['class_type']
-        class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
+        if 'class_type' not in prompt[unique_id]:
+            class_def = DummyNode
+        else:
+            class_type = prompt[unique_id]['class_type']
+            class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
 
         is_changed_old = ''
         is_changed = ''
@@ -216,7 +238,10 @@ class ExpPromptExecutor:
 
     def handle_execution_error(self, prompt_id, prompt, current_outputs, executed, error, ex):
         node_id = error["node_id"]
-        class_type = prompt[node_id]["class_type"]
+        if "class_type" in prompt[node_id]:
+            class_type = prompt[node_id]["class_type"]
+        else:
+            class_type = "ComponentInput/Output"
 
         # First, send back the status to the frontend depending
         # on the exception type

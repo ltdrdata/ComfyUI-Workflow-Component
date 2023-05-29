@@ -1,26 +1,26 @@
 {
-  "last_node_id": 30,
-  "last_link_id": 35,
+  "last_node_id": 32,
+  "last_link_id": 37,
   "nodes": [
     {
-      "id": 10,
-      "type": "ComponentInputImage",
+      "id": 29,
+      "type": "PreviewBridge",
       "pos": [
-        200,
-        280
+        820,
+        150
       ],
       "size": {
-        "0": 210,
-        "1": 26
+        "0": 315,
+        "1": 78
       },
       "flags": {},
-      "order": 0,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
-          "name": "#",
-          "type": "##IS_COMPONENT_INPUT",
-          "link": null
+          "name": "images",
+          "type": "IMAGE",
+          "link": 34
         }
       ],
       "outputs": [
@@ -28,23 +28,31 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            32
+            36
           ],
           "shape": 3,
-          "slot_index": 0,
-          "label": "image"
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "ComponentInputImage"
-      }
+        "Node name for S&R": "PreviewBridge"
+      },
+      "widgets_values": [
+        "#placeholder"
+      ]
     },
     {
       "id": 27,
       "type": "PreviewBridge",
       "pos": [
-        703,
-        321
+        360,
+        150
       ],
       "size": {
         "0": 315,
@@ -57,7 +65,8 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 32
+          "link": 37,
+          "slot_index": 0
         }
       ],
       "outputs": [
@@ -85,90 +94,62 @@
       ]
     },
     {
-      "id": 29,
-      "type": "PreviewBridge",
+      "id": 31,
+      "type": "ComponentOutput",
       "pos": [
-        1160,
-        328
+        1230,
+        160
       ],
       "size": {
-        "0": 315,
-        "1": 78
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 34
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            35
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewBridge"
-      },
-      "widgets_values": [
-        "#placeholder"
-      ]
-    },
-    {
-      "id": 30,
-      "type": "ComponentOutputImage",
-      "pos": [
-        1627,
-        332
-      ],
-      "size": {
-        "0": 210,
-        "1": 46
+        "0": 178,
+        "1": 26
       },
       "flags": {},
       "order": 3,
       "mode": 0,
       "inputs": [
         {
-          "name": "output",
-          "type": "IMAGE",
-          "link": 35
-        },
-        {
-          "name": "#",
-          "type": "##IS_COMPONENT_OUTPUT",
-          "link": null
+          "name": "rename after connect",
+          "type": "*",
+          "link": 36,
+          "label": "image"
         }
       ],
-      "properties": {
-        "Node name for S&R": "ComponentOutputImage"
-      }
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 32,
+      "type": "ComponentInput",
+      "pos": [
+        50,
+        150
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "rename after connect",
+          "type": "*",
+          "links": [
+            37
+          ],
+          "slot_index": 0,
+          "label": "images"
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
-    [
-      32,
-      10,
-      0,
-      27,
-      0,
-      "IMAGE"
-    ],
     [
       34,
       27,
@@ -178,10 +159,18 @@
       "IMAGE"
     ],
     [
-      35,
+      36,
       29,
       0,
-      30,
+      31,
+      0,
+      "*"
+    ],
+    [
+      37,
+      32,
+      0,
+      27,
       0,
       "IMAGE"
     ]
@@ -191,15 +180,11 @@
   "extra": {},
   "version": 0.4,
   "output": {
-    "10": {
-      "inputs": {},
-      "class_type": "ComponentInputImage"
-    },
     "27": {
       "inputs": {
         "image": "#placeholder",
         "images": [
-          "10",
+          "32",
           0
         ]
       },
@@ -215,14 +200,16 @@
       },
       "class_type": "PreviewBridge"
     },
-    "30": {
+    "31": {
       "inputs": {
-        "output": [
+        "rename after connect": [
           "29",
           0
         ]
-      },
-      "class_type": "ComponentOutputImage"
+      }
+    },
+    "32": {
+      "inputs": {}
     }
   }
 }
