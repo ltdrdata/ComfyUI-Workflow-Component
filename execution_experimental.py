@@ -168,17 +168,30 @@ def worklist_will_execute(prompt, outputs, current_item):
     return will_execute
 
 
-def worklist_output_delete_if_changed(prompt, old_prompt, outputs, current_item):
-    worklist = [current_item]
+def worklist_output_delete_if_changed(prompt, old_prompt, outputs):
+    worklist = []
+    deleted = set()
 
-    while worklist:
-        unique_id = worklist.pop()
+    # build forward map
+    nexts = {}
+    for key, value in prompt.items():
+        inputs = value['inputs']
 
-        inputs = prompt[unique_id]['inputs']
-        if 'class_type' not in prompt[unique_id]:
+        for input_data in inputs.values():
+            if isinstance(input_data, list):
+                input_unique_id = input_data[0]
+                if input_unique_id in nexts:
+                    nexts[input_unique_id].append(key)
+                else:
+                    nexts[input_unique_id] = [key]
+
+    # set seeds
+    for unique_id, value in prompt.items():
+        inputs = value['inputs']
+        if 'class_type' not in value:
             class_def = DummyNode
         else:
-            class_type = prompt[unique_id]['class_type']
+            class_type = value['class_type']
             class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
 
         is_changed_old = ''
@@ -188,43 +201,55 @@ def worklist_output_delete_if_changed(prompt, old_prompt, outputs, current_item)
         if hasattr(class_def, 'IS_CHANGED'):
             if unique_id in old_prompt and 'is_changed' in old_prompt[unique_id]:
                 is_changed_old = old_prompt[unique_id]['is_changed']
-            if 'is_changed' not in prompt[unique_id]:
+            if 'is_changed' not in value:
                 input_data_all = get_input_data(inputs, class_def, unique_id, outputs)
                 if input_data_all is not None:
                     try:
                         is_changed = map_node_over_list(class_def, input_data_all, "IS_CHANGED")
-                        prompt[unique_id]['is_changed'] = is_changed
+                        value['is_changed'] = is_changed
                     except:
                         to_delete = True
             else:
-                is_changed = prompt[unique_id]['is_changed']
+                is_changed = value['is_changed']
 
         if unique_id not in outputs:
-            continue
+            to_delete = True
+        else:
+            if not to_delete:
+                if is_changed != is_changed_old:
+                    to_delete = True
+                elif unique_id not in old_prompt:
+                    to_delete = True
+                elif inputs == old_prompt[unique_id]['inputs']:
+                    for x in inputs:
+                        input_data = inputs[x]
 
-        if not to_delete:
-            if is_changed != is_changed_old:
-                to_delete = True
-            elif unique_id not in old_prompt:
-                to_delete = True
-            elif inputs == old_prompt[unique_id]['inputs']:
-                for x in inputs:
-                    input_data = inputs[x]
+                        if isinstance(input_data, list):
+                            input_unique_id = input_data[0]
 
-                    if isinstance(input_data, list):
-                        input_unique_id = input_data[0]
-                        output_index = input_data[1]
-                        if input_unique_id in outputs:
-                            worklist.append(input_unique_id)
-                        else:
-                            to_delete = True
-                            break
-            else:
-                to_delete = True
+                            if input_unique_id not in outputs:
+                                to_delete = True
+                                break
+                else:
+                    to_delete = True
 
         if to_delete:
+            worklist.append(unique_id)
+
+    # cascade removing
+    while worklist:
+        unique_id = worklist.pop()
+
+        if unique_id in deleted:
+            continue
+
+        if unique_id in outputs:
             d = outputs.pop(unique_id)
             del d
+
+        new_works = nexts.get(unique_id, [])
+        worklist.extend(new_works)
+        deleted.add(unique_id)
 
     return outputs
 
@@ -303,8 +328,7 @@ class ExpPromptExecutor:
                 d = self.outputs.pop(o)
                 del d
 
-            for x in prompt:
-                worklist_output_delete_if_changed(prompt, self.old_prompt, self.outputs, x)
+            worklist_output_delete_if_changed(prompt, self.old_prompt, self.outputs)
 
             current_outputs = set(self.outputs.keys())
             for x in list(self.outputs_ui.keys()):
