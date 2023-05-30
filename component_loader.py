@@ -63,9 +63,9 @@ def get_linked_slots_config(json_data):
                         if "widget" in input_slot:
                             widget_config = input_slot["widget"].get("config")
                             if widget_config is not None:
-                                linked_slots_config[link_id] = (input_slot['type'], widget_config)
+                                linked_slots_config[link_id] = (input_slot['type'], widget_config, nodes[dest_node]['type'], input_slot['name'])
                         else:
-                            linked_slots_config[link_id] = (input_slot['type'], None)
+                            linked_slots_config[link_id] = (input_slot['type'], None, None, None)
 
         if node['type'] == "ComponentOutput":
             node_inputs = node["inputs"] if 'inputs' in node else []
@@ -82,7 +82,7 @@ def get_linked_slots_config(json_data):
                     outputs = nodes[src_node]["outputs"]
                     output_slot = outputs[src_slot]
 
-                    linked_slots_config[link_id] = (output_slot['type'], None)
+                    linked_slots_config[link_id] = (output_slot['type'], None, None, None)
 
     return linked_slots_config
 
@@ -95,8 +95,6 @@ def create_dynamic_class(component_name, workflow):
     input_optional_nodes = [node for node in nodes if node['type'] == "ComponentInputOptional"]
     output_nodes = [node for node in nodes if node['type'] == "ComponentOutput"]
 
-    input_types = {}
-    input_optional_types = {}
     input_mapping = {}
     internal_id_name_map = {}
 
@@ -106,13 +104,21 @@ def create_dynamic_class(component_name, workflow):
     # get widget config infos for auto recognition of input setting
     node_config_map = get_linked_slots_config(workflow)
 
-    sorted_nodes = sorted(input_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
-    for i, node in enumerate(sorted_nodes):
-        build_input_types(i, input_mapping, input_types, node, node_config_map)
+    sorted_input_nodes = sorted(input_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
 
-    sorted_nodes = sorted(input_optional_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
-    for i, node in enumerate(sorted_nodes):
-        build_input_types(i, input_mapping, input_optional_types, node, node_config_map)
+    def get_input_types_dynamic():
+        input_types = {}
+        for i, node in enumerate(sorted_input_nodes):
+            build_input_types(i, input_mapping, input_types, node, node_config_map)
+        return input_types
+
+    sorted_input_optional_nodes = sorted(input_optional_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
+
+    def get_input_optional_types_dynamic():
+        input_optional_types = {}
+        for i, node in enumerate(sorted_input_optional_nodes):
+            build_input_types(i, input_mapping, input_optional_types, node, node_config_map)
+        return input_optional_types
 
     return_types = []
     return_names = []
@@ -125,15 +131,16 @@ def create_dynamic_class(component_name, workflow):
     class DynamicClass:
         @classmethod
         def INPUT_TYPES(s):
+            input_optional_types = get_input_optional_types_dynamic()
             if len(input_optional_types) > 0:
                 return {
-                    "required": input_types,
+                    "required": get_input_types_dynamic(),
                     "optional": input_optional_types,
                     "hidden": {"unique_id": "UNIQUE_ID"},
                 }
             else:
                 return {
-                    "required": input_types,
+                    "required": get_input_types_dynamic(),
                     "hidden": {"unique_id": "UNIQUE_ID"},
                 }
 
@@ -163,7 +170,7 @@ def build_output_types(i, node, node_config_map, output_mapping, return_names, r
             pass
         else:
             if output_link in node_config_map:
-                output_type, node_config = node_config_map[output_link]
+                output_type, node_config, node_type, output_slot = node_config_map[output_link]
                 output_label = None
 
                 for output in node['inputs']:
@@ -174,6 +181,19 @@ def build_output_types(i, node, node_config_map, output_mapping, return_names, r
                     output_mapping[output_label] = (i, node)
                     return_types.append(output_type)
                     return_names.append(output_label)
+
+
+def flatten_INPUT_TYPES(data):
+    # order assumption: required, optional
+    # ref: app.js registerNodes()
+    items = {}
+    if 'required' in data:
+        items = data['required']
+
+    if 'optional' in data:
+        items.update(data['optional'])
+
+    return items
 
 
 def build_input_types(i, input_mapping, input_types, node, node_config_map):
@@ -187,14 +207,27 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
         else:
             for input_link in input_links:
                 if input_link in node_config_map:
-                    input_type, node_config = node_config_map[input_link]
-                    input_label = component_inputs[0].get('label', f"{input_type}_{i}")
+                    input_type, node_config, node_type, input_slot = node_config_map[input_link]
+
+                    input_label = None
+                    if node_type is not None and input_slot is not None:
+                        node_input_types = comfy_nodes.NODE_CLASS_MAPPINGS[node_type].INPUT_TYPES()
+                        input_value = flatten_INPUT_TYPES(node_input_types)[input_slot]
+                        if isinstance(input_value[0], list):
+                            input_label = input_slot
+                    else:
+                        input_value = (input_type,)
+
+                    if input_label is None:
+                        input_label = component_inputs[0].get('label', f"{input_type}_{i}")
+
                     input_mapping[input_label] = node
 
-                    if node_config is not None:
-                        input_types[input_label] = tuple(node_config)
-                    else:
-                        input_types[input_label] = (input_type,)
+                    input_types[input_label] = input_value
+                    # if node_config is not None:
+                    #     input_types[input_label] = tuple(node_config)
+                    # else:
+                    #     input_types[input_label] = (input_type,)
 
 
 def process_node(component_name, workflow):

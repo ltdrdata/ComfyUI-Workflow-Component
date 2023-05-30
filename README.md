@@ -26,7 +26,7 @@ There is a high possibility that the existing components created may not be comp
 
 ## Todo
 - [x] Default interface name
-- [ ] Support of refresh combo (ex. ckpt, images, lora, ...)
+- [x] Support of refresh combo (ex. ckpt, images, lora, ...)
 - [ ] Efficient traversal
 - [ ] Better internal error message
 - [ ] used components must be included into workflow
