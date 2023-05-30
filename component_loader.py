@@ -123,6 +123,7 @@ def create_dynamic_class(component_name, workflow):
     return_types = []
     return_names = []
     output_mapping = {}
+    optional_inputs = {str(node['id']) for node in input_optional_nodes}
 
     sorted_nodes = sorted(output_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
     for i, node in enumerate(sorted_nodes):
@@ -155,7 +156,8 @@ def create_dynamic_class(component_name, workflow):
 
         def doit(self, *args, **kwargs):
             return workflow_execution.execute(component_name, prompt, workflow,
-                                              internal_id_name_map, input_mapping, output_mapping, *args, **kwargs)
+                                              internal_id_name_map, optional_inputs, input_mapping, output_mapping,
+                                              *args, **kwargs)
 
     return DynamicClass
 

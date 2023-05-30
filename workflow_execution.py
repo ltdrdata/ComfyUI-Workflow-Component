@@ -77,7 +77,8 @@ def get_virtual_prompt_id():
     return virtual_prompt_id
 
 
-def execute(component_name, prompt, workflow, internal_id_name_map, input_mapping, output_mapping, *args, **kwargs):
+def execute(component_name, prompt, workflow, internal_id_name_map, optional_inputs, input_mapping, output_mapping,
+            *args, **kwargs):
     node_id = kwargs['unique_id']
     pe = get_executor(component_name, internal_id_name_map, node_id)
     pe.server.occurred_event = None
@@ -91,6 +92,16 @@ def execute(component_name, prompt, workflow, internal_id_name_map, input_mappin
         except:
             return True
 
+    # get empty prompt option
+    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and not value['inputs']]
+
+    # unlink unprovided option prompt
+    for key, value in prompt.items():
+        new_value = {name: input_value for name, input_value in value['inputs'].items() if
+                     not isinstance(input_value, list) or input_value[0] not in empty_option_prompts}
+        prompt[key]['inputs'] = new_value
+
+    # pass input interface to internal nodes
     for key, value in kwargs.items():
         if key not in ["unique_id", "prompt", "extra_pnginfo"]:
             input_node = input_mapping[key]
