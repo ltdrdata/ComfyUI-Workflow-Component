@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.9) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.10) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -98,6 +98,11 @@ async def load_component(request):
               "already_loaded": not new_created}
 
     return web.json_response(result, content_type='application/json')
+
+
+@server.PromptServer.instance.routes.get("/component/get_workflows")
+async def get_workflows(request):
+    return web.json_response(component_loader.workflow_components, content_type='application/json')
 
 
 NODE_CLASS_MAPPINGS = {

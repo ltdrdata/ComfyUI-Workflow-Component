@@ -34,6 +34,10 @@ There is a high possibility that the existing components created may not be comp
 - [x] Support of refresh combo (ex. ckpt, images, lora, ...)
 - [x] Hot loading
 - [ ] used components must be included into workflow
+  - [x] Save .json
+  - [ ] Load .json
+  - [ ] Save .png
+  - [ ] Load .png
 - [ ] Efficient traversal
 - [ ] Better internal error message
 - [ ] Report missing nodes in components when component is loaded

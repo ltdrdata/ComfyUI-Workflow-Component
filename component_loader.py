@@ -256,8 +256,11 @@ def load_component(component_name, workflow, direct_reflect=False):
         return False
 
 
+workflow_components = {}
+
+
 def load_all():
-    workflow_components = {}
+    global workflow_components
 
     for filename in os.listdir(directory):
         if filename.endswith(".component.json"):

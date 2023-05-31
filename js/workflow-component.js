@@ -73,11 +73,71 @@ class ProgressBadge {
 	}
 }
 
+async function loadComponentWorkflows() {
+    if(!app.loaded_components) {
+        app.loaded_components = {};
+    }
+
+    const res = await fetch(`component/get_workflows`, { cache: "no-store" });
+    const components = await res.json();
+    Object.assign(app.loaded_components, components);
+}
+
 app.registerExtension({
 	name: "Comfy.WorkflowComponent",
 
 	async setup() {
+	    loadComponentWorkflows();
 		const menu = document.querySelector(".comfy-menu");
+
+        // NOTE: Ultimately, the current Save should be replaced with Save Full.
+		const saveFullButton = document.createElement("button");
+		saveFullButton.textContent = "Save Full";
+		saveFullButton.onclick = async () => {
+					let filename = "workflow.json";
+
+					filename = prompt("Save workflow as:", filename);
+					if (!filename) return;
+					if (!filename.toLowerCase().endsWith(".json")) {
+						filename += ".json";
+					}
+
+					const p = await app.graphToPrompt();
+
+                    if(!app.loaded_components)
+                        app.loaded_components = {};
+
+                    // inject used components into workflow
+                    let used_node_types = new Set();
+                    for(let i in p.workflow.nodes) {
+                        if(p.workflow.nodes[i].type.startsWith('## '))
+                            used_node_types.add(p.workflow.nodes[i].type.slice(3));
+                    }
+
+                    const used_component_keys = Object.keys(app.loaded_components).filter(key => used_node_types.has(key));
+
+                    p.workflow.components = {};
+                    used_component_keys.forEach(key => {
+                      p.workflow.components[key] = app.loaded_components[key];
+                    });
+
+                    // save
+					const json = JSON.stringify(p.workflow, null, 2); // convert the data to a JSON string
+					const blob = new Blob([json], { type: "application/json" });
+					const url = URL.createObjectURL(blob);
+					const a = $el("a", {
+						href: url,
+						download: filename,
+						style: { display: "none" },
+						parent: document.body,
+					});
+					a.click();
+					setTimeout(function () {
+						a.remove();
+						window.URL.revokeObjectURL(url);
+					}, 0);
+				};
+
 
 		const saveComponentButton = document.createElement("button");
 		saveComponentButton.textContent = "Save As Component";
@@ -87,7 +147,7 @@ app.registerExtension({
 					filename = prompt("Save workflow as:", filename);
 					if (!filename) return;
 					if (!filename.toLowerCase().endsWith(".component.json")) {
-						filename += ".json";
+						filename += ".component.json";
 					}
 
 					const p = await app.graphToPrompt();
@@ -137,12 +197,18 @@ app.registerExtension({
 
 						const data = await resp.json();
 
+                        const component_name = data['node_name'];
 						if(!data['already_loaded']) {
-							const uri = encodeURIComponent(`## ${data['node_name']}`)
+							const uri = encodeURIComponent(`## ${component_name}`)
 							const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
 							const def = await node_info.json();
 
 							app.registerNodesFromDefs.call(app, def);
+						}
+
+						// loaded_components might be incomplete after frontend refresh
+						if(!app.loaded_components[component_name]) {
+							app.loaded_components[component_name] = JSON.parse(reader.result);
 						}
 					};
 
@@ -157,6 +223,7 @@ app.registerExtension({
 				fileInput.click();
 			}
 
+		menu.append(saveFullButton);
 		menu.append(saveComponentButton);
 		menu.append(loadComponentButton);
 	},
