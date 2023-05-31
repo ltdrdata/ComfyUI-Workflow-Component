@@ -242,8 +242,18 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                     #     input_types[input_label] = (input_type,)
 
 
-def process_node(component_name, workflow):
-    NODE_CLASS_MAPPINGS[f"## {component_name}"] = create_dynamic_class(component_name, workflow)
+def load_component(component_name, workflow, direct_reflect=False):
+    node_name = f"## {component_name}"
+
+    if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
+        obj = create_dynamic_class(component_name, workflow)
+        if direct_reflect:
+            comfy_nodes.NODE_CLASS_MAPPINGS[node_name] = obj
+        else:
+            NODE_CLASS_MAPPINGS[node_name] = obj
+        return True
+    else:
+        return False
 
 
 def load_all():
@@ -258,4 +268,4 @@ def load_all():
             with open(file_path, "r") as file:
                 data = json.load(file)
                 workflow_components[component_name] = data
-                process_node(component_name, data)
+                load_component(component_name, data)

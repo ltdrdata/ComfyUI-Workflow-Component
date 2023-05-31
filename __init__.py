@@ -83,6 +83,22 @@ async def prompt_hook(request):
 
 server.PromptServer.instance.app.router.add_post('/prompt', prompt_hook)
 
+import json
+@server.PromptServer.instance.routes.post("/component/load")
+async def load_component(request):
+    post = await request.post()
+    filename = post.get("filename")
+    json_text = post.get("content")
+    workflow = json.loads(json_text)
+
+    component_name = os.path.basename(filename)[:-15]
+    new_created = component_loader.load_component(component_name, workflow, True)
+
+    result = {'node_name': component_name,
+              "already_loaded": not new_created}
+
+    return web.json_response(result, content_type='application/json')
+
 
 NODE_CLASS_MAPPINGS = {
 }

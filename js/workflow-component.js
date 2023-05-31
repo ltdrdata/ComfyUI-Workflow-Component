@@ -109,7 +109,62 @@ app.registerExtension({
 					}, 0);
 				};
 
+		const loadComponentButton = document.createElement("button");
+
+		const fileInput = $el("input", {
+			id: "comfy-file-input",
+			type: "file",
+			accept: ".component.json",
+			style: { display: "none" },
+			multiple: true,
+			parent: document.body,
+			onchange: () => {
+				var refreshFlag = false;
+				for(let i in fileInput.files) {
+					const target_file = fileInput.files[i];
+					const filename = target_file.name;
+					const reader = new FileReader();
+					reader.onload = async () => {
+						const body = new FormData();
+						body.append("filename", filename);
+						body.append("content", reader.result);
+
+						const resp = await fetch(`/component/load`, {
+											method: 'POST',
+											body: body,
+										});
+
+						const data = await resp.json();
+						console.log(data['node_name']);
+
+						if(!data['already_loaded']) {
+	//						const uri = encodeURIComponent(`## ${data['node_name']}`)
+	//						const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
+	//						const def = await node_info.json();
+							refreshFlag = true;
+						}
+
+						if (i == fileInput.files.length - 1 && refreshFlag) {
+							const result = confirm("To use the new component, you need to refresh the page. Would you like to proceed with the refresh?");
+							if(result) {
+								location.reload();
+							}
+						}
+					};
+
+					reader.readAsText(target_file);
+				}
+			},
+		});
+
+		loadComponentButton.textContent = "Load Component";
+		loadComponentButton.onclick = () => {
+				fileInput.value = '';
+				fileInput.click();
+			}
+
 		menu.append(saveComponentButton);
+		menu.append(loadComponentButton);
 	},
 	registerCustomNodes() {
 		class ComponentOutputNode {
