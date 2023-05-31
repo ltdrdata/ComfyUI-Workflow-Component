@@ -24,13 +24,18 @@ There is a high possibility that the existing components created may not be comp
 ![component-use](misc/component-use.png)
 
 
+# Requirements
+* Dynamic component loading relies on this PR
+  * https://github.com/comfyanonymous/ComfyUI/pull/716
+
+
 ## Todo
 - [x] Default interface name
 - [x] Support of refresh combo (ex. ckpt, images, lora, ...)
+- [x] Hot loading
+- [ ] used components must be included into workflow
 - [ ] Efficient traversal
 - [ ] Better internal error message
-- [ ] used components must be included into workflow
-- [ ] Hot loading
 - [ ] Report missing nodes in components when component is loaded
 
 ## Credit
