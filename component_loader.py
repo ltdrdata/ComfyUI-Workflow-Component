@@ -203,6 +203,8 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
     if len(component_inputs) > 0:
         input_links = component_inputs[0]['links']
 
+        used_labels = set()
+
         if input_links is None:
             # hide unconnected input
             pass
@@ -221,7 +223,15 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                         input_value = (input_type,)
 
                     if input_label is None:
-                        input_label = component_inputs[0].get('label', f"{input_type}_{i}")
+                        if input_slot is not None:
+                            input_label = component_inputs[0].get('label', input_slot)
+                        else:
+                            input_label = component_inputs[0].get('label', input_type)
+
+                        if input_label in used_labels:
+                            input_label = f"{input_label}_{i}"
+
+                        used_labels.add(input_label)
 
                     input_mapping[input_label] = node
 
