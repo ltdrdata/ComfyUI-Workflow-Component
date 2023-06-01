@@ -209,7 +209,8 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
             # hide unconnected input
             pass
         else:
-            for input_link in input_links:
+            if len(input_links) > 0:
+                input_link = input_links[0]  # we need only 1 link for a slot
                 if input_link in node_config_map:
                     input_type, node_config, node_type, input_slot = node_config_map[input_link]
 

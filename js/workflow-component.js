@@ -1,6 +1,7 @@
 import { app } from "/scripts/app.js";
 import { $el } from "/scripts/ui.js";
 import { api } from "/scripts/api.js";
+import { getPngMetadata, importA1111, getLatentMetadata } from "/scripts/pnginfo.js";
 
 class ProgressBadge {
 	constructor() {
@@ -83,6 +84,138 @@ async function loadComponentWorkflows() {
     Object.assign(app.loaded_components, components);
 }
 
+async function loadComponent(filename, workflow_obj) {
+	var workflow_str = null;
+	var workflow_json = null;
+	if(typeof workflow_obj == "string") {
+		workflow_str = workflow_obj;
+	}
+	else {
+		workflow_json = workflow_obj;
+		workflow_str = JSON.stringify(workflow_json);
+	}
+
+	const body = new FormData();
+	body.append("filename", filename);
+	body.append("content", workflow_str);
+
+	const resp = await fetch(`/component/load`, {
+						method: 'POST',
+						body: body,
+					});
+
+	const data = await resp.json();
+
+    const component_name = data['node_name'];
+    const component_type = `## ${component_name}`;
+	if(!data['already_loaded']) {
+		const uri = encodeURIComponent(component_type);
+		const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
+		const def = await node_info.json();
+
+		await app.registerNodesFromDefs.call(app, def);
+	}
+
+	// loaded_components might be incomplete after frontend refresh
+	if(!app.loaded_components[component_name]) {
+		if(!workflow_json) {
+			workflow_json = JSON.parse(workflow_str)
+		}
+		app.loaded_components[component_name] = workflow_json;
+	}
+
+	// add node
+    var node = LiteGraph.createNode(component_type);
+    if (node) {
+		//paste in last known mouse position
+        node.pos[0] += app.canvas.graph_mouse[0] - node.size[0]/2;
+        node.pos[1] += app.canvas.graph_mouse[1] - node.size[1]/2;
+
+        app.canvas.graph.add(node,{doProcessChange:false});
+    }
+}
+
+async function loadWorkflowFull(workflow_obj) {
+	var workflow_json = null;
+
+	if(typeof workflow_obj == "string") {
+		workflow_json = JSON.parse(workflow_obj);
+	}
+	else {
+		workflow_json = workflow_obj;
+	}
+
+	if(workflow_json.components) {
+		for(let key in workflow_json.components) {
+			await loadComponent(`${key}.component.json`, workflow_json.components[key]);
+		}
+	}
+
+	app.loadGraphData(workflow_json);
+}
+
+const componentLoadMode = app.ui.settings.addSetting({
+	id: "Comfy.ComponentLoadMode",
+	name: "Require confirmation for the component edit mode when loading a .component.json file.",
+	type: "boolean",
+	defaultValue: false,
+});
+
+async function handleFileForFull(file) {
+	const load_json_normal_from_file = () => {
+		const reader = new FileReader();
+		reader.onload = async () => {
+			const workflow = JSON.parse(reader.result);
+
+			loadWorkflowFull(workflow);
+		};
+		reader.readAsText(file);
+	};
+
+	const load_as_component_from_file = () => {
+		const filename = file.name;
+		const reader = new FileReader();
+		reader.onloadend = async () => {
+			await loadComponent(filename, reader.result);
+		};
+
+		reader.readAsText(file);
+	};
+
+	if (file.type === "image/png") {
+		const pngInfo = await getPngMetadata(file);
+		if (pngInfo) {
+			if (pngInfo.workflow) {
+				loadWorkflowFull(pngInfo.workflow);
+			} else if (pngInfo.parameters) {
+				importA1111(this.graph, pngInfo.parameters);
+			}
+		}
+	} else if (file.name?.endsWith(".component.json")) {
+		var result = false;
+
+		if(componentLoadMode.value) {
+			result = confirm("Will you load as component edit mode?");
+		}
+
+		if (result) {
+			load_json_normal_from_file();
+		} else {
+			load_as_component_from_file();
+		}
+
+	} else if (file.type === "application/json" || file.name?.endsWith(".json")) {
+		load_json_normal_from_file();
+	} else if (file.name?.endsWith(".latent")) {
+		const info = await getLatentMetadata(file);
+		if (info.workflow) {
+			loadWorkflowFull(info.workflow);
+		}
+	}
+}
+
+app.handleFile = handleFileForFull;
+
 app.registerExtension({
 	name: "Comfy.WorkflowComponent",
 
@@ -94,53 +227,53 @@ app.registerExtension({
 		const saveFullButton = document.createElement("button");
 		saveFullButton.textContent = "Save Full";
 		saveFullButton.onclick = async () => {
-					let filename = "workflow.json";
+				let filename = "workflow.json";
 
-					filename = prompt("Save workflow as:", filename);
-					if (!filename) return;
-					if (!filename.toLowerCase().endsWith(".json")) {
-						filename += ".json";
-					}
+				filename = prompt("Save workflow as:", filename);
+				if (!filename) return;
+				if (!filename.toLowerCase().endsWith(".json")) {
+					filename += ".json";
+				}
 
-					const p = await app.graphToPrompt();
+				const p = await app.graphToPrompt();
 
-                    if(!app.loaded_components)
-                        app.loaded_components = {};
+                if(!app.loaded_components)
+                    app.loaded_components = {};
 
-                    // inject used components into workflow
-                    let used_node_types = new Set();
-                    for(let i in p.workflow.nodes) {
-                        if(p.workflow.nodes[i].type.startsWith('## '))
-                            used_node_types.add(p.workflow.nodes[i].type.slice(3));
-                    }
+                // inject used components into workflow
+                let used_node_types = new Set();
+                for(let i in p.workflow.nodes) {
+                    if(p.workflow.nodes[i].type.startsWith('## '))
+                        used_node_types.add(p.workflow.nodes[i].type.slice(3));
+                }
 
-                    const used_component_keys = Object.keys(app.loaded_components).filter(key => used_node_types.has(key));
+                const used_component_keys = Object.keys(app.loaded_components).filter(key => used_node_types.has(key));
 
-                    p.workflow.components = {};
-                    used_component_keys.forEach(key => {
-                      p.workflow.components[key] = app.loaded_components[key];
-                    });
+                p.workflow.components = {};
+                used_component_keys.forEach(key => {
+                  p.workflow.components[key] = app.loaded_components[key];
+                });
 
-                    // save
-					const json = JSON.stringify(p.workflow, null, 2); // convert the data to a JSON string
-					const blob = new Blob([json], { type: "application/json" });
-					const url = URL.createObjectURL(blob);
-					const a = $el("a", {
-						href: url,
-						download: filename,
-						style: { display: "none" },
-						parent: document.body,
-					});
-					a.click();
-					setTimeout(function () {
-						a.remove();
-						window.URL.revokeObjectURL(url);
-					}, 0);
-				};
+                // save
+				const json = JSON.stringify(p.workflow, null, 2); // convert the data to a JSON string
+				const blob = new Blob([json], { type: "application/json" });
+				const url = URL.createObjectURL(blob);
+				const a = $el("a", {
+					href: url,
+					download: filename,
+					style: { display: "none" },
+					parent: document.body,
+				});
+				a.click();
+				setTimeout(function () {
+					a.remove();
+					window.URL.revokeObjectURL(url);
+				}, 0);
+			};
 
 
 		const saveComponentButton = document.createElement("button");
-		saveComponentButton.textContent = "Save As Component";
+		saveComponentButton.textContent = "Export As Component";
 		saveComponentButton.onclick = async () => {
 					let filename = "workflow.component.json";
 
@@ -169,63 +302,8 @@ app.registerExtension({
 					}, 0);
 				};
 
-		const loadComponentButton = document.createElement("button");
-
-		const fileInput = $el("input", {
-			id: "comfy-file-input",
-			type: "file",
-			accept: ".component.json",
-			style: { display: "none" },
-			multiple: true,
-			parent: document.body,
-			onchange: () => {
-                const fileList = Array.from(fileInput.files);
-
-				for(let i in fileList) {
-					const target_file = fileList[i];
-					const filename = target_file.name;
-					const reader = new FileReader();
-					reader.onloadend = async () => {
-						const body = new FormData();
-						body.append("filename", filename);
-						body.append("content", reader.result);
-
-						const resp = await fetch(`/component/load`, {
-											method: 'POST',
-											body: body,
-										});
-
-						const data = await resp.json();
-
-                        const component_name = data['node_name'];
-						if(!data['already_loaded']) {
-							const uri = encodeURIComponent(`## ${component_name}`)
-							const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
-							const def = await node_info.json();
-
-							app.registerNodesFromDefs.call(app, def);
-						}
-
-						// loaded_components might be incomplete after frontend refresh
-						if(!app.loaded_components[component_name]) {
-							app.loaded_components[component_name] = JSON.parse(reader.result);
-						}
-					};
-
-					reader.readAsText(target_file);
-				}
-			},
-		});
-
-		loadComponentButton.textContent = "Load Component";
-		loadComponentButton.onclick = () => {
-				fileInput.value = '';
-				fileInput.click();
-			}
-
 		menu.append(saveFullButton);
 		menu.append(saveComponentButton);
-		menu.append(loadComponentButton);
 	},
 	registerCustomNodes() {
 		class ComponentOutputNode {

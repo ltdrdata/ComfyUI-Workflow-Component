@@ -1,213 +1,67 @@
 {
-  "last_node_id": 7,
-  "last_link_id": 9,
+  "last_node_id": 3,
+  "last_link_id": 2,
   "nodes": [
     {
-      "id": 2,
-      "type": "FromBasicPipe",
-      "pos": [
-        490,
-        100
-      ],
-      "size": {
-        "0": 241.79998779296875,
-        "1": 106
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
-          "link": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "links": [
-            3
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "links": null,
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "links": [
-            8
-          ],
-          "shape": 3,
-          "slot_index": 2
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "links": [
-            4
-          ],
-          "shape": 3,
-          "slot_index": 3
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "links": [
-            5
-          ],
-          "shape": 3,
-          "slot_index": 4
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "FromBasicPipe"
-      }
-    },
-    {
       "id": 1,
-      "type": "## make_basic_pipe",
+      "type": "## bridge",
       "pos": [
-        50,
-        90
-      ],
-      "size": {
-        "0": 400,
-        "1": 200
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "vae_opt",
-          "type": "VAE",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "BASIC_PIPE",
-          "type": "BASIC_PIPE",
-          "links": [
-            1
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "## make_basic_pipe"
-      },
-      "widgets_values": [
-        "V07_v07.safetensors",
-        "photorealistic:1.4, best quality:1.4, 1girl, 24 years old, Riding a bike through the city.",
-        "embedding:EasyNegative, (worst quality, low quality:1.3), (nsfw)"
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 5,
-      "type": "EmptyLatentImage",
-      "pos": [
-        490,
-        280
-      ],
-      "size": [
-        239.2075592041017,
-        106
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            6
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "EmptyLatentImage"
-      },
-      "widgets_values": [
-        640,
-        960,
-        1
-      ]
-    },
-    {
-      "id": 6,
-      "type": "VAEDecode",
-      "pos": [
-        1180,
-        120
+        410,
+        110
       ],
       "size": {
         "0": 210,
-        "1": 46
+        "1": 26
       },
       "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 7
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 8
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            9
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAEDecode"
-      }
-    },
-    {
-      "id": 7,
-      "type": "PreviewImage",
-      "pos": [
-        50,
-        380
-      ],
-      "size": [
-        400.4217926025391,
-        557.030623626709
-      ],
-      "flags": {},
-      "order": 5,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 9
+          "link": 1,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            2
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "## bridge"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        690,
+        120
+      ],
+      "size": [
+        210,
+        246
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
         }
       ],
       "properties": {
@@ -215,129 +69,58 @@
       }
     },
     {
-      "id": 4,
-      "type": "KSampler",
+      "id": 2,
+      "type": "LoadImage",
       "pos": [
-        810,
-        120
+        50,
+        110
       ],
-      "size": {
-        "0": 315,
-        "1": 262
-      },
+      "size": [
+        315,
+        314
+      ],
       "flags": {},
-      "order": 3,
+      "order": 0,
       "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 3
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 4
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 5
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 6,
-          "slot_index": 3
-        }
-      ],
       "outputs": [
         {
-          "name": "LATENT",
-          "type": "LATENT",
+          "name": "IMAGE",
+          "type": "IMAGE",
           "links": [
-            7
+            1
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "KSampler"
+        "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
-        388605271779623,
-        "fixed",
-        20,
-        8,
-        "euler",
-        "normal",
-        1
+        "4da93e90-56d3-4a34-bf38-91dc282249e3.png",
+        "image"
       ]
     }
   ],
   "links": [
     [
       1,
+      2,
+      0,
       1,
       0,
-      2,
-      0,
-      "BASIC_PIPE"
+      "IMAGE"
     ],
     [
-      3,
       2,
-      0,
-      4,
-      0,
-      "MODEL"
-    ],
-    [
-      4,
-      2,
-      3,
-      4,
       1,
-      "CONDITIONING"
-    ],
-    [
-      5,
-      2,
-      4,
-      4,
-      2,
-      "CONDITIONING"
-    ],
-    [
-      6,
-      5,
       0,
-      4,
       3,
-      "LATENT"
-    ],
-    [
-      7,
-      4,
-      0,
-      6,
-      0,
-      "LATENT"
-    ],
-    [
-      8,
-      2,
-      2,
-      6,
-      1,
-      "VAE"
-    ],
-    [
-      9,
-      6,
-      0,
-      7,
       0,
       "IMAGE"
     ]
@@ -345,5 +128,222 @@
   "groups": [],
   "config": {},
   "extra": {},
-  "version": 0.4
+  "version": 0.4,
+  "components": {
+    "bridge": {
+      "last_node_id": 32,
+      "last_link_id": 37,
+      "nodes": [
+        {
+          "id": 29,
+          "type": "PreviewBridge",
+          "pos": [
+            820,
+            150
+          ],
+          "size": {
+            "0": 315,
+            "1": 78
+          },
+          "flags": {},
+          "order": 2,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "images",
+              "type": "IMAGE",
+              "link": 34
+            }
+          ],
+          "outputs": [
+            {
+              "name": "IMAGE",
+              "type": "IMAGE",
+              "links": [
+                36
+              ],
+              "shape": 3,
+              "slot_index": 0
+            },
+            {
+              "name": "MASK",
+              "type": "MASK",
+              "links": null,
+              "shape": 3
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "PreviewBridge"
+          },
+          "widgets_values": [
+            "#placeholder"
+          ]
+        },
+        {
+          "id": 27,
+          "type": "PreviewBridge",
+          "pos": [
+            360,
+            150
+          ],
+          "size": {
+            "0": 315,
+            "1": 78
+          },
+          "flags": {},
+          "order": 1,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "images",
+              "type": "IMAGE",
+              "link": 37,
+              "slot_index": 0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "IMAGE",
+              "type": "IMAGE",
+              "links": [
+                34
+              ],
+              "shape": 3,
+              "slot_index": 0
+            },
+            {
+              "name": "MASK",
+              "type": "MASK",
+              "links": null,
+              "shape": 3
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "PreviewBridge"
+          },
+          "widgets_values": [
+            "#placeholder"
+          ]
+        },
+        {
+          "id": 31,
+          "type": "ComponentOutput",
+          "pos": [
+            1230,
+            160
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 3,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "rename after connect",
+              "type": "*",
+              "link": 36,
+              "label": "image"
+            }
+          ],
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 32,
+          "type": "ComponentInput",
+          "pos": [
+            50,
+            150
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 0,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "rename after connect",
+              "type": "*",
+              "links": [
+                37
+              ],
+              "slot_index": 0,
+              "label": "images"
+            }
+          ],
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        }
+      ],
+      "links": [
+        [
+          34,
+          27,
+          0,
+          29,
+          0,
+          "IMAGE"
+        ],
+        [
+          36,
+          29,
+          0,
+          31,
+          0,
+          "*"
+        ],
+        [
+          37,
+          32,
+          0,
+          27,
+          0,
+          "IMAGE"
+        ]
+      ],
+      "groups": [],
+      "config": {},
+      "extra": {},
+      "version": 0.4,
+      "output": {
+        "27": {
+          "inputs": {
+            "image": "#placeholder",
+            "images": [
+              "32",
+              0
+            ]
+          },
+          "class_type": "PreviewBridge"
+        },
+        "29": {
+          "inputs": {
+            "image": "#placeholder",
+            "images": [
+              "27",
+              0
+            ]
+          },
+          "class_type": "PreviewBridge"
+        },
+        "31": {
+          "inputs": {
+            "rename after connect": [
+              "29",
+              0
+            ]
+          }
+        },
+        "32": {
+          "inputs": {}
+        }
+      }
+    }
+  }
 }
