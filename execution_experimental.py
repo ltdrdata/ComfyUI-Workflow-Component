@@ -145,10 +145,17 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
 
 def worklist_will_execute(prompt, outputs, current_item):
     worklist = [current_item]
+    visited = set()
+
     will_execute = []
 
     while worklist:
         unique_id = str(worklist.pop())
+
+        if unique_id in visited:  # to avoid infinite loop and redundant processing
+            continue
+        else:
+            visited.add(unique_id)
 
         inputs = prompt[unique_id]['inputs']
 
