@@ -179,6 +179,9 @@ def build_output_types(i, node, node_config_map, output_mapping, return_names, r
                     output_label = output.get('label', f"{output_type}_{i}")
                     break
 
+                if output_label is None:
+                    output_label = output_type
+
                 if output_type:
                     output_mapping[output_label] = (i, node)
                     return_types.append(output_type)

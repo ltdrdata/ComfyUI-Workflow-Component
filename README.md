@@ -12,7 +12,7 @@ There is a high possibility that the existing components created may not be comp
 
 ![component-menu](misc/menu.png)
 
-* Once all the component workflows have been created, you can save them through the "SaveAsComponent" option in the menu. The file extension will be .component.json.
+* Once all the component workflows have been created, you can save them through the "Export As Component" option in the menu. The file extension will be .component.json.
 
 
 ## How To Use Component
@@ -23,11 +23,18 @@ There is a high possibility that the existing components created may not be comp
 
 ![component-use](misc/component-use.png)
 
+* When you load a .component.json file or load a workflow created with .component.json, the component is automatically loaded.
+  * Currently, the generated PNG file does not include component information. 
+
+
+## How To Edit Component
+![settings](misc/settings.png)
+
+* If the  ```Require confirmation for the component edit mode when loading a .component.json file.``` checkbox is unchecked, the .component.json file will always be loaded in the usage mode when loaded. To enable editing, please check the corresponding checkbox and click "OK" in the edit mode confirmation window to proceed.
+
 
 # Requirements
-* Dynamic component loading relies on this PR
-  * https://github.com/comfyanonymous/ComfyUI/pull/716
-
+* 
 
 ## Todo
 - [x] Default interface name
@@ -38,9 +45,10 @@ There is a high possibility that the existing components created may not be comp
   - [x] Load .json
   - [ ] Save .png/.latent
   - [x] Load .png/.latent
-- [ ] Efficient traversal
+- [x] Efficient traversal
 - [ ] Better internal error message
 - [ ] Report missing nodes in components when component is loaded
+- [ ] Image Upload Widget
 
 ## Credit
 

@@ -15,6 +15,15 @@ from execution import get_input_data, get_output_data, map_node_over_list, forma
 from queue import Queue
 
 
+DEBUG_FLAG = True
+
+
+def print_dbg(x):
+    if DEBUG_FLAG:
+        print(f"[DBG] {x()}")
+
+
+# To handling virtual node
 class DummyNode:
     @classmethod
     def INPUT_TYPES(s):
@@ -32,7 +41,89 @@ class DummyNode:
             pass
 
 
-def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_id, outputs_ui):
+def exception_helper(unique_id, input_data_all, executed, outputs, task):
+    try:
+        task()
+        return None
+    except comfy.model_management.InterruptProcessingException as iex:
+        print("Processing interrupted")
+
+        # skip formatting inputs/outputs
+        error_details = {
+            "node_id": unique_id,
+        }
+
+        return executed, False, error_details, iex
+    except Exception as ex:
+        typ, _, tb = sys.exc_info()
+        exception_type = full_type_name(typ)
+        input_data_formatted = {}
+        if input_data_all is not None:
+            input_data_formatted = {}
+            for name, inputs in input_data_all.items():
+                input_data_formatted[name] = [format_value(x) for x in inputs]
+
+        output_data_formatted = {}
+        for node_id, node_outputs in outputs.items():
+            output_data_formatted[node_id] = [[format_value(x) for x in l] for l in node_outputs]
+
+        print("!!! Exception during processing !!!")
+        print(traceback.format_exc())
+
+        error_details = {
+            "node_id": unique_id,
+            "exception_message": str(ex),
+            "exception_type": exception_type,
+            "traceback": traceback.format_tb(tb),
+            "current_inputs": input_data_formatted,
+            "current_outputs": output_data_formatted
+        }
+        return executed, False, error_details, ex
+
+
+def is_incomplete_input_slots(class_def, inputs, outputs):
+    required_inputs = set(class_def.INPUT_TYPES().get("required", []))
+
+    if len(required_inputs - inputs.keys()) > 0:
+        return True
+
+    for x in inputs:
+        input_data = inputs[x]
+
+        if isinstance(input_data, list):
+            input_unique_id = input_data[0]
+            if input_unique_id not in outputs:
+                return True
+
+    return False
+
+
+def get_class_def(prompt, unique_id):
+    if 'class_type' not in prompt[unique_id]:
+        class_def = DummyNode
+    else:
+        class_type = prompt[unique_id]['class_type']
+        class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
+
+    return class_def
+
+
+def get_next_nodes_map(prompt):
+    next_nodes = {}
+    for key, value in prompt.items():
+        inputs = value['inputs']
+
+        for input_data in inputs.values():
+            if isinstance(input_data, list):
+                input_unique_id = input_data[0]
+                if input_unique_id in next_nodes:
+                    next_nodes[input_unique_id].add(key)
+                else:
+                    next_nodes[input_unique_id] = {key}
+    return next_nodes
+
+
+def worklist_execute(server, prompt, outputs, extra_data, prompt_id, outputs_ui, to_execute, next_nodes):
     worklist = Queue()
     executed = set()
     will_execute = {}
@@ -56,48 +147,55 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
         total = len(executed)+len(will_execute.keys())
         return len(executed)/total
 
-    add_work(current_item)
-
-    while not worklist.empty():
-        unique_id = get_work()
-
-        if unique_id in executed:
-            continue
-
+    # init seeds: the nodes that have their output not erased in the input slot are the seeds.
+    for unique_id in to_execute:
         inputs = prompt[unique_id]['inputs']
-        if 'class_type' not in prompt[unique_id]:
-            class_def = DummyNode
-        else:
-            class_type = prompt[unique_id]['class_type']
-            class_def = nodes.NODE_CLASS_MAPPINGS[class_type]
+        class_def = get_class_def(prompt, unique_id)
 
         if unique_id in outputs:
             continue
 
-        for x in inputs:
-            input_data = inputs[x]
-
-            if isinstance(input_data, list):
-                input_unique_id = input_data[0]
-                output_index = input_data[1]
-                if input_unique_id not in outputs:
-                    if input_unique_id not in executed:
-                        add_work(input_unique_id)
+        if is_incomplete_input_slots(class_def, inputs, outputs):
+            continue
 
         input_data_all = None
-        try:
+
+        def task():
+            nonlocal input_data_all
             input_data_all = get_input_data(inputs, class_def, unique_id, outputs, prompt, extra_data)
 
             if input_data_all is None:
-                add_work(unique_id)
-                continue
+                return
+
+            if not is_incomplete_input_slots(class_def, prompt[unique_id]['inputs'], outputs):
+                add_work(unique_id)  # add to seed if all input is properly provided
+
+        result = exception_helper(unique_id, input_data_all, executed, outputs, task)
+        if result is not None:
+            return result  # error state
+
+    while not worklist.empty():
+        unique_id = get_work()
+
+        inputs = prompt[unique_id]['inputs']
+        class_def = get_class_def(prompt, unique_id)
+
+        print_dbg(lambda: f"work: {unique_id} ({class_def.__name__}) / worklist: {list(worklist.queue)}")
+
+        input_data_all = None
+
+        def task():
+            nonlocal input_data_all
+            input_data_all = get_input_data(inputs, class_def, unique_id, outputs, prompt, extra_data)
 
             if server.client_id is not None:
                 server.last_node_id = unique_id
-                server.send_sync("executing", {"node": unique_id, "prompt_id": prompt_id, "progress": get_progress()}, server.client_id)
+                server.send_sync("executing", {"node": unique_id, "prompt_id": prompt_id, "progress": get_progress()},
+                                 server.client_id)
             obj = class_def()
 
             output_data, output_ui = get_output_data(obj, input_data_all)
+
             outputs[unique_id] = output_data
             if len(output_ui) > 0:
                 outputs_ui[unique_id] = output_ui
@@ -105,46 +203,26 @@ def worklist_execute(server, prompt, outputs, current_item, extra_data, prompt_i
                     server.send_sync("executed", {"node": unique_id, "output": output_ui, "prompt_id": prompt_id},
                                      server.client_id)
             executed.add(unique_id)
-        except comfy.model_management.InterruptProcessingException as iex:
-            print("Processing interrupted")
 
-            # skip formatting inputs/outputs
-            error_details = {
-                "node_id": unique_id,
-            }
+        result = exception_helper(unique_id, input_data_all, executed, outputs, task)
+        if result is not None:
+            return result  # error state
+        else:
+            if unique_id in next_nodes:
 
-            return executed, False, error_details, iex
-        except Exception as ex:
-            typ, _, tb = sys.exc_info()
-            exception_type = full_type_name(typ)
-            input_data_formatted = {}
-            if input_data_all is not None:
-                input_data_formatted = {}
-                for name, inputs in input_data_all.items():
-                    input_data_formatted[name] = [format_value(x) for x in inputs]
-
-            output_data_formatted = {}
-            for node_id, node_outputs in outputs.items():
-                output_data_formatted[node_id] = [[format_value(x) for x in l] for l in node_outputs]
-
-            print("!!! Exception during processing !!!")
-            print(traceback.format_exc())
-
-            error_details = {
-                "node_id": unique_id,
-                "exception_message": str(ex),
-                "exception_type": exception_type,
-                "traceback": traceback.format_tb(tb),
-                "current_inputs": input_data_formatted,
-                "current_outputs": output_data_formatted
-            }
-            return executed, False, error_details, ex
+                for next_node in next_nodes[unique_id]:
+                    if next_node in to_execute:
+                        # If all input slots are not completed, do not add to the work.
+                        # This prevents duplicate entries of the same work in the worklist.
+                        # For loop support, it is important to fire only once when the input slot is completed.
+                        next_class_def = get_class_def(prompt, next_node)
+                        if not is_incomplete_input_slots(next_class_def, prompt[next_node]['inputs'], outputs):
+                            add_work(next_node)
 
     return executed, True, None, None
 
 
-def worklist_will_execute(prompt, outputs, current_item):
-    worklist = [current_item]
+def worklist_will_execute(prompt, outputs, worklist):
     visited = set()
 
     will_execute = []
@@ -175,24 +253,11 @@ def worklist_will_execute(prompt, outputs, current_item):
     return will_execute
 
 
-def worklist_output_delete_if_changed(prompt, old_prompt, outputs):
+def worklist_output_delete_if_changed(prompt, old_prompt, outputs, next_nodes):
     worklist = []
     deleted = set()
 
-    # build forward map
-    nexts = {}
-    for key, value in prompt.items():
-        inputs = value['inputs']
-
-        for input_data in inputs.values():
-            if isinstance(input_data, list):
-                input_unique_id = input_data[0]
-                if input_unique_id in nexts:
-                    nexts[input_unique_id].append(key)
-                else:
-                    nexts[input_unique_id] = [key]
-
-    # set seeds
+    # init seeds
     for unique_id, value in prompt.items():
         inputs = value['inputs']
         if 'class_type' not in value:
@@ -254,7 +319,7 @@ def worklist_output_delete_if_changed(prompt, old_prompt, outputs):
             d = outputs.pop(unique_id)
             del d
 
-        new_works = nexts.get(unique_id, [])
+        new_works = next_nodes.get(unique_id, [])
         worklist.extend(new_works)
         deleted.add(unique_id)
 
@@ -323,10 +388,10 @@ class ExpPromptExecutor:
 
         execution_start_time = time.perf_counter()
         if self.server.client_id is not None:
-            self.server.send_sync("execution_start", { "prompt_id": prompt_id}, self.server.client_id)
+            self.server.send_sync("execution_start", {"prompt_id": prompt_id}, self.server.client_id)
 
         with torch.inference_mode():
-            #delete cached outputs if nodes don't exist for them
+            # delete cached outputs if nodes don't exist for them
             to_delete = []
             for o in self.outputs:
                 if o not in prompt:
@@ -335,7 +400,8 @@ class ExpPromptExecutor:
                 d = self.outputs.pop(o)
                 del d
 
-            worklist_output_delete_if_changed(prompt, self.old_prompt, self.outputs)
+            next_nodes = get_next_nodes_map(prompt)
+            worklist_output_delete_if_changed(prompt, self.old_prompt, self.outputs, next_nodes)
 
             current_outputs = set(self.outputs.keys())
             for x in list(self.outputs_ui.keys()):
@@ -344,32 +410,24 @@ class ExpPromptExecutor:
                     del d
 
             if self.server.client_id is not None:
-                self.server.send_sync("execution_cached", { "nodes": list(current_outputs) , "prompt_id": prompt_id}, self.server.client_id)
-            executed = set()
-            output_node_id = None
-            to_execute = []
+                self.server.send_sync("execution_cached", {"nodes": list(current_outputs), "prompt_id": prompt_id},
+                                      self.server.client_id)
 
-            for node_id in list(execute_outputs):
-                to_execute += [(0, node_id)]
+            to_execute = worklist_will_execute(prompt, self.outputs, execute_outputs)
 
-            while len(to_execute) > 0:
-                #always execute the output that depends on the least amount of unexecuted nodes first
-                to_execute = sorted(list(map(lambda a: (len(worklist_will_execute(prompt, self.outputs, a[-1])), a[-1]), to_execute)))
-                output_node_id = to_execute.pop(0)[-1]
-
-                # This call shouldn't raise anything if there's an error deep in
-                # the actual SD code, instead it will report the node where the
-                # error was raised
-                executed, success, error, ex = worklist_execute(self.server, prompt, self.outputs, output_node_id, extra_data, prompt_id, self.outputs_ui)
-                if success is not True:
-                    self.handle_execution_error(prompt_id, prompt, current_outputs, executed, error, ex)
-                    break
+            # This call shouldn't raise anything if there's an error deep in
+            # the actual SD code, instead it will report the node where the
+            # error was raised
+            executed, success, error, ex = worklist_execute(self.server, prompt, self.outputs, extra_data, prompt_id,
+                                                            self.outputs_ui, to_execute, next_nodes)
+            if success is not True:
+                self.handle_execution_error(prompt_id, prompt, current_outputs, executed, error, ex)
 
             for x in executed:
                 self.old_prompt[x] = copy.deepcopy(prompt[x])
             self.server.last_node_id = None
             if self.server.client_id is not None:
-                self.server.send_sync("executing", { "node": None, "prompt_id": prompt_id }, self.server.client_id)
+                self.server.send_sync("executing", {"node": None, "prompt_id": prompt_id}, self.server.client_id)
 
         print("Prompt executed in {:.2f} seconds".format(time.perf_counter() - execution_start_time))
         gc.collect()

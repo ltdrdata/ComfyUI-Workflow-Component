@@ -1,0 +1,352 @@
+{
+  "last_node_id": 9,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        430,
+        110
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "2pass-1pass.png,2pass-original (1).png,2pass-original.png,ComfyUI_00001_.latent.png,ComfyUI_00004_.latent.webp,ComfyUI_00005_.latent.webp,combination-original (1).png,combination-original.png,example.png,izone-final.jpeg,mask-original (1).png,mask-original.png,simple.png,small.png",
+          "link": 2,
+          "widget": {
+            "name": "image",
+            "config": [
+              [
+                "2pass-1pass.png",
+                "2pass-original (1).png",
+                "2pass-original.png",
+                "ComfyUI_00001_.latent.png",
+                "ComfyUI_00004_.latent.webp",
+                "ComfyUI_00005_.latent.webp",
+                "combination-original (1).png",
+                "combination-original.png",
+                "example.png",
+                "izone-final.jpeg",
+                "mask-original (1).png",
+                "mask-original.png",
+                "simple.png",
+                "small.png"
+              ]
+            ]
+          },
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "2pass-1pass.png",
+        "image"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "ComponentOutput",
+      "pos": [
+        1140,
+        110
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "link": 4,
+          "label": null
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 2,
+      "type": "VAEEncode",
+      "pos": [
+        820,
+        110
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 5,
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            4
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": "#FF9CF9"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "id": 3,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        110
+      ],
+      "size": [
+        180,
+        30
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "image",
+          "type": "2pass-1pass.png,2pass-original (1).png,2pass-original.png,ComfyUI_00001_.latent.png,ComfyUI_00004_.latent.webp,ComfyUI_00005_.latent.webp,combination-original (1).png,combination-original.png,example.png,izone-final.jpeg,mask-original (1).png,mask-original.png,simple.png,small.png",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 8,
+      "type": "FromBasicPipe",
+      "pos": [
+        430,
+        500
+      ],
+      "size": [
+        160,
+        110
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 6,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FromBasicPipe"
+      }
+    },
+    {
+      "id": 9,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        500
+      ],
+      "size": [
+        180,
+        30
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      3,
+      0,
+      1,
+      0,
+      "2pass-1pass.png,2pass-original (1).png,2pass-original.png,ComfyUI_00001_.latent.png,ComfyUI_00004_.latent.webp,ComfyUI_00005_.latent.webp,combination-original (1).png,combination-original.png,example.png,izone-final.jpeg,mask-original (1).png,mask-original.png,simple.png,small.png"
+    ],
+    [
+      4,
+      2,
+      0,
+      7,
+      0,
+      "*"
+    ],
+    [
+      5,
+      8,
+      2,
+      2,
+      1,
+      "VAE"
+    ],
+    [
+      6,
+      9,
+      0,
+      8,
+      0,
+      "BASIC_PIPE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "output": {
+    "1": {
+      "inputs": {
+        "image": [
+          "3",
+          0
+        ],
+        "choose file to upload": "image"
+      },
+      "class_type": "LoadImage"
+    },
+    "2": {
+      "inputs": {
+        "pixels": [
+          "1",
+          0
+        ],
+        "vae": [
+          "8",
+          2
+        ]
+      },
+      "class_type": "VAEEncode"
+    },
+    "3": {
+      "inputs": {}
+    },
+    "7": {
+      "inputs": {
+        "LATENT": [
+          "2",
+          0
+        ]
+      }
+    },
+    "8": {
+      "inputs": {
+        "basic_pipe": [
+          "9",
+          0
+        ]
+      },
+      "class_type": "FromBasicPipe"
+    },
+    "9": {
+      "inputs": {}
+    }
+  }
+}
