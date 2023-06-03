@@ -468,34 +468,6 @@
       }
     },
     {
-      "id": 45,
-      "type": "ComponentOutput",
-      "pos": [
-        2790,
-        760
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 17,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "BASIC_PIPE",
-          "type": "BASIC_PIPE",
-          "link": 71,
-          "label": null,
-          "slot_index": 0
-        }
-      ],
-      "title": "3.Component Output",
-      "properties": {},
-      "color": "#223",
-      "bgcolor": "#335"
-    },
-    {
       "id": 39,
       "type": "ComponentOutput",
       "pos": [
@@ -1094,6 +1066,34 @@
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
+    },
+    {
+      "id": 45,
+      "type": "ComponentOutput",
+      "pos": [
+        2790,
+        370
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "link": 71,
+          "label": null,
+          "slot_index": 0
+        }
+      ],
+      "title": "0.Component Output",
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
     }
   ],
   "links": [

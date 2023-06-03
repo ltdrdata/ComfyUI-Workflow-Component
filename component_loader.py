@@ -217,11 +217,15 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                 if input_link in node_config_map:
                     input_type, node_config, node_type, input_slot = node_config_map[input_link]
 
-                    input_label = None
+                    if 'label' in node['outputs'][0]:
+                        input_label = node['outputs'][0]['label']
+                    else:
+                        input_label = None
+
                     if node_type is not None and input_slot is not None:
                         node_input_types = comfy_nodes.NODE_CLASS_MAPPINGS[node_type].INPUT_TYPES()
                         input_value = flatten_INPUT_TYPES(node_input_types)[input_slot]
-                        if isinstance(input_value[0], list):
+                        if input_label is None and isinstance(input_value[0], list):
                             input_label = input_slot
                     else:
                         input_value = (input_type,)

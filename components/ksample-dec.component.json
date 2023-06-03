@@ -1,6 +1,6 @@
 {
-  "last_node_id": 25,
-  "last_link_id": 29,
+  "last_node_id": 26,
+  "last_link_id": 30,
   "nodes": [
     {
       "id": 4,
@@ -14,7 +14,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -48,8 +48,8 @@
       "id": 12,
       "type": "ComponentInput",
       "pos": [
-        30,
-        500
+        20,
+        600
       ],
       "size": {
         "0": 178,
@@ -68,7 +68,7 @@
           "slot_index": 0
         }
       ],
-      "title": "7.Component Input",
+      "title": "6.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -77,8 +77,8 @@
       "id": 13,
       "type": "ComponentInput",
       "pos": [
-        30,
-        590
+        20,
+        690
       ],
       "size": {
         "0": 178,
@@ -97,7 +97,7 @@
           "slot_index": 0
         }
       ],
-      "title": "8.Component Input",
+      "title": "7.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -106,8 +106,8 @@
       "id": 14,
       "type": "ComponentInput",
       "pos": [
-        30,
-        690
+        20,
+        790
       ],
       "size": {
         "0": 178,
@@ -126,7 +126,7 @@
           "slot_index": 0
         }
       ],
-      "title": "9.Component Input",
+      "title": "8.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -135,8 +135,8 @@
       "id": 15,
       "type": "ComponentInput",
       "pos": [
-        30,
-        780
+        20,
+        880
       ],
       "size": {
         "0": 178,
@@ -155,7 +155,7 @@
           "slot_index": 0
         }
       ],
-      "title": "10.Component Input",
+      "title": "9.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -164,8 +164,8 @@
       "id": 11,
       "type": "ComponentInput",
       "pos": [
-        30,
-        410
+        20,
+        510
       ],
       "size": {
         "0": 178,
@@ -184,7 +184,7 @@
           "slot_index": 0
         }
       ],
-      "title": "6.Component Input",
+      "title": "5.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -201,7 +201,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -211,35 +211,81 @@
           "label": null
         }
       ],
+      "title": "2.Component Output",
       "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
+      "color": "#223",
+      "bgcolor": "#335"
     },
     {
-      "id": 5,
-      "type": "ComponentOutput",
+      "id": 2,
+      "type": "FromBasicPipe",
       "pos": [
-        1640,
-        230
+        310,
+        190
       ],
       "size": {
-        "0": 178,
-        "1": 26
+        "0": 210,
+        "1": 110
       },
       "flags": {},
-      "order": 11,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "link": 7,
-          "label": null
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 8,
+          "slot_index": 0
         }
       ],
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            3
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "links": [],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "links": [
+            6
+          ],
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            29
+          ],
+          "shape": 3,
+          "slot_index": 3
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            24
+          ],
+          "shape": 3,
+          "slot_index": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FromBasicPipe"
+      }
     },
     {
       "id": 1,
@@ -253,7 +299,7 @@
         "1": 262
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -274,7 +320,7 @@
         {
           "name": "latent_image",
           "type": "LATENT",
-          "link": null,
+          "link": 30,
           "slot_index": 3
         },
         {
@@ -414,11 +460,11 @@
       ]
     },
     {
-      "id": 6,
+      "id": 26,
       "type": "ComponentInput",
       "pos": [
-        30,
-        220
+        20,
+        330
       ],
       "size": {
         "0": 178,
@@ -426,6 +472,63 @@
       },
       "flags": {},
       "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "links": [
+            30
+          ]
+        }
+      ],
+      "title": "2. Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 10,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        420
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "steps",
+          "type": "INT",
+          "links": [
+            12
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "4.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 6,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        220
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
@@ -442,104 +545,31 @@
       "bgcolor": "#533"
     },
     {
-      "id": 10,
-      "type": "ComponentInput",
+      "id": 5,
+      "type": "ComponentOutput",
       "pos": [
-        30,
-        320
+        1640,
+        230
       ],
       "size": {
         "0": 178,
         "1": 26
       },
       "flags": {},
-      "order": 6,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "*",
-          "type": null,
-          "links": [
-            12
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "5.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 2,
-      "type": "FromBasicPipe",
-      "pos": [
-        310,
-        190
-      ],
-      "size": {
-        "0": 210,
-        "1": 110
-      },
-      "flags": {},
-      "order": 7,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
-          "link": 8,
-          "slot_index": 0
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 7,
+          "label": null
         }
       ],
-      "outputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "links": [
-            3
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "links": [],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "links": [
-            6
-          ],
-          "shape": 3,
-          "slot_index": 2
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "links": [
-            29
-          ],
-          "shape": 3,
-          "slot_index": 3
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "links": [
-            24
-          ],
-          "shape": 3,
-          "slot_index": 4
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "FromBasicPipe"
-      }
+      "title": "1.Component Output",
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
     }
   ],
   "links": [
@@ -654,6 +684,14 @@
       1,
       1,
       "CONDITIONING"
+    ],
+    [
+      30,
+      26,
+      0,
+      1,
+      3,
+      "LATENT"
     ]
   ],
   "groups": [],
@@ -698,6 +736,10 @@
         "negative": [
           "2",
           4
+        ],
+        "latent_image": [
+          "26",
+          0
         ]
       },
       "class_type": "KSampler"
@@ -760,6 +802,9 @@
           0
         ]
       }
+    },
+    "26": {
+      "inputs": {}
     }
   }
 }
