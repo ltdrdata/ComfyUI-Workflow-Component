@@ -75,16 +75,18 @@ class ProgressBadge {
 }
 
 async function loadComponentWorkflows() {
-    if(!app.loaded_components) {
-        app.loaded_components = {};
-    }
+	if(!localStorage.getItem('loaded_components')) {
+		localStorage.setItem('loaded_components', '{}');
+	}
 
-    const res = await fetch(`component/get_workflows`, { cache: "no-store" });
-    const components = await res.json();
-    Object.assign(app.loaded_components, components);
+	const res = await fetch(`component/get_workflows`, { cache: "no-store" });
+	const components = await res.json();
+	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
+	Object.assign(loaded_components, components);
+	localStorage.setItem('loaded_components', JSON.stringify(loaded_components));
 }
 
-async function loadComponent(filename, workflow_obj) {
+async function loadComponent(filename, workflow_obj, add_node) {
 	var workflow_str = null;
 	var workflow_json = null;
 	if(typeof workflow_obj == "string") {
@@ -117,22 +119,26 @@ async function loadComponent(filename, workflow_obj) {
 	}
 
 	// loaded_components might be incomplete after frontend refresh
-	if(!app.loaded_components[component_name]) {
+	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
+	if(!loaded_components[component_name]) {
 		if(!workflow_json) {
 			workflow_json = JSON.parse(workflow_str)
 		}
-		app.loaded_components[component_name] = workflow_json;
+		loaded_components[component_name] = workflow_json;
+		localStorage.setItem("loaded_components", JSON.stringify(loaded_components));
 	}
 
-	// add node
-    var node = LiteGraph.createNode(component_type);
-    if (node) {
-		//paste in last known mouse position
-        node.pos[0] += app.canvas.graph_mouse[0] - node.size[0]/2;
-        node.pos[1] += app.canvas.graph_mouse[1] - node.size[1]/2;
+	if(add_node) {
+		// add node
+		var node = LiteGraph.createNode(component_type);
+		if (node) {
+			//paste in last known mouse position
+			node.pos[0] += app.canvas.graph_mouse[0] - node.size[0]/2;
+			node.pos[1] += app.canvas.graph_mouse[1] - node.size[1]/2;
 
-        app.canvas.graph.add(node,{doProcessChange:false});
-    }
+			app.canvas.graph.add(node,{doProcessChange:false});
+		}
+	}
 }
 
 async function loadWorkflowFull(workflow_obj) {
@@ -147,7 +153,7 @@ async function loadWorkflowFull(workflow_obj) {
 
 	if(workflow_json.components) {
 		for(let key in workflow_json.components) {
-			await loadComponent(`${key}.component.json`, workflow_json.components[key]);
+			await loadComponent(`${key}.component.json`, workflow_json.components[key], false);
 		}
 	}
 
@@ -176,7 +182,7 @@ async function handleFileForFull(file) {
 		const filename = file.name;
 		const reader = new FileReader();
 		reader.onloadend = async () => {
-			await loadComponent(filename, reader.result);
+			await loadComponent(filename, reader.result, true);
 		};
 
 		reader.readAsText(file);
@@ -224,17 +230,33 @@ async function queuePrompt_with_components(number, { output, workflow }) {
 			used_node_types.add(workflow.nodes[i].type.slice(3));
 	}
 
-	const used_component_keys = Object.keys(app.loaded_components).filter(key => used_node_types.has(key));
+	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
+	const used_component_keys = Object.keys(loaded_components).filter(key => used_node_types.has(key));
 
 	workflow.components = {};
 	used_component_keys.forEach(key => {
-		workflow.components[key] = app.loaded_components[key];
+		workflow.components[key] = loaded_components[key];
 	});
 
 	await original_queuePrompt.call(api, number, { output, workflow });
 }
 
 api.queuePrompt = queuePrompt_with_components;
+
+const original_registerNodes = app.registerNodes;
+
+async function registerNodes() {
+	original_registerNodes.call(app);
+
+	if(localStorage.getItem('loaded_components')) {
+		let components = JSON.parse(localStorage.getItem('loaded_components'));
+		for(let key in components) {
+			await loadComponent(`${key}.component.json`, components[key], false);
+		}
+	}
+}
+
+app.registerNodes = registerNodes;
 
 app.registerExtension({
 	name: "Comfy.WorkflowComponent",
@@ -257,8 +279,8 @@ app.registerExtension({
 
 				const p = await app.graphToPrompt();
 
-				if(!app.loaded_components)
-					app.loaded_components = {};
+				if(!localStorage.getItem('loaded_components'))
+					localStorage.setItem('loaded_components', "{}");
 
 				// inject used components into workflow
 				let used_node_types = new Set();
@@ -267,11 +289,12 @@ app.registerExtension({
 						used_node_types.add(p.workflow.nodes[i].type.slice(3));
 				}
 
-				const used_component_keys = Object.keys(app.loaded_components).filter(key => used_node_types.has(key));
+				let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
+				const used_component_keys = Object.keys(loaded_components).filter(key => used_node_types.has(key));
 
 				p.workflow.components = {};
 				used_component_keys.forEach(key => {
-					p.workflow.components[key] = app.loaded_components[key];
+					p.workflow.components[key] = loaded_components[key];
 				});
 
 				// save
