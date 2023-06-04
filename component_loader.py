@@ -6,7 +6,7 @@ import nodes as comfy_nodes
 directory = os.path.join(os.path.dirname(__file__), "components")
 
 NODE_CLASS_MAPPINGS = {}
-unresolved_custom_nodes = set()
+unresolved_map = {}
 workflow_components = {}
 
 
@@ -248,23 +248,33 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                     input_types[input_label] = input_value
 
 
-def update_unresolved_custom_node(workflow):
-    global unresolved_custom_nodes
+def update_unresolved_map(node_name, workflow):
+    global unresolved_map
 
     # add new unresolved
     for node in workflow['nodes']:
         if node['type'] not in comfy_nodes.NODE_CLASS_MAPPINGS and node['type'] not in ['ComponentInput', 'ComponentInputOptional', 'ComponentOutput']:
-            unresolved_custom_nodes.add(node['type'])
+            if node_name not in unresolved_map:
+                unresolved_map[node_name] = set()
+
+            unresolved_nodes = unresolved_map[node_name]
+            unresolved_nodes.add(node['type'])
 
 
-def update_resolved_custom_node():
-    global unresolved_custom_nodes
-    unresolved_custom_nodes -= set(comfy_nodes.NODE_CLASS_MAPPINGS)
+def resolve_unresolved_map():
+    global unresolved_map
+
+    fully_resolved = []
+    for node_name, unresolved_nodes in unresolved_map.items():
+        unresolved_nodes -= set(comfy_nodes.NODE_CLASS_MAPPINGS)
+        if len(unresolved_nodes) == 0:
+            fully_resolved.append(node_name)
+
+    for node_name in fully_resolved:
+        del unresolved_map[node_name]
 
 
 def load_component(component_name, workflow, direct_reflect=False):
-    global unresolved_custom_nodes
-
     node_name = f"## {component_name}"
 
     if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
@@ -275,7 +285,7 @@ def load_component(component_name, workflow, direct_reflect=False):
         else:
             NODE_CLASS_MAPPINGS[node_name] = obj
 
-        update_unresolved_custom_node(workflow)
+        update_unresolved_map(node_name, workflow)
 
         return True
     else:
@@ -296,7 +306,7 @@ def load_all():
                 workflow_components[component_name] = data
                 load_component(component_name, data)
 
-    update_resolved_custom_node()
+    resolve_unresolved_map()
 
 
 
