@@ -216,6 +216,26 @@ async function handleFileForFull(file) {
 
 app.handleFile = handleFileForFull;
 
+const original_queuePrompt = api.queuePrompt;
+async function queuePrompt_with_components(number, { output, workflow }) {
+	let used_node_types = new Set();
+	for(let i in workflow.nodes) {
+		if(workflow.nodes[i].type.startsWith('## '))
+			used_node_types.add(workflow.nodes[i].type.slice(3));
+	}
+
+	const used_component_keys = Object.keys(app.loaded_components).filter(key => used_node_types.has(key));
+
+	workflow.components = {};
+	used_component_keys.forEach(key => {
+		workflow.components[key] = app.loaded_components[key];
+	});
+
+	original_queuePrompt.call(api, number, { output, workflow });
+}
+
+api.queuePrompt = queuePrompt_with_components;
+
 app.registerExtension({
 	name: "Comfy.WorkflowComponent",
 

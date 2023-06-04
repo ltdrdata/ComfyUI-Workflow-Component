@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.10.3) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.11) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -73,6 +73,11 @@ async def original_post_prompt(request):
 @server.PromptServer.instance.routes.post("/prompt")
 async def prompt_hook(request):
     json_data = await request.json()
+
+    nodes = json_data['extra_data']['extra_pnginfo']['workflow']['nodes']
+    if any(node['type'] in ["ComponentInput", "ComponentOutput", "ComponentOptional"] for node in nodes):
+        msg = "<B>The Workflow Component being composed is not executable.</B><BR><BR>If ComponentInput, ComponentInputOptional, or ComponentOutput nodes are used, it is considered that the Component being composed is in progress."
+        return web.json_response({"error": {"message": msg}, "node_errors": {}}, status=400)
 
     if "prompt" in json_data:
         prompt = json_data["prompt"]

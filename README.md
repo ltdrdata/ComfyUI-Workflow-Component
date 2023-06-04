@@ -40,10 +40,10 @@ There is a high possibility that the existing components created may not be comp
 - [x] Default interface name
 - [x] Support of refresh combo (ex. ckpt, images, lora, ...)
 - [x] Hot loading
-- [ ] used components must be included into workflow
+- [x] used components must be included into workflow
   - [x] Save .json
   - [x] Load .json
-  - [ ] Save .png/.latent
+  - [x] Save .png/.latent
   - [x] Load .png/.latent
 - [x] Efficient traversal
 - [ ] Better internal error message

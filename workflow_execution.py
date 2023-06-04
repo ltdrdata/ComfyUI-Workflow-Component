@@ -71,10 +71,12 @@ def get_executor(component_name, internal_id_name_map, node_id):
 
 
 virtual_prompt_id = 0
-def get_virtual_prompt_id():
+
+
+def get_virtual_prompt_id(node_id):
     global virtual_prompt_id
     virtual_prompt_id += 1
-    return virtual_prompt_id
+    return f"wc-{node_id}-{virtual_prompt_id}"
 
 
 def execute(component_name, prompt, workflow, internal_id_name_map, optional_inputs, input_mapping, output_mapping,
@@ -123,7 +125,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
                 if input_unique_id in changed_inputs and key in pe.old_prompt:
                     del pe.old_prompt[key]
 
-    prompt_id = get_virtual_prompt_id()
+    prompt_id = get_virtual_prompt_id(node_id)
 
     execute_outputs = []
     for key in output_mapping:
