@@ -151,7 +151,14 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
         if pe.server.occurred_event[0] == "execution_interrupted":
             raise comfy.model_management.InterruptProcessingException()
         else:
-            raise Exception(pe.server.occurred_event[1])
+            err = pe.server.occurred_event[1]
+
+            traceback_msg = ""
+            for item in err['traceback']:
+                traceback_msg += f"&nbsp;&nbsp;&nbsp;{item}"
+
+            msg = f"\n------------------------\nComponent internal error on [{err['node_id']}]:{err['node_type']}\nError:{err['exception_message']}\nTraceback:\n{traceback_msg}\n------------------------\n"
+            raise Exception(msg)
 
     results = []
     for key in output_mapping:
