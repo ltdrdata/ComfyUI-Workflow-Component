@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.11) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.12) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -79,6 +79,11 @@ async def prompt_hook(request):
         msg = "<B>The Workflow Component being composed is not executable.</B><BR><BR>If ComponentInput, ComponentInputOptional, or ComponentOutput nodes are used, it is considered that the Component being composed is in progress."
         return web.json_response({"error": {"message": msg}, "node_errors": {}}, status=400)
 
+    component_loader.update_resolved_custom_node()
+    if len(component_loader.unresolved_custom_nodes) > 0:
+        msg = f"<B>Non-installed custom nodes are being used within the component.</B><BR><BR>{component_loader.unresolved_custom_nodes}"
+        return web.json_response({"error": {"message": msg}, "node_errors": {}}, status=400)
+
     if "prompt" in json_data:
         prompt = json_data["prompt"]
         workflow_execution.garbage_collect(prompt.keys())
@@ -87,6 +92,7 @@ async def prompt_hook(request):
 
 
 server.PromptServer.instance.app.router.add_post('/prompt', prompt_hook)
+
 
 import json
 @server.PromptServer.instance.routes.post("/component/load")
@@ -108,6 +114,12 @@ async def load_component(request):
 @server.PromptServer.instance.routes.get("/component/get_workflows")
 async def get_workflows(request):
     return web.json_response(component_loader.workflow_components, content_type='application/json')
+
+
+@server.PromptServer.instance.routes.get("/component/get_unresolved")
+async def get_unresolved(request):
+    component_loader.update_resolved_custom_node()
+    return web.json_response({'nodes': list(component_loader.unresolved_custom_nodes)}, content_type='application/json')
 
 
 NODE_CLASS_MAPPINGS = {

@@ -46,8 +46,9 @@ There is a high possibility that the existing components created may not be comp
   - [x] Load .png/.latent
 - [x] Efficient traversal
 - [ ] Better internal error message
-- [ ] Report missing nodes in components when component is loaded
+- [x] Report missing nodes in components when component is loaded
 - [ ] Image Upload Widget
+- [ ] Component nesting
 
 ## Credit
 

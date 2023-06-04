@@ -106,8 +106,8 @@ async function loadComponent(filename, workflow_obj) {
 
 	const data = await resp.json();
 
-    const component_name = data['node_name'];
-    const component_type = `## ${component_name}`;
+	const component_name = data['node_name'];
+	const component_type = `## ${component_name}`;
 	if(!data['already_loaded']) {
 		const uri = encodeURIComponent(component_type);
 		const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
@@ -231,7 +231,7 @@ async function queuePrompt_with_components(number, { output, workflow }) {
 		workflow.components[key] = app.loaded_components[key];
 	});
 
-	original_queuePrompt.call(api, number, { output, workflow });
+	await original_queuePrompt.call(api, number, { output, workflow });
 }
 
 api.queuePrompt = queuePrompt_with_components;

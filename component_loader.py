@@ -6,6 +6,8 @@ import nodes as comfy_nodes
 directory = os.path.join(os.path.dirname(__file__), "components")
 
 NODE_CLASS_MAPPINGS = {}
+unresolved_custom_nodes = set()
+workflow_components = {}
 
 
 class ComponentBase:
@@ -244,27 +246,40 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                     input_mapping[input_label] = node
 
                     input_types[input_label] = input_value
-                    # if node_config is not None:
-                    #     input_types[input_label] = tuple(node_config)
-                    # else:
-                    #     input_types[input_label] = (input_type,)
+
+
+def update_unresolved_custom_node(workflow):
+    global unresolved_custom_nodes
+
+    # add new unresolved
+    for node in workflow['nodes']:
+        if node['type'] not in comfy_nodes.NODE_CLASS_MAPPINGS and node['type'] not in ['ComponentInput', 'ComponentInputOptional', 'ComponentOutput']:
+            unresolved_custom_nodes.add(node['type'])
+
+
+def update_resolved_custom_node():
+    global unresolved_custom_nodes
+    unresolved_custom_nodes -= set(comfy_nodes.NODE_CLASS_MAPPINGS)
 
 
 def load_component(component_name, workflow, direct_reflect=False):
+    global unresolved_custom_nodes
+
     node_name = f"## {component_name}"
 
     if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
         obj = create_dynamic_class(component_name, workflow)
+
         if direct_reflect:
             comfy_nodes.NODE_CLASS_MAPPINGS[node_name] = obj
         else:
             NODE_CLASS_MAPPINGS[node_name] = obj
+
+        update_unresolved_custom_node(workflow)
+
         return True
     else:
         return False
-
-
-workflow_components = {}
 
 
 def load_all():
@@ -280,3 +295,8 @@ def load_all():
                 data = json.load(file)
                 workflow_components[component_name] = data
                 load_component(component_name, data)
+
+    update_resolved_custom_node()
+
+
+
