@@ -24,7 +24,6 @@ There is a high possibility that the existing components created may not be comp
 ![component-use](misc/component-use.png)
 
 * When you load a .component.json file or load a workflow created with .component.json, the component is automatically loaded.
-  * Currently, the generated PNG file does not include component information. 
 
 
 ## How To Edit Component
