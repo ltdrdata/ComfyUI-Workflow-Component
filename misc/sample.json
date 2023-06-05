@@ -1,0 +1,314 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 13,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        1320,
+        90
+      ],
+      "size": {
+        "0": 550,
+        "1": 830
+      },
+      "flags": {
+        "collapsed": false
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 6,
+      "type": "PreviewImage",
+      "pos": [
+        1900,
+        90
+      ],
+      "size": {
+        "0": 520,
+        "1": 830
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 2,
+      "type": "## make-basic_pipe",
+      "pos": [
+        30,
+        350
+      ],
+      "size": {
+        "0": 496.9268798828125,
+        "1": 294.0109558105469
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae_opt",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "links": [
+            1,
+            12
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "## make-basic_pipe"
+      },
+      "widgets_values": [
+        "V07_v07.safetensors",
+        "(photorealistic:1.4), (8k), (best quality), (masterpiece), (realistic), (intricate details), ultra-detailed, 1girl, detailed face, (ultra realistic body details), extremely detailed, Wide pelvis, narrow waist, (ultra short pixie hair cut), ((sky blue+pink hair)), ((pencil skirt)), ((full body)), ((shirt)), (small breast), (looking side), (profile), (narrow forehead, slightly mouth open, open eyes upward, tilt head back), kneel down, ocean view, cafe",
+        "embedding:easynegative, embedding:ng_deepnegative_v1_75t, childish, (worst quality:1.4, low quality:1.4), logo, watermark, text, embedding:bad-hands-5, legs out of picture, tatto, AuroraNegative, multiple view, KHFB, embedding:negative_hand-neg, ((nipple)), ((nsfw)), ((stand)), ((pencil)), (2girl), ((nude))"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "## edit-lora-clips-basic_pipe",
+      "pos": [
+        600,
+        740
+      ],
+      "size": [
+        300,
+        170
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "links": [
+            13
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "## edit-lora-clips-basic_pipe"
+      },
+      "widgets_values": [
+        "emotionPuppeteerLora_v2Lora.safetensors",
+        "(photorealistic:1.4),detailed eyes, smile:0.5",
+        "(worst quality:1.4, low quality:1.4), blue eyes"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 5,
+      "type": "## face-detailer-start",
+      "pos": [
+        960,
+        740
+      ],
+      "size": {
+        "0": 315,
+        "1": 174
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "link": 13
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "DETAILER_PIPE",
+          "type": "DETAILER_PIPE",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "## face-detailer-start"
+      },
+      "widgets_values": [
+        256,
+        20,
+        8,
+        0.5,
+        "enabled"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 1,
+      "type": "## empty-to-image",
+      "pos": [
+        590,
+        350
+      ],
+      "size": {
+        "0": 315,
+        "1": 294
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2,
+            3
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "## empty-to-image"
+      },
+      "widgets_values": [
+        1,
+        512,
+        768,
+        1,
+        20,
+        8,
+        87354408269973,
+        "fixed",
+        "euler",
+        "normal"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      1,
+      0,
+      "BASIC_PIPE"
+    ],
+    [
+      2,
+      1,
+      1,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      3,
+      1,
+      1,
+      5,
+      1,
+      "IMAGE"
+    ],
+    [
+      4,
+      5,
+      1,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      2,
+      0,
+      14,
+      0,
+      "BASIC_PIPE"
+    ],
+    [
+      13,
+      14,
+      0,
+      5,
+      0,
+      "BASIC_PIPE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

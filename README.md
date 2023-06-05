@@ -14,6 +14,7 @@ There is a high possibility that the existing components created may not be comp
 
 * Once all the component workflows have been created, you can save them through the "Export As Component" option in the menu. The file extension will be .component.json.
 
+* **Note: Please make sure to avoid using the same name for input and output interface nodes in the component.**
 
 ## How To Use Component
 ![component-files](misc/component-files.png)
@@ -30,6 +31,13 @@ There is a high possibility that the existing components created may not be comp
 ![settings](misc/settings.png)
 
 * If the  ```Require confirmation for the component edit mode when loading a .component.json file.``` checkbox is unchecked, the .component.json file will always be loaded in the usage mode when loaded. To enable editing, please check the corresponding checkbox and click "OK" in the edit mode confirmation window to proceed.
+
+
+## Example
+![workflow](misc/sample-workflow.png)
+* Once you install the Workflow Component and download this image, you can drag and drop it into comfyui. This will load the component and open the workflow.
+* The component used in this example is composed of nodes from the [ComfyUI Impact Pack](https://github.com/ltdrdata/ComfyUI-Impact-Pack), so the installation of ComfyUI Impact Pack is required. If it is not installed, an error message will appear indicating that the node is missing. You can install it through the "missing nodes" installation menu in [ComfyUI-Manager](https://github.com/ltdrdata/ComfyUI-Manager).
+![sample](misc/sample.png) 
 
 
 # Requirements
