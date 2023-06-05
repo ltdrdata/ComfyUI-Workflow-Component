@@ -63,11 +63,15 @@ def garbage_collect(keys):
 
 
 def get_executor(component_name, internal_id_name_map, node_id):
+    if node_id in executor_dict:
+        if executor_dict[node_id][0] != component_name:
+            del executor_dict[node_id]
+
     if node_id not in executor_dict:
         vs = VirtualServer(component_name, internal_id_name_map, node_id)
-        executor_dict[node_id] = ExpPromptExecutor(vs)
+        executor_dict[node_id] = (component_name, ExpPromptExecutor(vs))
 
-    return executor_dict[node_id]
+    return executor_dict[node_id][1]
 
 
 virtual_prompt_id = 0
