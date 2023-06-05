@@ -74,6 +74,35 @@ class ProgressBadge {
 	}
 }
 
+const excludeExtensions = new Set([".png", ".jpg", ".webp", ".jpeg", ".safetensors", ".ckpt", ".pt", ".pth"]);
+
+function workflow_security_filter(workflow) {
+  workflow.nodes.forEach((node) => {
+    if (node.inputs) {
+      node.inputs.forEach((input) => {
+        if (input.widget && input.widget.config) {
+          const configArray = input.widget.config[0];
+          if (Array.isArray(configArray) && configArray.every((filename) => excludeExtensions.has(getFileExtension(filename)))) {
+            input.widget.config[0] = [];
+          }
+        }
+      });
+    }
+    if (node.outputs) {
+      node.outputs.forEach((output) => {
+        if (output.widget && output.widget.config) {
+          const configArray = output.widget.config[0];
+          if (Array.isArray(configArray) && configArray.every((filename) => excludeExtensions.has(getFileExtension(filename)))) {
+            output.widget.config[0] = [];
+          }
+        }
+      });
+    }
+  });
+
+  return workflow;
+}
+
 async function loadComponentWorkflows() {
 	if(!localStorage.getItem('loaded_components')) {
 		localStorage.setItem('loaded_components', '{}');
@@ -233,6 +262,8 @@ async function queuePrompt_with_components(number, { output, workflow }) {
 	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
 	const used_component_keys = Object.keys(loaded_components).filter(key => used_node_types.has(key));
 
+	workflow = workflow_security_filter(workflow);
+
 	workflow.components = {};
 	used_component_keys.forEach(key => {
 		workflow.components[key] = loaded_components[key];
@@ -257,6 +288,10 @@ async function registerNodes() {
 }
 
 app.registerNodes = registerNodes;
+
+function getFileExtension(filename) {
+  return filename.substring(filename.lastIndexOf("."));
+}
 
 app.registerExtension({
 	name: "Comfy.WorkflowComponent",
@@ -291,6 +326,8 @@ app.registerExtension({
 
 				let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
 				const used_component_keys = Object.keys(loaded_components).filter(key => used_node_types.has(key));
+
+				p.workflow = workflow_security_filter(p.workflow);
 
 				p.workflow.components = {};
 				used_component_keys.forEach(key => {
