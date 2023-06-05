@@ -246,7 +246,7 @@ api.queuePrompt = queuePrompt_with_components;
 const original_registerNodes = app.registerNodes;
 
 async function registerNodes() {
-	original_registerNodes.call(app);
+	await original_registerNodes.call(app);
 
 	if(localStorage.getItem('loaded_components')) {
 		let components = JSON.parse(localStorage.getItem('loaded_components'));
