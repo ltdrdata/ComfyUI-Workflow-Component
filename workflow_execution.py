@@ -173,6 +173,10 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
         class_def = DummyNode
 
         input_data_all = get_input_data(inputs, class_def, output_node_id, pe.outputs, prompt, workflow)
+
+        if input_data_all is None:
+            print(f"ERROR: [{output_node_id}] {class_def} / {inputs}")
+
         _, value = next(iter(input_data_all.items()))
 
         unboxed_value = value[0]  # TODO: check

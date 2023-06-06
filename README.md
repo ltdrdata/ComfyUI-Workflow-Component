@@ -57,6 +57,10 @@ There is a high possibility that the existing components created may not be comp
 - [x] Report missing nodes in components when component is loaded
 - [ ] Image Upload Widget
 - [ ] Component nesting
+- [ ] reroute problem fix
+- [ ] incomplete workflow checker
+- [ ] unconnected output checker
+- [ ] default value of component
 
 ## Credit
 
