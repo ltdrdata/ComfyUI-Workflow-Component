@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.16.1) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.16.2) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -85,6 +85,9 @@ async def prompt_hook(request):
         for node in nodes:
             if node['type'] in component_loader.unresolved_map:
                 unresolved_nodes.update(component_loader.unresolved_map[node['type']])
+
+        # excludes
+        unresolved_nodes -= set(['Reroute'])
 
         if len(unresolved_nodes) > 0:
             msg = f"<B>Non-installed custom nodes are being used within the component.</B><BR><BR>{unresolved_nodes}"

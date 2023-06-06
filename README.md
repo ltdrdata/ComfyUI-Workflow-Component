@@ -55,9 +55,9 @@ There is a high possibility that the existing components created may not be comp
 - [x] Efficient traversal
 - [x] Better internal error message
 - [x] Report missing nodes in components when component is loaded
+- [x] reroute problem fix
 - [ ] Image Upload Widget
 - [ ] Component nesting
-- [ ] reroute problem fix
 - [ ] incomplete workflow checker
 - [ ] unconnected output checker
 - [ ] default value of component
