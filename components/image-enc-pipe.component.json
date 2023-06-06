@@ -24,22 +24,7 @@
           "widget": {
             "name": "image",
             "config": [
-              [
-                "2pass-1pass.png",
-                "2pass-original (1).png",
-                "2pass-original.png",
-                "ComfyUI_00001_.latent.png",
-                "ComfyUI_00004_.latent.webp",
-                "ComfyUI_00005_.latent.webp",
-                "combination-original (1).png",
-                "combination-original.png",
-                "example.png",
-                "izone-final.jpeg",
-                "mask-original (1).png",
-                "mask-original.png",
-                "simple.png",
-                "small.png"
-              ]
+              []
             ]
           },
           "slot_index": 0

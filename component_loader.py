@@ -277,18 +277,22 @@ def resolve_unresolved_map():
 def load_component(component_name, workflow, direct_reflect=False):
     node_name = f"## {component_name}"
 
-    if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
-        obj = create_dynamic_class(component_name, workflow)
+    try:
+        if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
+            obj = create_dynamic_class(component_name, workflow)
 
-        if direct_reflect:
-            comfy_nodes.NODE_CLASS_MAPPINGS[node_name] = obj
+            if direct_reflect:
+                comfy_nodes.NODE_CLASS_MAPPINGS[node_name] = obj
+            else:
+                NODE_CLASS_MAPPINGS[node_name] = obj
+
+            update_unresolved_map(node_name, workflow)
+
+            return True
         else:
-            NODE_CLASS_MAPPINGS[node_name] = obj
-
-        update_unresolved_map(node_name, workflow)
-
-        return True
-    else:
+            return False
+    except:
+        print(f"[ERROR] Failed to load component '## {component_name}'")
         return False
 
 

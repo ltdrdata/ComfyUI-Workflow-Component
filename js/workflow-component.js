@@ -280,9 +280,20 @@ async function registerNodes() {
 	await original_registerNodes.call(app);
 
 	if(localStorage.getItem('loaded_components')) {
-		let components = JSON.parse(localStorage.getItem('loaded_components'));
-		for(let key in components) {
-			await loadComponent(`${key}.component.json`, components[key], false);
+		let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
+		let workflow = JSON.parse(localStorage.getItem("workflow"));
+
+		let used_node_types = new Set();
+		for(let i in workflow.nodes) {
+			if(workflow.nodes[i].type.startsWith('## '))
+				used_node_types.add(workflow.nodes[i].type.slice(3));
+		}
+
+		localStorage.setItem('loaded_components', "{}"); // clear
+		for(let key in loaded_components) {
+			if(used_node_types.has(loaded_components)) {
+				await loadComponent(`${key}.component.json`, components[key], false);
+			}
 		}
 	}
 }
@@ -492,6 +503,9 @@ app.registerExtension({
 					// Iterate through output links to determine the output type
 					if (outputs.length) {
 						for (const linkId of outputs) {
+							if(outputType && outputType != '*')
+								continue;
+
 							const link = app.graph.links[linkId];
 
 							if (!link) continue;
