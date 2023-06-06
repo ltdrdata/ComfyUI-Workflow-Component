@@ -109,18 +109,24 @@ def create_dynamic_class(component_name, workflow):
     sorted_input_nodes = sorted(input_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
 
     def get_input_types_dynamic():
-        input_types = {}
-        for i, node in enumerate(sorted_input_nodes):
-            build_input_types(i, input_mapping, input_types, node, node_config_map)
-        return input_types
+        try:
+            input_types = {}
+            for i, node in enumerate(sorted_input_nodes):
+                build_input_types(i, input_mapping, input_types, node, node_config_map)
+            return input_types
+        except:
+            return {"BROKEN component": ("BROKEN component", )}
 
     sorted_input_optional_nodes = sorted(input_optional_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
 
     def get_input_optional_types_dynamic():
-        input_optional_types = {}
-        for i, node in enumerate(sorted_input_optional_nodes):
-            build_input_types(i, input_mapping, input_optional_types, node, node_config_map)
-        return input_optional_types
+        try:
+            input_optional_types = {}
+            for i, node in enumerate(sorted_input_optional_nodes):
+                build_input_types(i, input_mapping, input_optional_types, node, node_config_map)
+            return input_optional_types
+        except:
+            return {"BROKEN component": ("BROKEN component", )}
 
     return_types = []
     return_names = []
