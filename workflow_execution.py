@@ -175,11 +175,12 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
         input_data_all = get_input_data(inputs, class_def, output_node_id, pe.outputs, prompt, workflow)
 
         if input_data_all is None:
-            print(f"ERROR: [{output_node_id}] {class_def} / {inputs}")
+            print(f"ERROR: Output slot '{key}' in '{component_name}[{node_id}]' doesn't provide any value.")
+            unboxed_value = None
+        else:
+            _, value = next(iter(input_data_all.items()))
+            unboxed_value = value[0]  # TODO: check
 
-        _, value = next(iter(input_data_all.items()))
-
-        unboxed_value = value[0]  # TODO: check
         results.append((order, unboxed_value))
 
     results.sort(key=lambda x: x[0])
