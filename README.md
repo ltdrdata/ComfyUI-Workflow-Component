@@ -56,11 +56,15 @@ There is a high possibility that the existing components created may not be comp
 - [x] Better internal error message
 - [x] Report missing nodes in components when component is loaded
 - [x] reroute problem fix
-- [ ] Image Upload Widget
+- [ ] Resolve conflicts between components with the same name based on hash
+- [ ] Set the currently configured ```widget value``` as the default value for component interface
+- [ ] A feature that enables selecting a graceful termination for a specific execution path in a node instead of a crash
+- [ ] A feature that disable a specific optional input slot
+  - [ ] Handling the workflow execution of a node composed solely of optional inputs
+- [ ] Switch node
 - [ ] Component nesting
-- [ ] incomplete workflow checker
-- [ ] unconnected output checker
-- [ ] default value of component
+- [ ] Incomplete workflow checker
+- [ ] Unconnected output checker to avoid inefficient execution
 
 ## Credit
 
