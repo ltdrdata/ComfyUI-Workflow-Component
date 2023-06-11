@@ -293,7 +293,7 @@ async function registerNodes() {
 
 		localStorage.setItem('loaded_components', "{}"); // clear
 		for(let key in loaded_components) {
-			if(used_node_types.has(loaded_components)) {
+			if(loaded_components[used_node_types]) {
 				await loadComponent(`${key}.component.json`, components[key], false);
 			}
 		}
