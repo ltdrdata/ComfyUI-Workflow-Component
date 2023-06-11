@@ -119,7 +119,9 @@ def create_dynamic_class(component_name, workflow):
             for i, node in enumerate(sorted_input_nodes):
                 build_input_types(i, input_mapping, input_types, node, node_config_map)
             return input_types
-        except:
+        except Exception as e:
+            print(f"[Workflow-Component] BROKEN component - {e}")
+            traceback.print_exc()
             return {"BROKEN component": ("BROKEN component", )}
 
     sorted_input_optional_nodes = sorted(input_optional_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
@@ -130,7 +132,9 @@ def create_dynamic_class(component_name, workflow):
             for i, node in enumerate(sorted_input_optional_nodes):
                 build_input_types(i, input_mapping, input_optional_types, node, node_config_map)
             return input_optional_types
-        except:
+        except Exception as e:
+            print(f"[Workflow-Component] BROKEN component - {e}")
+            traceback.print_exc()
             return {"BROKEN component": ("BROKEN component", )}
 
     return_types = []
@@ -241,7 +245,7 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                         widget_idx = -1
                         widget_values_found = False
                         last_is_int = False
-                        if input_type in input_type in ['FLOAT', 'INT', 'STRING'] and node_config is not None:
+                        if input_type in ['FLOAT', 'INT', 'STRING'] and node_config is not None:
                             for _, key in enumerate(node_input_types['required'].keys()):
                                 slot = node_input_types['required'][key]
                                 if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list):
