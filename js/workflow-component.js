@@ -196,6 +196,8 @@ const componentLoadMode = app.ui.settings.addSetting({
 	defaultValue: false,
 });
 
+app.load_workflow_with_components = loadWorkflowFull;
+
 async function handleFileForFull(file) {
 	const load_json_normal_from_file = () => {
 		const reader = new FileReader();
