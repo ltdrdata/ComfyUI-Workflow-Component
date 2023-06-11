@@ -49,7 +49,7 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "calicomixreal_v10.safetensors"
+        "V07_v07.safetensors"
       ]
     },
     {
@@ -100,7 +100,7 @@
       ],
       "size": {
         "0": 210,
-        "1": 26
+        "1": 246
       },
       "flags": {},
       "order": 3,
@@ -123,10 +123,10 @@
         726,
         248
       ],
-      "size": {
-        "0": 331,
-        "1": 374
-      },
+      "size": [
+        320,
+        570
+      ],
       "flags": {},
       "order": 2,
       "mode": 0,
@@ -176,8 +176,8 @@
       },
       "widgets_values": [
         "1girl is jumping, blue sky, emerald mountain",
-        "",
-        1
+        "nsfw",
+        0.8
       ],
       "color": "#322",
       "bgcolor": "#533"
@@ -1014,7 +1014,8 @@
             ]
           }
         }
-      }
+      },
+      "client_id": "1cc4f2aae4a24dafac33666781d291bc"
     }
   }
 }

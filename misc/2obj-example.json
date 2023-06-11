@@ -39,7 +39,7 @@
         "Node name for S&R": "## make-basic_pipe [2c8c61]"
       },
       "widgets_values": [
-        "calicomixreal_v10.safetensors",
+        "V07_v07.safetensors",
         "photorealistic:1.4, best quality:1.4, beautiful ocean view cafe terrace, ",
         "worst quality:1.4, low quality:1.4, (looking viewer:1.2), (nsfw:1.2)"
       ],
@@ -55,7 +55,7 @@
       ],
       "size": {
         "0": 400,
-        "1": 574
+        "1": 624
       },
       "flags": {},
       "order": 1,
@@ -110,7 +110,7 @@
         0,
         1,
         "photorealistic:1.4, best quality:1.4, (1 girl) is looking away in stand, pink short break hair, yellow uniform, from behind",
-        18,
+        19,
         "increment",
         20,
         10,
@@ -168,654 +168,6 @@
   "extra": {},
   "version": 0.4,
   "components": {
-    "## make-basic_pipe [2c8c61]": {
-      "last_node_id": 10,
-      "last_link_id": 13,
-      "nodes": [
-        {
-          "id": 4,
-          "type": "CLIPTextEncode",
-          "pos": [
-            780,
-            340
-          ],
-          "size": [
-            210,
-            54
-          ],
-          "flags": {},
-          "order": 6,
-          "mode": 0,
-          "inputs": [
-            {
-              "name": "clip",
-              "type": "CLIP",
-              "link": 6
-            },
-            {
-              "name": "text",
-              "type": "STRING",
-              "link": 9,
-              "widget": {
-                "name": "text",
-                "config": [
-                  "STRING",
-                  {
-                    "multiline": true
-                  }
-                ]
-              },
-              "slot_index": 1
-            }
-          ],
-          "outputs": [
-            {
-              "name": "CONDITIONING",
-              "type": "CONDITIONING",
-              "links": [
-                7
-              ],
-              "shape": 3,
-              "slot_index": 0
-            }
-          ],
-          "properties": {
-            "Node name for S&R": "CLIPTextEncode"
-          },
-          "widgets_values": [
-            ""
-          ]
-        },
-        {
-          "id": 2,
-          "type": "ToBasicPipe",
-          "pos": [
-            1060,
-            180
-          ],
-          "size": {
-            "0": 241.79998779296875,
-            "1": 106
-          },
-          "flags": {},
-          "order": 7,
-          "mode": 0,
-          "inputs": [
-            {
-              "name": "model",
-              "type": "MODEL",
-              "link": 1
-            },
-            {
-              "name": "clip",
-              "type": "CLIP",
-              "link": 2
-            },
-            {
-              "name": "vae",
-              "type": "VAE",
-              "link": 3
-            },
-            {
-              "name": "positive",
-              "type": "CONDITIONING",
-              "link": 5
-            },
-            {
-              "name": "negative",
-              "type": "CONDITIONING",
-              "link": 7
-            }
-          ],
-          "outputs": [
-            {
-              "name": "basic_pipe",
-              "type": "BASIC_PIPE",
-              "links": [
-                11
-              ],
-              "shape": 3,
-              "slot_index": 0
-            }
-          ],
-          "properties": {
-            "Node name for S&R": "ToBasicPipe"
-          }
-        },
-        {
-          "id": 5,
-          "type": "ComponentInput",
-          "pos": [
-            90,
-            230
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 0,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "text",
-              "type": "STRING",
-              "links": [
-                8
-              ],
-              "label": "positive"
-            }
-          ],
-          "title": "2.Component Input",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 6,
-          "type": "ComponentInput",
-          "pos": [
-            90,
-            360
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 1,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "text",
-              "type": "STRING",
-              "links": [
-                9
-              ],
-              "label": "negative"
-            }
-          ],
-          "title": "3.Component Input",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 9,
-          "type": "ComponentInputOptional",
-          "pos": [
-            90,
-            490
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 2,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "vae",
-              "type": "VAE",
-              "links": [
-                12
-              ],
-              "label": "vae_opt"
-            }
-          ],
-          "title": "4.Component Input (OPT)",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 7,
-          "type": "ComponentInput",
-          "pos": [
-            90,
-            110
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 3,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "ckpt_name",
-              "type": "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors",
-              "links": [
-                10
-              ]
-            }
-          ],
-          "title": "1.Component Input",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 8,
-          "type": "EditBasicPipe",
-          "pos": [
-            1400,
-            180
-          ],
-          "size": {
-            "0": 267,
-            "1": 126
-          },
-          "flags": {},
-          "order": 8,
-          "mode": 0,
-          "inputs": [
-            {
-              "name": "basic_pipe",
-              "type": "BASIC_PIPE",
-              "link": 11
-            },
-            {
-              "name": "model",
-              "type": "MODEL",
-              "link": null
-            },
-            {
-              "name": "clip",
-              "type": "CLIP",
-              "link": null
-            },
-            {
-              "name": "vae",
-              "type": "VAE",
-              "link": 12,
-              "slot_index": 3
-            },
-            {
-              "name": "positive",
-              "type": "CONDITIONING",
-              "link": null
-            },
-            {
-              "name": "negative",
-              "type": "CONDITIONING",
-              "link": null
-            }
-          ],
-          "outputs": [
-            {
-              "name": "basic_pipe",
-              "type": "BASIC_PIPE",
-              "links": [
-                13
-              ],
-              "shape": 3,
-              "slot_index": 0,
-              "color": ""
-            }
-          ],
-          "properties": {
-            "Node name for S&R": "EditBasicPipe"
-          }
-        },
-        {
-          "id": 10,
-          "type": "ComponentOutput",
-          "pos": [
-            1750,
-            180
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 9,
-          "mode": 0,
-          "inputs": [
-            {
-              "name": "BASIC_PIPE",
-              "type": "BASIC_PIPE",
-              "link": 13,
-              "label": null
-            }
-          ],
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 3,
-          "type": "CLIPTextEncode",
-          "pos": [
-            770,
-            90
-          ],
-          "size": [
-            210,
-            54
-          ],
-          "flags": {},
-          "order": 5,
-          "mode": 0,
-          "inputs": [
-            {
-              "name": "clip",
-              "type": "CLIP",
-              "link": 4
-            },
-            {
-              "name": "text",
-              "type": "STRING",
-              "link": 8,
-              "widget": {
-                "name": "text",
-                "config": [
-                  "STRING",
-                  {
-                    "multiline": true
-                  }
-                ]
-              },
-              "slot_index": 1
-            }
-          ],
-          "outputs": [
-            {
-              "name": "CONDITIONING",
-              "type": "CONDITIONING",
-              "links": [
-                5
-              ],
-              "shape": 3,
-              "slot_index": 0
-            }
-          ],
-          "properties": {
-            "Node name for S&R": "CLIPTextEncode"
-          },
-          "widgets_values": [
-            ""
-          ]
-        },
-        {
-          "id": 1,
-          "type": "CheckpointLoaderSimple",
-          "pos": [
-            410,
-            180
-          ],
-          "size": [
-            315,
-            98
-          ],
-          "flags": {},
-          "order": 4,
-          "mode": 0,
-          "inputs": [
-            {
-              "name": "ckpt_name",
-              "type": "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors",
-              "link": 10,
-              "widget": {
-                "name": "ckpt_name",
-                "config": [
-                  [
-                    "v1-5-pruned-emaonly.ckpt",
-                    "v2-1_512-ema-pruned.safetensors"
-                  ]
-                ]
-              },
-              "slot_index": 0
-            }
-          ],
-          "outputs": [
-            {
-              "name": "MODEL",
-              "type": "MODEL",
-              "links": [
-                1
-              ],
-              "shape": 3,
-              "slot_index": 0
-            },
-            {
-              "name": "CLIP",
-              "type": "CLIP",
-              "links": [
-                2,
-                4,
-                6
-              ],
-              "shape": 3,
-              "slot_index": 1
-            },
-            {
-              "name": "VAE",
-              "type": "VAE",
-              "links": [
-                3
-              ],
-              "shape": 3,
-              "slot_index": 2
-            }
-          ],
-          "properties": {
-            "Node name for S&R": "CheckpointLoaderSimple"
-          },
-          "widgets_values": [
-            "v1-5-pruned-emaonly.ckpt"
-          ]
-        }
-      ],
-      "links": [
-        [
-          1,
-          1,
-          0,
-          2,
-          0,
-          "MODEL"
-        ],
-        [
-          2,
-          1,
-          1,
-          2,
-          1,
-          "CLIP"
-        ],
-        [
-          3,
-          1,
-          2,
-          2,
-          2,
-          "VAE"
-        ],
-        [
-          4,
-          1,
-          1,
-          3,
-          0,
-          "CLIP"
-        ],
-        [
-          5,
-          3,
-          0,
-          2,
-          3,
-          "CONDITIONING"
-        ],
-        [
-          6,
-          1,
-          1,
-          4,
-          0,
-          "CLIP"
-        ],
-        [
-          7,
-          4,
-          0,
-          2,
-          4,
-          "CONDITIONING"
-        ],
-        [
-          8,
-          5,
-          0,
-          3,
-          1,
-          "STRING"
-        ],
-        [
-          9,
-          6,
-          0,
-          4,
-          1,
-          "STRING"
-        ],
-        [
-          10,
-          7,
-          0,
-          1,
-          0,
-          "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors"
-        ],
-        [
-          11,
-          2,
-          0,
-          8,
-          0,
-          "BASIC_PIPE"
-        ],
-        [
-          12,
-          9,
-          0,
-          8,
-          3,
-          "VAE"
-        ],
-        [
-          13,
-          8,
-          0,
-          10,
-          0,
-          "*"
-        ]
-      ],
-      "groups": [],
-      "config": {},
-      "extra": {},
-      "version": 0.4,
-      "output": {
-        "1": {
-          "inputs": {
-            "ckpt_name": [
-              "7",
-              0
-            ]
-          },
-          "class_type": "CheckpointLoaderSimple"
-        },
-        "2": {
-          "inputs": {
-            "model": [
-              "1",
-              0
-            ],
-            "clip": [
-              "1",
-              1
-            ],
-            "vae": [
-              "1",
-              2
-            ],
-            "positive": [
-              "3",
-              0
-            ],
-            "negative": [
-              "4",
-              0
-            ]
-          },
-          "class_type": "ToBasicPipe"
-        },
-        "3": {
-          "inputs": {
-            "text": [
-              "5",
-              0
-            ],
-            "clip": [
-              "1",
-              1
-            ]
-          },
-          "class_type": "CLIPTextEncode"
-        },
-        "4": {
-          "inputs": {
-            "text": [
-              "6",
-              0
-            ],
-            "clip": [
-              "1",
-              1
-            ]
-          },
-          "class_type": "CLIPTextEncode"
-        },
-        "5": {
-          "inputs": {}
-        },
-        "6": {
-          "inputs": {}
-        },
-        "7": {
-          "inputs": {}
-        },
-        "8": {
-          "inputs": {
-            "basic_pipe": [
-              "2",
-              0
-            ],
-            "vae": [
-              "9",
-              0
-            ]
-          },
-          "class_type": "EditBasicPipe"
-        },
-        "9": {
-          "inputs": {}
-        },
-        "10": {
-          "inputs": {
-            "BASIC_PIPE": [
-              "8",
-              0
-            ]
-          }
-        }
-      }
-    },
     "## 2obj [b7a97e]": {
       "last_node_id": 93,
       "last_link_id": 112,
@@ -4918,6 +4270,654 @@
             ]
           },
           "class_type": "EditBasicPipe"
+        }
+      }
+    },
+    "## make-basic_pipe [2c8c61]": {
+      "last_node_id": 10,
+      "last_link_id": 13,
+      "nodes": [
+        {
+          "id": 4,
+          "type": "CLIPTextEncode",
+          "pos": [
+            780,
+            340
+          ],
+          "size": [
+            210,
+            54
+          ],
+          "flags": {},
+          "order": 6,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 6
+            },
+            {
+              "name": "text",
+              "type": "STRING",
+              "link": 9,
+              "widget": {
+                "name": "text",
+                "config": [
+                  "STRING",
+                  {
+                    "multiline": true
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                7
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "CLIPTextEncode"
+          },
+          "widgets_values": [
+            ""
+          ]
+        },
+        {
+          "id": 2,
+          "type": "ToBasicPipe",
+          "pos": [
+            1060,
+            180
+          ],
+          "size": {
+            "0": 241.79998779296875,
+            "1": 106
+          },
+          "flags": {},
+          "order": 7,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "model",
+              "type": "MODEL",
+              "link": 1
+            },
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 2
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "link": 3
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "link": 5
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "link": 7
+            }
+          ],
+          "outputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "links": [
+                11
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "ToBasicPipe"
+          }
+        },
+        {
+          "id": 5,
+          "type": "ComponentInput",
+          "pos": [
+            90,
+            230
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 0,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": "STRING",
+              "links": [
+                8
+              ],
+              "label": "positive"
+            }
+          ],
+          "title": "2.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 6,
+          "type": "ComponentInput",
+          "pos": [
+            90,
+            360
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 1,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": "STRING",
+              "links": [
+                9
+              ],
+              "label": "negative"
+            }
+          ],
+          "title": "3.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 9,
+          "type": "ComponentInputOptional",
+          "pos": [
+            90,
+            490
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 2,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "vae",
+              "type": "VAE",
+              "links": [
+                12
+              ],
+              "label": "vae_opt"
+            }
+          ],
+          "title": "4.Component Input (OPT)",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 7,
+          "type": "ComponentInput",
+          "pos": [
+            90,
+            110
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 3,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "ckpt_name",
+              "type": "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors",
+              "links": [
+                10
+              ]
+            }
+          ],
+          "title": "1.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 8,
+          "type": "EditBasicPipe",
+          "pos": [
+            1400,
+            180
+          ],
+          "size": {
+            "0": 267,
+            "1": 126
+          },
+          "flags": {},
+          "order": 8,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "link": 11
+            },
+            {
+              "name": "model",
+              "type": "MODEL",
+              "link": null
+            },
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": null
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "link": 12,
+              "slot_index": 3
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "link": null
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "link": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "links": [
+                13
+              ],
+              "shape": 3,
+              "slot_index": 0,
+              "color": ""
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "EditBasicPipe"
+          }
+        },
+        {
+          "id": 10,
+          "type": "ComponentOutput",
+          "pos": [
+            1750,
+            180
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 9,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "BASIC_PIPE",
+              "type": "BASIC_PIPE",
+              "link": 13,
+              "label": null
+            }
+          ],
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 3,
+          "type": "CLIPTextEncode",
+          "pos": [
+            770,
+            90
+          ],
+          "size": [
+            210,
+            54
+          ],
+          "flags": {},
+          "order": 5,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 4
+            },
+            {
+              "name": "text",
+              "type": "STRING",
+              "link": 8,
+              "widget": {
+                "name": "text",
+                "config": [
+                  "STRING",
+                  {
+                    "multiline": true
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                5
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "CLIPTextEncode"
+          },
+          "widgets_values": [
+            ""
+          ]
+        },
+        {
+          "id": 1,
+          "type": "CheckpointLoaderSimple",
+          "pos": [
+            410,
+            180
+          ],
+          "size": [
+            315,
+            98
+          ],
+          "flags": {},
+          "order": 4,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "ckpt_name",
+              "type": "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors",
+              "link": 10,
+              "widget": {
+                "name": "ckpt_name",
+                "config": [
+                  [
+                    "v1-5-pruned-emaonly.ckpt",
+                    "v2-1_512-ema-pruned.safetensors"
+                  ]
+                ]
+              },
+              "slot_index": 0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "MODEL",
+              "type": "MODEL",
+              "links": [
+                1
+              ],
+              "shape": 3,
+              "slot_index": 0
+            },
+            {
+              "name": "CLIP",
+              "type": "CLIP",
+              "links": [
+                2,
+                4,
+                6
+              ],
+              "shape": 3,
+              "slot_index": 1
+            },
+            {
+              "name": "VAE",
+              "type": "VAE",
+              "links": [
+                3
+              ],
+              "shape": 3,
+              "slot_index": 2
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "CheckpointLoaderSimple"
+          },
+          "widgets_values": [
+            "v1-5-pruned-emaonly.ckpt"
+          ]
+        }
+      ],
+      "links": [
+        [
+          1,
+          1,
+          0,
+          2,
+          0,
+          "MODEL"
+        ],
+        [
+          2,
+          1,
+          1,
+          2,
+          1,
+          "CLIP"
+        ],
+        [
+          3,
+          1,
+          2,
+          2,
+          2,
+          "VAE"
+        ],
+        [
+          4,
+          1,
+          1,
+          3,
+          0,
+          "CLIP"
+        ],
+        [
+          5,
+          3,
+          0,
+          2,
+          3,
+          "CONDITIONING"
+        ],
+        [
+          6,
+          1,
+          1,
+          4,
+          0,
+          "CLIP"
+        ],
+        [
+          7,
+          4,
+          0,
+          2,
+          4,
+          "CONDITIONING"
+        ],
+        [
+          8,
+          5,
+          0,
+          3,
+          1,
+          "STRING"
+        ],
+        [
+          9,
+          6,
+          0,
+          4,
+          1,
+          "STRING"
+        ],
+        [
+          10,
+          7,
+          0,
+          1,
+          0,
+          "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors"
+        ],
+        [
+          11,
+          2,
+          0,
+          8,
+          0,
+          "BASIC_PIPE"
+        ],
+        [
+          12,
+          9,
+          0,
+          8,
+          3,
+          "VAE"
+        ],
+        [
+          13,
+          8,
+          0,
+          10,
+          0,
+          "*"
+        ]
+      ],
+      "groups": [],
+      "config": {},
+      "extra": {},
+      "version": 0.4,
+      "output": {
+        "1": {
+          "inputs": {
+            "ckpt_name": [
+              "7",
+              0
+            ]
+          },
+          "class_type": "CheckpointLoaderSimple"
+        },
+        "2": {
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "clip": [
+              "1",
+              1
+            ],
+            "vae": [
+              "1",
+              2
+            ],
+            "positive": [
+              "3",
+              0
+            ],
+            "negative": [
+              "4",
+              0
+            ]
+          },
+          "class_type": "ToBasicPipe"
+        },
+        "3": {
+          "inputs": {
+            "text": [
+              "5",
+              0
+            ],
+            "clip": [
+              "1",
+              1
+            ]
+          },
+          "class_type": "CLIPTextEncode"
+        },
+        "4": {
+          "inputs": {
+            "text": [
+              "6",
+              0
+            ],
+            "clip": [
+              "1",
+              1
+            ]
+          },
+          "class_type": "CLIPTextEncode"
+        },
+        "5": {
+          "inputs": {}
+        },
+        "6": {
+          "inputs": {}
+        },
+        "7": {
+          "inputs": {}
+        },
+        "8": {
+          "inputs": {
+            "basic_pipe": [
+              "2",
+              0
+            ],
+            "vae": [
+              "9",
+              0
+            ]
+          },
+          "class_type": "EditBasicPipe"
+        },
+        "9": {
+          "inputs": {}
+        },
+        "10": {
+          "inputs": {
+            "BASIC_PIPE": [
+              "8",
+              0
+            ]
+          }
         }
       }
     }

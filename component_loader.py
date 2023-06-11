@@ -1,5 +1,7 @@
 import os
 import json
+import traceback
+
 import workflow_execution
 import nodes as comfy_nodes
 import hashlib
@@ -61,14 +63,16 @@ def get_linked_slots_config(json_data):
 
                     if dest_node in nodes and "inputs" in nodes[dest_node]:
                         inputs = nodes[dest_node]["inputs"]
+                        widgets_values = nodes[dest_node]['widgets_values'] if 'widgets_values' in nodes[dest_node] else None
+
                         input_slot = inputs[dest_slot]
 
                         if "widget" in input_slot:
                             widget_config = input_slot["widget"].get("config")
                             if widget_config is not None:
-                                linked_slots_config[link_id] = (input_slot['type'], widget_config, nodes[dest_node]['type'], input_slot['name'])
+                                linked_slots_config[link_id] = (input_slot['type'], widget_config, nodes[dest_node]['type'], input_slot['name'], widgets_values)
                         else:
-                            linked_slots_config[link_id] = (input_slot['type'], None, None, None)
+                            linked_slots_config[link_id] = (input_slot['type'], None, None, None, None)
 
         if node['type'] == "ComponentOutput":
             node_inputs = node["inputs"] if 'inputs' in node else []
@@ -85,7 +89,7 @@ def get_linked_slots_config(json_data):
                     outputs = nodes[src_node]["outputs"]
                     output_slot = outputs[src_slot]
 
-                    linked_slots_config[link_id] = (output_slot['type'], None, None, None)
+                    linked_slots_config[link_id] = (output_slot['type'], None, None, None, None)
 
     return linked_slots_config
 
@@ -181,7 +185,7 @@ def build_output_types(i, node, node_config_map, output_mapping, return_names, r
             pass
         else:
             if output_link in node_config_map:
-                output_type, node_config, node_type, output_slot = node_config_map[output_link]
+                output_type, node_config, node_type, output_slot, widget_values = node_config_map[output_link]
                 output_label = None
 
                 for output in node['inputs']:
@@ -224,7 +228,7 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
             if len(input_links) > 0:
                 input_link = input_links[0]  # we need only 1 link for a slot
                 if input_link in node_config_map:
-                    input_type, node_config, node_type, input_slot = node_config_map[input_link]
+                    input_type, node_config, node_type, input_slot, widget_values = node_config_map[input_link]
 
                     if 'label' in node['outputs'][0]:
                         input_label = node['outputs'][0]['label']
@@ -233,7 +237,46 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
 
                     if node_type is not None and input_slot is not None:
                         node_input_types = comfy_nodes.NODE_CLASS_MAPPINGS[node_type].INPUT_TYPES()
-                        input_value = flatten_INPUT_TYPES(node_input_types)[input_slot]
+
+                        widget_idx = -1
+                        widget_values_found = False
+                        last_is_int = False
+                        if input_type in input_type in ['FLOAT', 'INT', 'STRING'] and node_config is not None:
+                            for _, key in enumerate(node_input_types['required'].keys()):
+                                slot = node_input_types['required'][key]
+                                if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list):
+                                    widget_idx += 1
+
+                                if last_is_int and widget_values[widget_idx] in ['randomize', 'fixed', 'increment', 'decrement']:
+                                    widget_idx += 1  # skip 'control after...' widget. It belongs to former INT widget
+
+                                last_is_int = slot[0] == 'INT'
+
+                                if key == input_slot:
+                                    widget_values_found = True
+                                    break
+
+                            if not widget_values_found and 'optional' in node_input_types:
+                                for _, key in enumerate(node_input_types['optional'].keys()):
+                                    slot = node_input_types['optional'][key]
+                                    if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list):
+                                        widget_idx += 1
+
+                                    if last_is_int and widget_values[widget_idx] in ['randomize', 'fixed', 'increment', 'decrement']:
+                                        widget_idx += 1  # skip 'control after...' widget. It belongs to former INT widget
+
+                                    last_is_int = slot[0] == 'INT'
+
+                                    if key == input_slot:
+                                        widget_values_found = True
+                                        break
+
+                        if widget_values_found:
+                            node_config[1]['default'] = widget_values[widget_idx]
+                            input_value = tuple(node_config)
+                        else:
+                            input_value = flatten_INPUT_TYPES(node_input_types)[input_slot]
+
                         if input_label is None and isinstance(input_value[0], list):
                             input_label = input_slot
                     else:
@@ -305,8 +348,9 @@ def load_component(component_name, workflow, direct_reflect=False):
             return (True, node_name)
         else:
             return (False, node_name)
-    except:
-        print(f"[ERROR] Failed to load component '## {component_name}'")
+    except Exception as e:
+        print(f"[ERROR] Failed to load component '## {component_name}'\n\tMSG: {e}")
+        traceback.print_exc()
         return (False, None)
 
 
