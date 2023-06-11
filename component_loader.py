@@ -330,13 +330,16 @@ def get_workflow_hash(workflow):
     return hash_obj.hexdigest()[:6]
 
 
-def load_component(component_name, workflow, direct_reflect=False):
+def load_component(component_name, is_full_name, workflow, direct_reflect=False):
     component_hash = get_workflow_hash(workflow)
-    node_name = f"## {component_name} [{component_hash}]"
+    if is_full_name:
+        node_name = component_name
+    else:
+        node_name = f"## {component_name} [{component_hash}]"
 
     try:
         if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
-            obj = create_dynamic_class(component_name, workflow)
+            obj = create_dynamic_class(node_name, workflow)
 
             if direct_reflect:
                 comfy_nodes.NODE_CLASS_MAPPINGS[node_name] = obj
@@ -349,7 +352,7 @@ def load_component(component_name, workflow, direct_reflect=False):
         else:
             return (False, node_name)
     except Exception as e:
-        print(f"[ERROR] Failed to load component '## {component_name}'\n\tMSG: {e}")
+        print(f"[ERROR] Failed to load component '{node_name}'\n\tMSG: {e}")
         traceback.print_exc()
         return (False, None)
 
@@ -365,7 +368,7 @@ def load_all():
 
             with open(file_path, "r") as file:
                 data = json.load(file)
-                _, component_full_name = load_component(component_name, data)
+                _, component_full_name = load_component(component_name, False, data)
                 workflow_components[component_full_name] = data
 
     resolve_unresolved_map()

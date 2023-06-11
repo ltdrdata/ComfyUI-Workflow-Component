@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.19) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.19.1) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -107,12 +107,17 @@ import json
 @server.PromptServer.instance.routes.post("/component/load")
 async def load_component(request):
     post = await request.post()
-    filename = post.get("filename")
+    component_name = post.get("component_or_filename")
     json_text = post.get("content")
     workflow = json.loads(json_text)
 
-    component_name = os.path.basename(filename)[:-15]
-    new_created, component_full_name = component_loader.load_component(component_name, workflow, True)
+    is_full_name = False
+    if component_name.endswith('.component.json'):
+        component_name = os.path.basename(component_name)[:-15]
+    else:
+        is_full_name = True
+
+    new_created, component_full_name = component_loader.load_component(component_name, is_full_name, workflow, True)
 
     result = {'node_name': component_full_name,
               "already_loaded": not new_created}

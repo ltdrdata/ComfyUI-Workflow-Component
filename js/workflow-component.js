@@ -151,7 +151,7 @@ async function loadComponentWorkflows() {
 	localStorage.setItem('loaded_components', JSON.stringify(loaded_components));
 }
 
-async function loadComponent(filename, workflow_obj, add_node) {
+async function loadComponent(component_or_filename, workflow_obj, add_node) {
 	var workflow_str = null;
 	var workflow_json = null;
 	if(typeof workflow_obj == "string") {
@@ -163,7 +163,7 @@ async function loadComponent(filename, workflow_obj, add_node) {
 	}
 
 	const body = new FormData();
-	body.append("filename", filename);
+	body.append("component_or_filename", component_or_filename);
 	body.append("content", workflow_str);
 
 	const resp = await fetch(`/component/load`, {
@@ -219,7 +219,7 @@ async function loadWorkflowFull(workflow_obj) {
 
 	if(workflow_json.components) {
 		for(let key in workflow_json.components) {
-			await loadComponent(`${key}.component.json`, workflow_json.components[key], false);
+			await loadComponent(key, workflow_json.components[key], false);
 		}
 	}
 
@@ -295,7 +295,7 @@ async function queuePrompt_with_components(number, { output, workflow }) {
 	let used_node_types = new Set();
 	for(let i in workflow.nodes) {
 		if(workflow.nodes[i].type.startsWith('## '))
-			used_node_types.add(workflow.nodes[i].type.slice(3));
+			used_node_types.add(workflow.nodes[i].type);
 	}
 
 	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
@@ -331,7 +331,7 @@ async function registerNodes() {
 		localStorage.setItem('loaded_components', "{}"); // clear
 		for(let key in loaded_components) {
 			if(loaded_components[used_node_types]) {
-				await loadComponent(`${key}.component.json`, components[key], false);
+				await loadComponent(key, components[key], false);
 			}
 			else {
 				register_component_name(key);
