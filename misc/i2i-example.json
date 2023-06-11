@@ -1,13 +1,13 @@
 {
-  "last_node_id": 9,
-  "last_link_id": 21,
+  "last_node_id": 4,
+  "last_link_id": 5,
   "nodes": [
     {
-      "id": 5,
+      "id": 3,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        40,
-        110
+        210,
+        250
       ],
       "size": {
         "0": 315,
@@ -21,7 +21,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            17
+            1
           ],
           "shape": 3,
           "slot_index": 0
@@ -30,7 +30,7 @@
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            18
+            2
           ],
           "shape": 3,
           "slot_index": 1
@@ -39,7 +39,7 @@
           "name": "VAE",
           "type": "VAE",
           "links": [
-            19
+            3
           ],
           "shape": 3,
           "slot_index": 2
@@ -49,15 +49,15 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "V07_v07.safetensors"
+        "calicomixreal_v10.safetensors"
       ]
     },
     {
-      "id": 3,
+      "id": 2,
       "type": "LoadImage",
       "pos": [
-        40,
-        330
+        210,
+        500
       ],
       "size": {
         "0": 315,
@@ -71,7 +71,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            20
+            4
           ],
           "shape": 3,
           "slot_index": 0
@@ -92,73 +92,15 @@
       ]
     },
     {
-      "id": 9,
-      "type": "## i2i",
-      "pos": [
-        450,
-        110
-      ],
-      "size": {
-        "0": 400,
-        "1": 210
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 17
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 18
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 19
-        },
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 20
-        }
-      ],
-      "outputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "links": [
-            21
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "## i2i"
-      },
-      "widgets_values": [
-        "",
-        "",
-        1
-      ],
-      "color": "#323",
-      "bgcolor": "#535"
-    },
-    {
       "id": 4,
       "type": "PreviewImage",
       "pos": [
-        910,
-        110
+        1211,
+        249
       ],
       "size": {
         "0": 210,
-        "1": 246
+        "1": 26
       },
       "flags": {},
       "order": 3,
@@ -167,50 +109,116 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 21
+          "link": 5
         }
       ],
       "properties": {
         "Node name for S&R": "PreviewImage"
       }
+    },
+    {
+      "id": 1,
+      "type": "## i2i [e18611]",
+      "pos": [
+        726,
+        248
+      ],
+      "size": {
+        "0": 331,
+        "1": 374
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1,
+          "slot_index": 0
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 3
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "title": "## i2i",
+      "properties": {
+        "Node name for S&R": "## i2i [e18611]"
+      },
+      "widgets_values": [
+        "1girl is jumping, blue sky, emerald mountain",
+        "",
+        1
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
     [
-      17,
-      5,
+      1,
+      3,
       0,
-      9,
+      1,
       0,
       "MODEL"
     ],
     [
-      18,
-      5,
+      2,
+      3,
       1,
-      9,
+      1,
       1,
       "CLIP"
     ],
     [
-      19,
-      5,
+      3,
+      3,
       2,
-      9,
+      1,
       2,
       "VAE"
     ],
     [
-      20,
-      3,
+      4,
+      2,
       0,
-      9,
+      1,
       3,
       "IMAGE"
     ],
     [
-      21,
-      9,
+      5,
+      1,
       0,
       4,
       0,
@@ -222,9 +230,9 @@
   "extra": {},
   "version": 0.4,
   "components": {
-    "i2i": {
-      "last_node_id": 38,
-      "last_link_id": 43,
+    "## i2i [e18611]": {
+      "last_node_id": 39,
+      "last_link_id": 44,
       "nodes": [
         {
           "id": 15,
@@ -238,7 +246,7 @@
             "1": 54
           },
           "flags": {},
-          "order": 9,
+          "order": 7,
           "mode": 0,
           "inputs": [
             {
@@ -291,7 +299,7 @@
             "1": 54
           },
           "flags": {},
-          "order": 8,
+          "order": 9,
           "mode": 0,
           "inputs": [
             {
@@ -344,12 +352,12 @@
             "1": 26
           },
           "flags": {},
-          "order": 5,
+          "order": 0,
           "mode": 0,
           "outputs": [
             {
-              "name": "rename after connect",
-              "type": "*",
+              "name": "text",
+              "type": "STRING",
               "links": [
                 42
               ],
@@ -374,12 +382,12 @@
             "1": 26
           },
           "flags": {},
-          "order": 6,
+          "order": 1,
           "mode": 0,
           "outputs": [
             {
-              "name": "rename after connect",
-              "type": "*",
+              "name": "*",
+              "type": null,
               "links": [
                 43
               ],
@@ -404,14 +412,14 @@
             "1": 26
           },
           "flags": {},
-          "order": 12,
+          "order": 13,
           "mode": 0,
           "inputs": [
             {
-              "name": "rename after connect",
-              "type": "*",
+              "name": "IMAGE",
+              "type": "IMAGE",
               "link": 34,
-              "label": "image"
+              "label": null
             }
           ],
           "properties": {},
@@ -471,12 +479,12 @@
             "1": 26
           },
           "flags": {},
-          "order": 0,
+          "order": 2,
           "mode": 0,
           "outputs": [
             {
-              "name": "rename after connect",
-              "type": "*",
+              "name": "model",
+              "type": "MODEL",
               "links": [
                 35
               ],
@@ -501,7 +509,7 @@
             "1": 46
           },
           "flags": {},
-          "order": 7,
+          "order": 8,
           "mode": 0,
           "inputs": [
             {
@@ -530,6 +538,128 @@
           "properties": {
             "Node name for S&R": "VAEEncode"
           }
+        },
+        {
+          "id": 34,
+          "type": "ComponentInput",
+          "pos": [
+            80,
+            260
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 3,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "vae",
+              "type": "VAE",
+              "links": [
+                38,
+                39
+              ],
+              "slot_index": 0,
+              "label": "vae"
+            }
+          ],
+          "title": "3.ComponentInput",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 33,
+          "type": "ComponentInput",
+          "pos": [
+            80,
+            160
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 4,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "links": [
+                36,
+                37
+              ],
+              "slot_index": 0,
+              "label": "clip"
+            }
+          ],
+          "title": "2.ComponentInput",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 35,
+          "type": "ComponentInput",
+          "pos": [
+            80,
+            360
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 5,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "pixels",
+              "type": "IMAGE",
+              "links": [
+                40
+              ],
+              "slot_index": 0,
+              "label": "image"
+            }
+          ],
+          "title": "4.ComponentInput",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 36,
+          "type": "ComponentInput",
+          "pos": [
+            80,
+            460
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 6,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": "STRING",
+              "links": [
+                41
+              ],
+              "slot_index": 0,
+              "label": "positive"
+            }
+          ],
+          "title": "5.ComponentInput",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
         },
         {
           "id": 16,
@@ -590,10 +720,12 @@
               "name": "LATENT",
               "type": "LATENT",
               "links": [
-                16
+                16,
+                44
               ],
               "shape": 3,
-              "slot_index": 0
+              "slot_index": 0,
+              "color": "#FF9CF9"
             }
           ],
           "properties": {
@@ -610,123 +742,27 @@
           ]
         },
         {
-          "id": 34,
-          "type": "ComponentInput",
+          "id": 39,
+          "type": "ComponentOutput",
           "pos": [
-            80,
-            260
+            1500,
+            380
           ],
           "size": {
             "0": 178,
             "1": 26
           },
           "flags": {},
-          "order": 2,
+          "order": 12,
           "mode": 0,
-          "outputs": [
+          "inputs": [
             {
-              "name": "rename after connect",
-              "type": "*",
-              "links": [
-                38,
-                39
-              ],
-              "slot_index": 0,
-              "label": "vae"
+              "name": "LATENT",
+              "type": "LATENT",
+              "link": 44,
+              "label": null
             }
           ],
-          "title": "3.ComponentInput",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 33,
-          "type": "ComponentInput",
-          "pos": [
-            80,
-            160
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 1,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "rename after connect",
-              "type": "*",
-              "links": [
-                36,
-                37
-              ],
-              "slot_index": 0,
-              "label": "clip"
-            }
-          ],
-          "title": "2.ComponentInput",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 35,
-          "type": "ComponentInput",
-          "pos": [
-            80,
-            360
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 3,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "rename after connect",
-              "type": "*",
-              "links": [
-                40
-              ],
-              "slot_index": 0,
-              "label": "image"
-            }
-          ],
-          "title": "4.ComponentInput",
-          "properties": {},
-          "color": "#322",
-          "bgcolor": "#533"
-        },
-        {
-          "id": 36,
-          "type": "ComponentInput",
-          "pos": [
-            80,
-            460
-          ],
-          "size": {
-            "0": 178,
-            "1": 26
-          },
-          "flags": {},
-          "order": 4,
-          "mode": 0,
-          "outputs": [
-            {
-              "name": "rename after connect",
-              "type": "*",
-              "links": [
-                41
-              ],
-              "slot_index": 0,
-              "label": "positive"
-            }
-          ],
-          "title": "5.ComponentInput",
           "properties": {},
           "color": "#322",
           "bgcolor": "#533"
@@ -844,6 +880,14 @@
           16,
           4,
           "FLOAT"
+        ],
+        [
+          44,
+          16,
+          0,
+          39,
+          0,
+          "*"
         ]
       ],
       "groups": [],
@@ -935,7 +979,7 @@
         },
         "31": {
           "inputs": {
-            "rename after connect": [
+            "IMAGE": [
               "18",
               0
             ]
@@ -961,6 +1005,14 @@
         },
         "38": {
           "inputs": {}
+        },
+        "39": {
+          "inputs": {
+            "LATENT": [
+              "16",
+              0
+            ]
+          }
         }
       }
     }

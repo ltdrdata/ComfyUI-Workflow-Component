@@ -1,38 +1,13 @@
 {
-  "last_node_id": 3,
-  "last_link_id": 2,
+  "last_node_id": 5,
+  "last_link_id": 4,
   "nodes": [
     {
-      "id": 3,
-      "type": "PreviewImage",
+      "id": 4,
+      "type": "## make-basic_pipe [2c8c61]",
       "pos": [
-        928,
-        300
-      ],
-      "size": {
-        "0": 940,
-        "1": 570
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      }
-    },
-    {
-      "id": 2,
-      "type": "## make-basic_pipe",
-      "pos": [
-        50,
-        300
+        40,
+        80
       ],
       "size": {
         "0": 400,
@@ -53,27 +28,30 @@
           "name": "BASIC_PIPE",
           "type": "BASIC_PIPE",
           "links": [
-            1
+            3
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
+      "title": "## make-basic_pipe",
       "properties": {
-        "Node name for S&R": "## make-basic_pipe"
+        "Node name for S&R": "## make-basic_pipe [2c8c61]"
       },
       "widgets_values": [
-        "V07_v07.safetensors",
+        "calicomixreal_v10.safetensors",
         "photorealistic:1.4, best quality:1.4, beautiful ocean view cafe terrace, ",
         "worst quality:1.4, low quality:1.4, (looking viewer:1.2), (nsfw:1.2)"
-      ]
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
     },
     {
-      "id": 1,
-      "type": "## 2obj",
+      "id": 5,
+      "type": "## 2obj [b7a97e]",
       "pos": [
         490,
-        300
+        80
       ],
       "size": {
         "0": 400,
@@ -86,21 +64,22 @@
         {
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
-          "link": 1
+          "link": 3
         }
       ],
       "outputs": [
         {
-          "name": "basic_pipe",
+          "name": "BASIC_PIPE",
           "type": "BASIC_PIPE",
           "links": null,
-          "shape": 3
+          "shape": 3,
+          "slot_index": 0
         },
         {
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            2
+            4
           ],
           "shape": 3,
           "slot_index": 1
@@ -112,8 +91,9 @@
           "shape": 3
         }
       ],
+      "title": "## 2obj",
       "properties": {
-        "Node name for S&R": "## 2obj"
+        "Node name for S&R": "## 2obj [b7a97e]"
       },
       "widgets_values": [
         1280,
@@ -138,20 +118,45 @@
       ],
       "color": "#322",
       "bgcolor": "#533"
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [
+        940,
+        80
+      ],
+      "size": {
+        "0": 940,
+        "1": 570
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
     }
   ],
   "links": [
     [
-      1,
-      2,
+      3,
+      4,
       0,
-      1,
+      5,
       0,
       "BASIC_PIPE"
     ],
     [
-      2,
-      1,
+      4,
+      5,
       1,
       3,
       0,
@@ -161,5 +166,4760 @@
   "groups": [],
   "config": {},
   "extra": {},
-  "version": 0.4
+  "version": 0.4,
+  "components": {
+    "## make-basic_pipe [2c8c61]": {
+      "last_node_id": 10,
+      "last_link_id": 13,
+      "nodes": [
+        {
+          "id": 4,
+          "type": "CLIPTextEncode",
+          "pos": [
+            780,
+            340
+          ],
+          "size": [
+            210,
+            54
+          ],
+          "flags": {},
+          "order": 6,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 6
+            },
+            {
+              "name": "text",
+              "type": "STRING",
+              "link": 9,
+              "widget": {
+                "name": "text",
+                "config": [
+                  "STRING",
+                  {
+                    "multiline": true
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                7
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "CLIPTextEncode"
+          },
+          "widgets_values": [
+            ""
+          ]
+        },
+        {
+          "id": 2,
+          "type": "ToBasicPipe",
+          "pos": [
+            1060,
+            180
+          ],
+          "size": {
+            "0": 241.79998779296875,
+            "1": 106
+          },
+          "flags": {},
+          "order": 7,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "model",
+              "type": "MODEL",
+              "link": 1
+            },
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 2
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "link": 3
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "link": 5
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "link": 7
+            }
+          ],
+          "outputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "links": [
+                11
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "ToBasicPipe"
+          }
+        },
+        {
+          "id": 5,
+          "type": "ComponentInput",
+          "pos": [
+            90,
+            230
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 0,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": "STRING",
+              "links": [
+                8
+              ],
+              "label": "positive"
+            }
+          ],
+          "title": "2.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 6,
+          "type": "ComponentInput",
+          "pos": [
+            90,
+            360
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 1,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": "STRING",
+              "links": [
+                9
+              ],
+              "label": "negative"
+            }
+          ],
+          "title": "3.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 9,
+          "type": "ComponentInputOptional",
+          "pos": [
+            90,
+            490
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 2,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "vae",
+              "type": "VAE",
+              "links": [
+                12
+              ],
+              "label": "vae_opt"
+            }
+          ],
+          "title": "4.Component Input (OPT)",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 7,
+          "type": "ComponentInput",
+          "pos": [
+            90,
+            110
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 3,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "ckpt_name",
+              "type": "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors",
+              "links": [
+                10
+              ]
+            }
+          ],
+          "title": "1.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 8,
+          "type": "EditBasicPipe",
+          "pos": [
+            1400,
+            180
+          ],
+          "size": {
+            "0": 267,
+            "1": 126
+          },
+          "flags": {},
+          "order": 8,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "link": 11
+            },
+            {
+              "name": "model",
+              "type": "MODEL",
+              "link": null
+            },
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": null
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "link": 12,
+              "slot_index": 3
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "link": null
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "link": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "links": [
+                13
+              ],
+              "shape": 3,
+              "slot_index": 0,
+              "color": ""
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "EditBasicPipe"
+          }
+        },
+        {
+          "id": 10,
+          "type": "ComponentOutput",
+          "pos": [
+            1750,
+            180
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 9,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "BASIC_PIPE",
+              "type": "BASIC_PIPE",
+              "link": 13,
+              "label": null
+            }
+          ],
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 3,
+          "type": "CLIPTextEncode",
+          "pos": [
+            770,
+            90
+          ],
+          "size": [
+            210,
+            54
+          ],
+          "flags": {},
+          "order": 5,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 4
+            },
+            {
+              "name": "text",
+              "type": "STRING",
+              "link": 8,
+              "widget": {
+                "name": "text",
+                "config": [
+                  "STRING",
+                  {
+                    "multiline": true
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                5
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "CLIPTextEncode"
+          },
+          "widgets_values": [
+            ""
+          ]
+        },
+        {
+          "id": 1,
+          "type": "CheckpointLoaderSimple",
+          "pos": [
+            410,
+            180
+          ],
+          "size": [
+            315,
+            98
+          ],
+          "flags": {},
+          "order": 4,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "ckpt_name",
+              "type": "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors",
+              "link": 10,
+              "widget": {
+                "name": "ckpt_name",
+                "config": [
+                  [
+                    "v1-5-pruned-emaonly.ckpt",
+                    "v2-1_512-ema-pruned.safetensors"
+                  ]
+                ]
+              },
+              "slot_index": 0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "MODEL",
+              "type": "MODEL",
+              "links": [
+                1
+              ],
+              "shape": 3,
+              "slot_index": 0
+            },
+            {
+              "name": "CLIP",
+              "type": "CLIP",
+              "links": [
+                2,
+                4,
+                6
+              ],
+              "shape": 3,
+              "slot_index": 1
+            },
+            {
+              "name": "VAE",
+              "type": "VAE",
+              "links": [
+                3
+              ],
+              "shape": 3,
+              "slot_index": 2
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "CheckpointLoaderSimple"
+          },
+          "widgets_values": [
+            "v1-5-pruned-emaonly.ckpt"
+          ]
+        }
+      ],
+      "links": [
+        [
+          1,
+          1,
+          0,
+          2,
+          0,
+          "MODEL"
+        ],
+        [
+          2,
+          1,
+          1,
+          2,
+          1,
+          "CLIP"
+        ],
+        [
+          3,
+          1,
+          2,
+          2,
+          2,
+          "VAE"
+        ],
+        [
+          4,
+          1,
+          1,
+          3,
+          0,
+          "CLIP"
+        ],
+        [
+          5,
+          3,
+          0,
+          2,
+          3,
+          "CONDITIONING"
+        ],
+        [
+          6,
+          1,
+          1,
+          4,
+          0,
+          "CLIP"
+        ],
+        [
+          7,
+          4,
+          0,
+          2,
+          4,
+          "CONDITIONING"
+        ],
+        [
+          8,
+          5,
+          0,
+          3,
+          1,
+          "STRING"
+        ],
+        [
+          9,
+          6,
+          0,
+          4,
+          1,
+          "STRING"
+        ],
+        [
+          10,
+          7,
+          0,
+          1,
+          0,
+          "v1-5-pruned-emaonly.ckpt,v2-1_512-ema-pruned.safetensors"
+        ],
+        [
+          11,
+          2,
+          0,
+          8,
+          0,
+          "BASIC_PIPE"
+        ],
+        [
+          12,
+          9,
+          0,
+          8,
+          3,
+          "VAE"
+        ],
+        [
+          13,
+          8,
+          0,
+          10,
+          0,
+          "*"
+        ]
+      ],
+      "groups": [],
+      "config": {},
+      "extra": {},
+      "version": 0.4,
+      "output": {
+        "1": {
+          "inputs": {
+            "ckpt_name": [
+              "7",
+              0
+            ]
+          },
+          "class_type": "CheckpointLoaderSimple"
+        },
+        "2": {
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "clip": [
+              "1",
+              1
+            ],
+            "vae": [
+              "1",
+              2
+            ],
+            "positive": [
+              "3",
+              0
+            ],
+            "negative": [
+              "4",
+              0
+            ]
+          },
+          "class_type": "ToBasicPipe"
+        },
+        "3": {
+          "inputs": {
+            "text": [
+              "5",
+              0
+            ],
+            "clip": [
+              "1",
+              1
+            ]
+          },
+          "class_type": "CLIPTextEncode"
+        },
+        "4": {
+          "inputs": {
+            "text": [
+              "6",
+              0
+            ],
+            "clip": [
+              "1",
+              1
+            ]
+          },
+          "class_type": "CLIPTextEncode"
+        },
+        "5": {
+          "inputs": {}
+        },
+        "6": {
+          "inputs": {}
+        },
+        "7": {
+          "inputs": {}
+        },
+        "8": {
+          "inputs": {
+            "basic_pipe": [
+              "2",
+              0
+            ],
+            "vae": [
+              "9",
+              0
+            ]
+          },
+          "class_type": "EditBasicPipe"
+        },
+        "9": {
+          "inputs": {}
+        },
+        "10": {
+          "inputs": {
+            "BASIC_PIPE": [
+              "8",
+              0
+            ]
+          }
+        }
+      }
+    },
+    "## 2obj [b7a97e]": {
+      "last_node_id": 93,
+      "last_link_id": 112,
+      "nodes": [
+        {
+          "id": 39,
+          "type": "Integer",
+          "pos": [
+            340,
+            260
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 28,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 20,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                18
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Integer"
+          },
+          "widgets_values": [
+            512
+          ]
+        },
+        {
+          "id": 40,
+          "type": "Integer",
+          "pos": [
+            340,
+            190
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 27,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 19,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 1
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                17
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Integer"
+          },
+          "widgets_values": [
+            1024
+          ]
+        },
+        {
+          "id": 35,
+          "type": "Multiply",
+          "pos": [
+            620,
+            740
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 32,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 21,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 88,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                29
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj1 W",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 42,
+          "type": "Multiply",
+          "pos": [
+            620,
+            840
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 30,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 23,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 89,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                30
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj1 H",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 44,
+          "type": "Multiply",
+          "pos": [
+            620,
+            1040
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 33,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 27,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 92,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                32
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj1 Y",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 48,
+          "type": "Floor",
+          "pos": [
+            880,
+            840
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 41,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 30,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                36
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 49,
+          "type": "Floor",
+          "pos": [
+            880,
+            940
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 42,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 31,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                37
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 50,
+          "type": "Floor",
+          "pos": [
+            880,
+            1040
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 44,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 32,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                38
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 4,
+          "type": "ConditioningSetArea",
+          "pos": [
+            1430,
+            620
+          ],
+          "size": {
+            "0": 317.4000244140625,
+            "1": 154
+          },
+          "flags": {},
+          "order": 49,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "conditioning",
+              "type": "CONDITIONING",
+              "link": 1
+            },
+            {
+              "name": "width",
+              "type": "INT",
+              "link": 35,
+              "widget": {
+                "name": "width",
+                "config": [
+                  "INT",
+                  {
+                    "default": 64,
+                    "min": 64,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "height",
+              "type": "INT",
+              "link": 36,
+              "widget": {
+                "name": "height",
+                "config": [
+                  "INT",
+                  {
+                    "default": 64,
+                    "min": 64,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "x",
+              "type": "INT",
+              "link": 37,
+              "widget": {
+                "name": "x",
+                "config": [
+                  "INT",
+                  {
+                    "default": 0,
+                    "min": 0,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "y",
+              "type": "INT",
+              "link": 38,
+              "widget": {
+                "name": "y",
+                "config": [
+                  "INT",
+                  {
+                    "default": 0,
+                    "min": 0,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "strength",
+              "type": "FLOAT",
+              "link": 40,
+              "widget": {
+                "name": "strength",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": 0,
+                    "max": 10,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                3
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "ConditioningSetArea"
+          },
+          "widgets_values": [
+            64,
+            64,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 53,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1030
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 0,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                40
+              ],
+              "label": "obj1 strength",
+              "slot_index": 0
+            }
+          ],
+          "title": "14.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 52,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1100
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 1,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": null,
+              "links": [
+                39
+              ],
+              "label": "obj1 positive"
+            }
+          ],
+          "title": "15.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 43,
+          "type": "Multiply",
+          "pos": [
+            620,
+            940
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 31,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 25,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 90,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                31
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj1 X",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 47,
+          "type": "Floor",
+          "pos": [
+            880,
+            740
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 43,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 29,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                35
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 18,
+          "type": "CLIPTextEncode",
+          "pos": [
+            1160,
+            1080
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 39,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 46
+            },
+            {
+              "name": "text",
+              "type": "STRING",
+              "link": 39,
+              "widget": {
+                "name": "text",
+                "config": [
+                  "STRING",
+                  {
+                    "multiline": true
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                1
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "Obj1 Positive",
+          "properties": {
+            "Node name for S&R": "CLIPTextEncode"
+          },
+          "widgets_values": [
+            ""
+          ]
+        },
+        {
+          "id": 63,
+          "type": "CLIPTextEncode",
+          "pos": [
+            1160,
+            1710
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 40,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": 109
+            },
+            {
+              "name": "text",
+              "type": "STRING",
+              "link": 53,
+              "widget": {
+                "name": "text",
+                "config": [
+                  "STRING",
+                  {
+                    "multiline": true
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                47
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "Obj1 Positive",
+          "properties": {
+            "Node name for S&R": "CLIPTextEncode"
+          },
+          "widgets_values": [
+            ""
+          ]
+        },
+        {
+          "id": 70,
+          "type": "Multiply",
+          "pos": [
+            620,
+            1370
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 34,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 101,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 93,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                64
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj2 W",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 71,
+          "type": "Multiply",
+          "pos": [
+            620,
+            1470
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 35,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 102,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 94,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                65
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj2 H",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 72,
+          "type": "Multiply",
+          "pos": [
+            620,
+            1570
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 36,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 103,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 95,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                66
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj2 X",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 73,
+          "type": "Multiply",
+          "pos": [
+            620,
+            1670
+          ],
+          "size": {
+            "0": 210,
+            "1": 54
+          },
+          "flags": {},
+          "order": 37,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value_A",
+              "type": "FLOAT",
+              "link": 104,
+              "widget": {
+                "name": "Value_A",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 0
+            },
+            {
+              "name": "Value_B",
+              "type": "FLOAT",
+              "link": 96,
+              "widget": {
+                "name": "Value_B",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                67
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "title": "obj2 Y",
+          "properties": {
+            "Node name for S&R": "Multiply"
+          },
+          "widgets_values": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": 74,
+          "type": "Floor",
+          "pos": [
+            880,
+            1370
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 45,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 64,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                48
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 75,
+          "type": "Floor",
+          "pos": [
+            880,
+            1470
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 46,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 65,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                49
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 76,
+          "type": "Floor",
+          "pos": [
+            880,
+            1570
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 47,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 66,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                50
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 77,
+          "type": "Floor",
+          "pos": [
+            880,
+            1670
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 48,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 67,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "INT",
+              "type": "INT",
+              "links": [
+                51
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Floor"
+          },
+          "widgets_values": [
+            1
+          ]
+        },
+        {
+          "id": 78,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1730
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 2,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "text",
+              "type": "STRING",
+              "links": [
+                53
+              ],
+              "label": "obj2 positive"
+            }
+          ],
+          "title": "21.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 60,
+          "type": "ConditioningSetArea",
+          "pos": [
+            1430,
+            1250
+          ],
+          "size": {
+            "0": 317.4000244140625,
+            "1": 154
+          },
+          "flags": {},
+          "order": 50,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "conditioning",
+              "type": "CONDITIONING",
+              "link": 47
+            },
+            {
+              "name": "width",
+              "type": "INT",
+              "link": 48,
+              "widget": {
+                "name": "width",
+                "config": [
+                  "INT",
+                  {
+                    "default": 64,
+                    "min": 64,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "height",
+              "type": "INT",
+              "link": 49,
+              "widget": {
+                "name": "height",
+                "config": [
+                  "INT",
+                  {
+                    "default": 64,
+                    "min": 64,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "x",
+              "type": "INT",
+              "link": 50,
+              "widget": {
+                "name": "x",
+                "config": [
+                  "INT",
+                  {
+                    "default": 0,
+                    "min": 0,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "y",
+              "type": "INT",
+              "link": 51,
+              "widget": {
+                "name": "y",
+                "config": [
+                  "INT",
+                  {
+                    "default": 0,
+                    "min": 0,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "strength",
+              "type": "FLOAT",
+              "link": 52,
+              "widget": {
+                "name": "strength",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": 0,
+                    "max": 10,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                68
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "ConditioningSetArea"
+          },
+          "widgets_values": [
+            64,
+            64,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": 21,
+          "type": "ConditioningCombine",
+          "pos": [
+            1975,
+            1025
+          ],
+          "size": {
+            "0": 228.39999389648438,
+            "1": 46
+          },
+          "flags": {},
+          "order": 51,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "conditioning_1",
+              "type": "CONDITIONING",
+              "link": 3
+            },
+            {
+              "name": "conditioning_2",
+              "type": "CONDITIONING",
+              "link": 68
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                6
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "ConditioningCombine"
+          }
+        },
+        {
+          "id": 23,
+          "type": "EmptyLatentImage",
+          "pos": [
+            610,
+            50
+          ],
+          "size": {
+            "0": 315,
+            "1": 106
+          },
+          "flags": {},
+          "order": 38,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "width",
+              "type": "INT",
+              "link": 17,
+              "widget": {
+                "name": "width",
+                "config": [
+                  "INT",
+                  {
+                    "default": 512,
+                    "min": 64,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              }
+            },
+            {
+              "name": "height",
+              "type": "INT",
+              "link": 18,
+              "widget": {
+                "name": "height",
+                "config": [
+                  "INT",
+                  {
+                    "default": 512,
+                    "min": 64,
+                    "max": 8192,
+                    "step": 8
+                  }
+                ]
+              },
+              "slot_index": 1
+            }
+          ],
+          "outputs": [
+            {
+              "name": "LATENT",
+              "type": "LATENT",
+              "links": [
+                74
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "EmptyLatentImage"
+          },
+          "widgets_values": [
+            512,
+            512,
+            1
+          ]
+        },
+        {
+          "id": 84,
+          "type": "ComponentOutput",
+          "pos": [
+            3790,
+            370
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 58,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "IMAGE",
+              "type": "IMAGE",
+              "link": 78,
+              "label": null
+            }
+          ],
+          "title": "2.Component Output",
+          "properties": {},
+          "color": "#223",
+          "bgcolor": "#335"
+        },
+        {
+          "id": 86,
+          "type": "ComponentOutput",
+          "pos": [
+            3790,
+            550
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 56,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "LATENT",
+              "type": "LATENT",
+              "link": 79,
+              "label": null
+            }
+          ],
+          "title": "3.Component Output",
+          "properties": {},
+          "color": "#223",
+          "bgcolor": "#335"
+        },
+        {
+          "id": 87,
+          "type": "ComponentOutput",
+          "pos": [
+            3791,
+            226
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 57,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "BASIC_PIPE",
+              "type": "BASIC_PIPE",
+              "link": 112,
+              "label": null
+            }
+          ],
+          "title": "1.Component Output",
+          "properties": {},
+          "color": "#223",
+          "bgcolor": "#335"
+        },
+        {
+          "id": 82,
+          "type": "VAEDecode",
+          "pos": [
+            3450,
+            370
+          ],
+          "size": {
+            "0": 210,
+            "1": 46
+          },
+          "flags": {},
+          "order": 55,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "samples",
+              "type": "LATENT",
+              "link": 75
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "link": 108
+            }
+          ],
+          "outputs": [
+            {
+              "name": "IMAGE",
+              "type": "IMAGE",
+              "links": [
+                78
+              ],
+              "shape": 3,
+              "slot_index": 0,
+              "color": "#64B5F6"
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "VAEDecode"
+          }
+        },
+        {
+          "id": 89,
+          "type": "ComponentInput",
+          "pos": [
+            2530,
+            840
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 3,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "steps",
+              "type": null,
+              "links": [
+                82
+              ],
+              "label": "steps"
+            }
+          ],
+          "title": "31.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 91,
+          "type": "ComponentInput",
+          "pos": [
+            2530,
+            1000
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 4,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "denoise",
+              "type": null,
+              "links": [
+                84
+              ],
+              "label": "denoise"
+            }
+          ],
+          "title": "33.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 80,
+          "type": "KSampler",
+          "pos": [
+            2940,
+            500
+          ],
+          "size": {
+            "0": 315,
+            "1": 262
+          },
+          "flags": {},
+          "order": 53,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "model",
+              "type": "MODEL",
+              "link": 107
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "link": 70
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "link": 106
+            },
+            {
+              "name": "latent_image",
+              "type": "LATENT",
+              "link": 74
+            },
+            {
+              "name": "seed",
+              "type": "INT",
+              "link": 81,
+              "widget": {
+                "name": "seed",
+                "config": [
+                  "INT",
+                  {
+                    "default": 0,
+                    "min": 0,
+                    "max": 18446744073709552000
+                  }
+                ]
+              },
+              "slot_index": 4
+            },
+            {
+              "name": "steps",
+              "type": "INT",
+              "link": 82,
+              "widget": {
+                "name": "steps",
+                "config": [
+                  "INT",
+                  {
+                    "default": 20,
+                    "min": 1,
+                    "max": 10000
+                  }
+                ]
+              },
+              "slot_index": 5
+            },
+            {
+              "name": "cfg",
+              "type": "FLOAT",
+              "link": 83,
+              "widget": {
+                "name": "cfg",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 8,
+                    "min": 0,
+                    "max": 100
+                  }
+                ]
+              },
+              "slot_index": 6
+            },
+            {
+              "name": "denoise",
+              "type": "FLOAT",
+              "link": 84,
+              "widget": {
+                "name": "denoise",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.01
+                  }
+                ]
+              },
+              "slot_index": 7
+            }
+          ],
+          "outputs": [
+            {
+              "name": "LATENT",
+              "type": "LATENT",
+              "links": [
+                75,
+                79
+              ],
+              "shape": 3,
+              "slot_index": 0,
+              "color": "#FF9CF9"
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "KSampler"
+          },
+          "widgets_values": [
+            0,
+            "randomize",
+            20,
+            8,
+            "euler",
+            "normal",
+            1
+          ]
+        },
+        {
+          "id": 88,
+          "type": "ComponentInput",
+          "pos": [
+            2530,
+            760
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 5,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "seed",
+              "type": "INT",
+              "links": [
+                81
+              ],
+              "label": "seed"
+            }
+          ],
+          "title": "30.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 90,
+          "type": "ComponentInput",
+          "pos": [
+            2530,
+            920
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 6,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "cfg",
+              "type": "FLOAT",
+              "links": [
+                83
+              ],
+              "label": "cfg"
+            }
+          ],
+          "title": "32.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 8,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            820
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 7,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": null,
+              "links": [
+                85
+              ],
+              "label": "obj1 ratio H",
+              "slot_index": 0
+            }
+          ],
+          "title": "11.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 31,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            890
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 8,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": null,
+              "links": [
+                86
+              ],
+              "label": "obj1 ratio X",
+              "slot_index": 0
+            }
+          ],
+          "title": "12.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 7,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            750
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 9,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": null,
+              "links": [
+                87
+              ],
+              "slot_index": 0,
+              "label": "obj1 ratio W"
+            }
+          ],
+          "title": "10.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 32,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            960
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 10,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": null,
+              "links": [
+                91
+              ],
+              "label": "obj1 ratio Y",
+              "slot_index": 0
+            }
+          ],
+          "title": "13.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 79,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1659
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 11,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                52
+              ],
+              "label": "obj2 strength",
+              "slot_index": 0
+            }
+          ],
+          "title": "20.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 28,
+          "type": "Float",
+          "pos": [
+            340,
+            860
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 19,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 85,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                89
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.5
+          ]
+        },
+        {
+          "id": 27,
+          "type": "Float",
+          "pos": [
+            340,
+            760
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 21,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 87,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                88
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.3
+          ]
+        },
+        {
+          "id": 33,
+          "type": "Float",
+          "pos": [
+            340,
+            960
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 20,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 86,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                90
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.2
+          ]
+        },
+        {
+          "id": 34,
+          "type": "Float",
+          "pos": [
+            340,
+            1060
+          ],
+          "size": {
+            "0": 210,
+            "1": 34
+          },
+          "flags": {},
+          "order": 22,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 91,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                92
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.2
+          ]
+        },
+        {
+          "id": 64,
+          "type": "Float",
+          "pos": [
+            340,
+            1380
+          ],
+          "size": {
+            "0": 210,
+            "1": 58
+          },
+          "flags": {},
+          "order": 23,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 97,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                93
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.3
+          ]
+        },
+        {
+          "id": 65,
+          "type": "Float",
+          "pos": [
+            340,
+            1480
+          ],
+          "size": {
+            "0": 210,
+            "1": 58
+          },
+          "flags": {},
+          "order": 24,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 98,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                94
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.5
+          ]
+        },
+        {
+          "id": 68,
+          "type": "Float",
+          "pos": [
+            340,
+            1580
+          ],
+          "size": {
+            "0": 210,
+            "1": 58
+          },
+          "flags": {},
+          "order": 25,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 99,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                95
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.7
+          ]
+        },
+        {
+          "id": 69,
+          "type": "Float",
+          "pos": [
+            340,
+            1680
+          ],
+          "size": {
+            "0": 210,
+            "1": 58
+          },
+          "flags": {},
+          "order": 26,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "link": 100,
+              "widget": {
+                "name": "Value",
+                "config": [
+                  "FLOAT",
+                  {
+                    "default": 1,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "step": 0.01
+                  }
+                ]
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "FLOAT",
+              "type": "FLOAT",
+              "links": [
+                96
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "Float"
+          },
+          "widgets_values": [
+            0.3
+          ]
+        },
+        {
+          "id": 61,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1380
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 12,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                97
+              ],
+              "label": "obj2 ratio W",
+              "slot_index": 0
+            }
+          ],
+          "title": "16.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 62,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1450
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 13,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                98
+              ],
+              "slot_index": 0,
+              "label": "obj2 ratio H"
+            }
+          ],
+          "title": "17.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 66,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1520
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 14,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                99
+              ],
+              "slot_index": 0,
+              "label": "obj2 ratio X"
+            }
+          ],
+          "title": "18.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 67,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            1590
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 15,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                100
+              ],
+              "slot_index": 0,
+              "label": "obj2 ratio Y"
+            }
+          ],
+          "title": "19.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 5,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            190
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 16,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                19,
+                21,
+                25,
+                101,
+                103
+              ],
+              "slot_index": 0,
+              "label": "canvas W"
+            }
+          ],
+          "title": "01.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 6,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            260
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 17,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "FLOAT",
+              "links": [
+                20,
+                23,
+                27,
+                102,
+                104
+              ],
+              "slot_index": 0,
+              "label": "canvas H"
+            }
+          ],
+          "title": "02.Component Input",
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 59,
+          "type": "FromBasicPipe",
+          "pos": [
+            610,
+            -140
+          ],
+          "size": {
+            "0": 241.79998779296875,
+            "1": 106
+          },
+          "flags": {},
+          "order": 29,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "link": 43
+            }
+          ],
+          "outputs": [
+            {
+              "name": "model",
+              "type": "MODEL",
+              "links": [
+                107
+              ],
+              "shape": 3,
+              "slot_index": 0
+            },
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "links": [
+                46,
+                109
+              ],
+              "shape": 3,
+              "slot_index": 1
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "links": [
+                108
+              ],
+              "shape": 3,
+              "slot_index": 2
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "links": [
+                105
+              ],
+              "shape": 3,
+              "slot_index": 3
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "links": [
+                106
+              ],
+              "shape": 3,
+              "slot_index": 4
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "FromBasicPipe"
+          }
+        },
+        {
+          "id": 58,
+          "type": "ComponentInput",
+          "pos": [
+            70,
+            -140
+          ],
+          "size": {
+            "0": 178,
+            "1": 26
+          },
+          "flags": {},
+          "order": 18,
+          "mode": 0,
+          "outputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "links": [
+                43,
+                110
+              ],
+              "slot_index": 0,
+              "label": "basic_pipe",
+              "color": ""
+            }
+          ],
+          "properties": {},
+          "color": "#322",
+          "bgcolor": "#533"
+        },
+        {
+          "id": 22,
+          "type": "ConditioningCombine",
+          "pos": [
+            2411,
+            335
+          ],
+          "size": {
+            "0": 228.39999389648438,
+            "1": 46
+          },
+          "flags": {},
+          "order": 52,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "conditioning_1",
+              "type": "CONDITIONING",
+              "link": 105
+            },
+            {
+              "name": "conditioning_2",
+              "type": "CONDITIONING",
+              "link": 6
+            }
+          ],
+          "outputs": [
+            {
+              "name": "CONDITIONING",
+              "type": "CONDITIONING",
+              "links": [
+                70,
+                111
+              ],
+              "shape": 3,
+              "slot_index": 0
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "ConditioningCombine"
+          }
+        },
+        {
+          "id": 93,
+          "type": "EditBasicPipe",
+          "pos": [
+            2930,
+            -130
+          ],
+          "size": {
+            "0": 267,
+            "1": 126
+          },
+          "flags": {},
+          "order": 54,
+          "mode": 0,
+          "inputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "link": 110
+            },
+            {
+              "name": "model",
+              "type": "MODEL",
+              "link": null
+            },
+            {
+              "name": "clip",
+              "type": "CLIP",
+              "link": null
+            },
+            {
+              "name": "vae",
+              "type": "VAE",
+              "link": null
+            },
+            {
+              "name": "positive",
+              "type": "CONDITIONING",
+              "link": 111
+            },
+            {
+              "name": "negative",
+              "type": "CONDITIONING",
+              "link": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "basic_pipe",
+              "type": "BASIC_PIPE",
+              "links": [
+                112
+              ],
+              "shape": 3,
+              "slot_index": 0,
+              "color": ""
+            }
+          ],
+          "properties": {
+            "Node name for S&R": "EditBasicPipe"
+          }
+        }
+      ],
+      "links": [
+        [
+          1,
+          18,
+          0,
+          4,
+          0,
+          "CONDITIONING"
+        ],
+        [
+          3,
+          4,
+          0,
+          21,
+          0,
+          "CONDITIONING"
+        ],
+        [
+          6,
+          21,
+          0,
+          22,
+          1,
+          "CONDITIONING"
+        ],
+        [
+          17,
+          40,
+          0,
+          23,
+          0,
+          "INT"
+        ],
+        [
+          18,
+          39,
+          0,
+          23,
+          1,
+          "INT"
+        ],
+        [
+          19,
+          5,
+          0,
+          40,
+          0,
+          "FLOAT"
+        ],
+        [
+          20,
+          6,
+          0,
+          39,
+          0,
+          "FLOAT"
+        ],
+        [
+          21,
+          5,
+          0,
+          35,
+          0,
+          "FLOAT"
+        ],
+        [
+          23,
+          6,
+          0,
+          42,
+          0,
+          "FLOAT"
+        ],
+        [
+          25,
+          5,
+          0,
+          43,
+          0,
+          "FLOAT"
+        ],
+        [
+          27,
+          6,
+          0,
+          44,
+          0,
+          "FLOAT"
+        ],
+        [
+          29,
+          35,
+          0,
+          47,
+          0,
+          "FLOAT"
+        ],
+        [
+          30,
+          42,
+          0,
+          48,
+          0,
+          "FLOAT"
+        ],
+        [
+          31,
+          43,
+          0,
+          49,
+          0,
+          "FLOAT"
+        ],
+        [
+          32,
+          44,
+          0,
+          50,
+          0,
+          "FLOAT"
+        ],
+        [
+          35,
+          47,
+          0,
+          4,
+          1,
+          "INT"
+        ],
+        [
+          36,
+          48,
+          0,
+          4,
+          2,
+          "INT"
+        ],
+        [
+          37,
+          49,
+          0,
+          4,
+          3,
+          "INT"
+        ],
+        [
+          38,
+          50,
+          0,
+          4,
+          4,
+          "INT"
+        ],
+        [
+          39,
+          52,
+          0,
+          18,
+          1,
+          "STRING"
+        ],
+        [
+          40,
+          53,
+          0,
+          4,
+          5,
+          "FLOAT"
+        ],
+        [
+          43,
+          58,
+          0,
+          59,
+          0,
+          "BASIC_PIPE"
+        ],
+        [
+          46,
+          59,
+          1,
+          18,
+          0,
+          "CLIP"
+        ],
+        [
+          47,
+          63,
+          0,
+          60,
+          0,
+          "CONDITIONING"
+        ],
+        [
+          48,
+          74,
+          0,
+          60,
+          1,
+          "INT"
+        ],
+        [
+          49,
+          75,
+          0,
+          60,
+          2,
+          "INT"
+        ],
+        [
+          50,
+          76,
+          0,
+          60,
+          3,
+          "INT"
+        ],
+        [
+          51,
+          77,
+          0,
+          60,
+          4,
+          "INT"
+        ],
+        [
+          52,
+          79,
+          0,
+          60,
+          5,
+          "FLOAT"
+        ],
+        [
+          53,
+          78,
+          0,
+          63,
+          1,
+          "STRING"
+        ],
+        [
+          64,
+          70,
+          0,
+          74,
+          0,
+          "FLOAT"
+        ],
+        [
+          65,
+          71,
+          0,
+          75,
+          0,
+          "FLOAT"
+        ],
+        [
+          66,
+          72,
+          0,
+          76,
+          0,
+          "FLOAT"
+        ],
+        [
+          67,
+          73,
+          0,
+          77,
+          0,
+          "FLOAT"
+        ],
+        [
+          68,
+          60,
+          0,
+          21,
+          1,
+          "CONDITIONING"
+        ],
+        [
+          70,
+          22,
+          0,
+          80,
+          1,
+          "CONDITIONING"
+        ],
+        [
+          74,
+          23,
+          0,
+          80,
+          3,
+          "LATENT"
+        ],
+        [
+          75,
+          80,
+          0,
+          82,
+          0,
+          "LATENT"
+        ],
+        [
+          78,
+          82,
+          0,
+          84,
+          0,
+          "*"
+        ],
+        [
+          79,
+          80,
+          0,
+          86,
+          0,
+          "*"
+        ],
+        [
+          81,
+          88,
+          0,
+          80,
+          4,
+          "INT"
+        ],
+        [
+          82,
+          89,
+          0,
+          80,
+          5,
+          "INT"
+        ],
+        [
+          83,
+          90,
+          0,
+          80,
+          6,
+          "FLOAT"
+        ],
+        [
+          84,
+          91,
+          0,
+          80,
+          7,
+          "FLOAT"
+        ],
+        [
+          85,
+          8,
+          0,
+          28,
+          0,
+          "FLOAT"
+        ],
+        [
+          86,
+          31,
+          0,
+          33,
+          0,
+          "FLOAT"
+        ],
+        [
+          87,
+          7,
+          0,
+          27,
+          0,
+          "FLOAT"
+        ],
+        [
+          88,
+          27,
+          0,
+          35,
+          1,
+          "FLOAT"
+        ],
+        [
+          89,
+          28,
+          0,
+          42,
+          1,
+          "FLOAT"
+        ],
+        [
+          90,
+          33,
+          0,
+          43,
+          1,
+          "FLOAT"
+        ],
+        [
+          91,
+          32,
+          0,
+          34,
+          0,
+          "FLOAT"
+        ],
+        [
+          92,
+          34,
+          0,
+          44,
+          1,
+          "FLOAT"
+        ],
+        [
+          93,
+          64,
+          0,
+          70,
+          1,
+          "FLOAT"
+        ],
+        [
+          94,
+          65,
+          0,
+          71,
+          1,
+          "FLOAT"
+        ],
+        [
+          95,
+          68,
+          0,
+          72,
+          1,
+          "FLOAT"
+        ],
+        [
+          96,
+          69,
+          0,
+          73,
+          1,
+          "FLOAT"
+        ],
+        [
+          97,
+          61,
+          0,
+          64,
+          0,
+          "FLOAT"
+        ],
+        [
+          98,
+          62,
+          0,
+          65,
+          0,
+          "FLOAT"
+        ],
+        [
+          99,
+          66,
+          0,
+          68,
+          0,
+          "FLOAT"
+        ],
+        [
+          100,
+          67,
+          0,
+          69,
+          0,
+          "FLOAT"
+        ],
+        [
+          101,
+          5,
+          0,
+          70,
+          0,
+          "FLOAT"
+        ],
+        [
+          102,
+          6,
+          0,
+          71,
+          0,
+          "FLOAT"
+        ],
+        [
+          103,
+          5,
+          0,
+          72,
+          0,
+          "FLOAT"
+        ],
+        [
+          104,
+          6,
+          0,
+          73,
+          0,
+          "FLOAT"
+        ],
+        [
+          105,
+          59,
+          3,
+          22,
+          0,
+          "CONDITIONING"
+        ],
+        [
+          106,
+          59,
+          4,
+          80,
+          2,
+          "CONDITIONING"
+        ],
+        [
+          107,
+          59,
+          0,
+          80,
+          0,
+          "MODEL"
+        ],
+        [
+          108,
+          59,
+          2,
+          82,
+          1,
+          "VAE"
+        ],
+        [
+          109,
+          59,
+          1,
+          63,
+          0,
+          "CLIP"
+        ],
+        [
+          110,
+          58,
+          0,
+          93,
+          0,
+          "BASIC_PIPE"
+        ],
+        [
+          111,
+          22,
+          0,
+          93,
+          4,
+          "CONDITIONING"
+        ],
+        [
+          112,
+          93,
+          0,
+          87,
+          0,
+          "*"
+        ]
+      ],
+      "groups": [],
+      "config": {},
+      "extra": {},
+      "version": 0.4,
+      "output": {
+        "4": {
+          "inputs": {
+            "width": [
+              "47",
+              0
+            ],
+            "height": [
+              "48",
+              0
+            ],
+            "x": [
+              "49",
+              0
+            ],
+            "y": [
+              "50",
+              0
+            ],
+            "strength": [
+              "53",
+              0
+            ],
+            "conditioning": [
+              "18",
+              0
+            ]
+          },
+          "class_type": "ConditioningSetArea"
+        },
+        "5": {
+          "inputs": {}
+        },
+        "6": {
+          "inputs": {}
+        },
+        "7": {
+          "inputs": {}
+        },
+        "8": {
+          "inputs": {}
+        },
+        "18": {
+          "inputs": {
+            "text": [
+              "52",
+              0
+            ],
+            "clip": [
+              "59",
+              1
+            ]
+          },
+          "class_type": "CLIPTextEncode"
+        },
+        "21": {
+          "inputs": {
+            "conditioning_1": [
+              "4",
+              0
+            ],
+            "conditioning_2": [
+              "60",
+              0
+            ]
+          },
+          "class_type": "ConditioningCombine"
+        },
+        "22": {
+          "inputs": {
+            "conditioning_1": [
+              "59",
+              3
+            ],
+            "conditioning_2": [
+              "21",
+              0
+            ]
+          },
+          "class_type": "ConditioningCombine"
+        },
+        "23": {
+          "inputs": {
+            "width": [
+              "40",
+              0
+            ],
+            "height": [
+              "39",
+              0
+            ],
+            "batch_size": 1
+          },
+          "class_type": "EmptyLatentImage"
+        },
+        "27": {
+          "inputs": {
+            "Value": [
+              "7",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "28": {
+          "inputs": {
+            "Value": [
+              "8",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "31": {
+          "inputs": {}
+        },
+        "32": {
+          "inputs": {}
+        },
+        "33": {
+          "inputs": {
+            "Value": [
+              "31",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "34": {
+          "inputs": {
+            "Value": [
+              "32",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "35": {
+          "inputs": {
+            "Value_A": [
+              "5",
+              0
+            ],
+            "Value_B": [
+              "27",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "39": {
+          "inputs": {
+            "Value": [
+              "6",
+              0
+            ]
+          },
+          "class_type": "Integer"
+        },
+        "40": {
+          "inputs": {
+            "Value": [
+              "5",
+              0
+            ]
+          },
+          "class_type": "Integer"
+        },
+        "42": {
+          "inputs": {
+            "Value_A": [
+              "6",
+              0
+            ],
+            "Value_B": [
+              "28",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "43": {
+          "inputs": {
+            "Value_A": [
+              "5",
+              0
+            ],
+            "Value_B": [
+              "33",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "44": {
+          "inputs": {
+            "Value_A": [
+              "6",
+              0
+            ],
+            "Value_B": [
+              "34",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "47": {
+          "inputs": {
+            "Value": [
+              "35",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "48": {
+          "inputs": {
+            "Value": [
+              "42",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "49": {
+          "inputs": {
+            "Value": [
+              "43",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "50": {
+          "inputs": {
+            "Value": [
+              "44",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "52": {
+          "inputs": {}
+        },
+        "53": {
+          "inputs": {}
+        },
+        "58": {
+          "inputs": {}
+        },
+        "59": {
+          "inputs": {
+            "basic_pipe": [
+              "58",
+              0
+            ]
+          },
+          "class_type": "FromBasicPipe"
+        },
+        "60": {
+          "inputs": {
+            "width": [
+              "74",
+              0
+            ],
+            "height": [
+              "75",
+              0
+            ],
+            "x": [
+              "76",
+              0
+            ],
+            "y": [
+              "77",
+              0
+            ],
+            "strength": [
+              "79",
+              0
+            ],
+            "conditioning": [
+              "63",
+              0
+            ]
+          },
+          "class_type": "ConditioningSetArea"
+        },
+        "61": {
+          "inputs": {}
+        },
+        "62": {
+          "inputs": {}
+        },
+        "63": {
+          "inputs": {
+            "text": [
+              "78",
+              0
+            ],
+            "clip": [
+              "59",
+              1
+            ]
+          },
+          "class_type": "CLIPTextEncode"
+        },
+        "64": {
+          "inputs": {
+            "Value": [
+              "61",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "65": {
+          "inputs": {
+            "Value": [
+              "62",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "66": {
+          "inputs": {}
+        },
+        "67": {
+          "inputs": {}
+        },
+        "68": {
+          "inputs": {
+            "Value": [
+              "66",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "69": {
+          "inputs": {
+            "Value": [
+              "67",
+              0
+            ]
+          },
+          "class_type": "Float"
+        },
+        "70": {
+          "inputs": {
+            "Value_A": [
+              "5",
+              0
+            ],
+            "Value_B": [
+              "64",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "71": {
+          "inputs": {
+            "Value_A": [
+              "6",
+              0
+            ],
+            "Value_B": [
+              "65",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "72": {
+          "inputs": {
+            "Value_A": [
+              "5",
+              0
+            ],
+            "Value_B": [
+              "68",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "73": {
+          "inputs": {
+            "Value_A": [
+              "6",
+              0
+            ],
+            "Value_B": [
+              "69",
+              0
+            ]
+          },
+          "class_type": "Multiply"
+        },
+        "74": {
+          "inputs": {
+            "Value": [
+              "70",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "75": {
+          "inputs": {
+            "Value": [
+              "71",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "76": {
+          "inputs": {
+            "Value": [
+              "72",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "77": {
+          "inputs": {
+            "Value": [
+              "73",
+              0
+            ]
+          },
+          "class_type": "Floor"
+        },
+        "78": {
+          "inputs": {}
+        },
+        "79": {
+          "inputs": {}
+        },
+        "80": {
+          "inputs": {
+            "seed": [
+              "88",
+              0
+            ],
+            "steps": [
+              "89",
+              0
+            ],
+            "cfg": [
+              "90",
+              0
+            ],
+            "sampler_name": "euler",
+            "scheduler": "normal",
+            "denoise": [
+              "91",
+              0
+            ],
+            "model": [
+              "59",
+              0
+            ],
+            "positive": [
+              "22",
+              0
+            ],
+            "negative": [
+              "59",
+              4
+            ],
+            "latent_image": [
+              "23",
+              0
+            ]
+          },
+          "class_type": "KSampler"
+        },
+        "82": {
+          "inputs": {
+            "samples": [
+              "80",
+              0
+            ],
+            "vae": [
+              "59",
+              2
+            ]
+          },
+          "class_type": "VAEDecode"
+        },
+        "84": {
+          "inputs": {
+            "IMAGE": [
+              "82",
+              0
+            ]
+          }
+        },
+        "86": {
+          "inputs": {
+            "LATENT": [
+              "80",
+              0
+            ]
+          }
+        },
+        "87": {
+          "inputs": {
+            "BASIC_PIPE": [
+              "93",
+              0
+            ]
+          }
+        },
+        "88": {
+          "inputs": {}
+        },
+        "89": {
+          "inputs": {}
+        },
+        "90": {
+          "inputs": {}
+        },
+        "91": {
+          "inputs": {}
+        },
+        "93": {
+          "inputs": {
+            "basic_pipe": [
+              "58",
+              0
+            ],
+            "positive": [
+              "22",
+              0
+            ]
+          },
+          "class_type": "EditBasicPipe"
+        }
+      }
+    }
+  }
 }

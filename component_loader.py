@@ -2,6 +2,7 @@ import os
 import json
 import workflow_execution
 import nodes as comfy_nodes
+import hashlib
 
 directory = os.path.join(os.path.dirname(__file__), "components")
 
@@ -280,8 +281,15 @@ def resolve_unresolved_map():
         del unresolved_map[node_name]
 
 
+def get_workflow_hash(workflow):
+    json_str = json.dumps(workflow, sort_keys=True)
+    hash_obj = hashlib.md5(json_str.encode())
+    return hash_obj.hexdigest()[:6]
+
+
 def load_component(component_name, workflow, direct_reflect=False):
-    node_name = f"## {component_name}"
+    component_hash = get_workflow_hash(workflow)
+    node_name = f"## {component_name} [{component_hash}]"
 
     try:
         if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
@@ -294,12 +302,12 @@ def load_component(component_name, workflow, direct_reflect=False):
 
             update_unresolved_map(node_name, workflow)
 
-            return True
+            return (True, node_name)
         else:
-            return False
+            return (False, node_name)
     except:
         print(f"[ERROR] Failed to load component '## {component_name}'")
-        return False
+        return (False, None)
 
 
 def load_all():
@@ -313,8 +321,8 @@ def load_all():
 
             with open(file_path, "r") as file:
                 data = json.load(file)
-                workflow_components[component_name] = data
-                load_component(component_name, data)
+                _, component_full_name = load_component(component_name, data)
+                workflow_components[component_full_name] = data
 
     resolve_unresolved_map()
 

@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.17) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.18) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -112,9 +112,9 @@ async def load_component(request):
     workflow = json.loads(json_text)
 
     component_name = os.path.basename(filename)[:-15]
-    new_created = component_loader.load_component(component_name, workflow, True)
+    new_created, component_full_name = component_loader.load_component(component_name, workflow, True)
 
-    result = {'node_name': component_name,
+    result = {'node_name': component_full_name,
               "already_loaded": not new_created}
 
     return web.json_response(result, content_type='application/json')

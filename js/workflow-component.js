@@ -3,6 +3,19 @@ import { $el } from "/scripts/ui.js";
 import { api } from "/scripts/api.js";
 import { getPngMetadata, importA1111, getLatentMetadata } from "/scripts/pnginfo.js";
 
+function removeHashFromNodeName(name) {
+	const regex = /##.*\[([^\]]+)\]$/;
+	const match = name.match(regex);
+
+	if (match) {
+		const hash = match[1];
+		const modifiedName = name.replace(` [${hash}]`, '');
+		return modifiedName;
+	}
+
+	return name;
+}
+
 class ProgressBadge {
 	constructor() {
 		if (!window.__progress_badge__) {
@@ -103,6 +116,29 @@ function workflow_security_filter(workflow) {
   return workflow;
 }
 
+const conflict_table = {};
+function is_component_conflicted(name) {
+	let pure_name = name.substring(3, name.length - 9);
+	let m = conflict_table[pure_name];
+	if(m)
+		return m.size>1;
+	return false;
+}
+
+function register_component_name(name) {
+	let pure_name = name.substring(3, name.length - 9);
+	var s = conflict_table[pure_name];
+
+	if(s) {
+		s.add(name);
+	}
+	else {
+		s = new Set();
+		s.add(name);
+		conflict_table[pure_name] = s;
+	}
+}
+
 async function loadComponentWorkflows() {
 	if(!localStorage.getItem('loaded_components')) {
 		localStorage.setItem('loaded_components', '{}');
@@ -138,9 +174,8 @@ async function loadComponent(filename, workflow_obj, add_node) {
 	const data = await resp.json();
 
 	const component_name = data['node_name'];
-	const component_type = `## ${component_name}`;
 	if(!data['already_loaded']) {
-		const uri = encodeURIComponent(component_type);
+		const uri = encodeURIComponent(component_name);
 		const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
 		const def = await node_info.json();
 
@@ -149,17 +184,19 @@ async function loadComponent(filename, workflow_obj, add_node) {
 
 	// loaded_components might be incomplete after frontend refresh
 	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
+
 	if(!loaded_components[component_name]) {
 		if(!workflow_json) {
 			workflow_json = JSON.parse(workflow_str)
 		}
 		loaded_components[component_name] = workflow_json;
 		localStorage.setItem("loaded_components", JSON.stringify(loaded_components));
+		register_component_name(component_name);
 	}
 
 	if(add_node) {
 		// add node
-		var node = LiteGraph.createNode(component_type);
+		var node = LiteGraph.createNode(component_name);
 		if (node) {
 			//paste in last known mouse position
 			node.pos[0] += app.canvas.graph_mouse[0] - node.size[0]/2;
@@ -296,6 +333,9 @@ async function registerNodes() {
 			if(loaded_components[used_node_types]) {
 				await loadComponent(`${key}.component.json`, components[key], false);
 			}
+			else {
+				register_component_name(key);
+			}
 		}
 	}
 }
@@ -334,7 +374,7 @@ app.registerExtension({
 				let used_node_types = new Set();
 				for(let i in p.workflow.nodes) {
 					if(p.workflow.nodes[i].type.startsWith('## '))
-						used_node_types.add(p.workflow.nodes[i].type.slice(3));
+						used_node_types.add(p.workflow.nodes[i].type);
 				}
 
 				let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
@@ -604,6 +644,21 @@ app.registerExtension({
 		ComponentOutputNode.category = "ComponentBuilder";
 		ComponentInputNode.category = "ComponentBuilder";
 	},
+	nodeCreated(node, app) {
+		Object.defineProperty(node, "title", {
+			set: function(value) {
+				node._title = value;
+			},
+			get: function() {
+				if(node.type.startsWith('## ') && (node.type == node._title || node.type.substring(0,node.type.length-9) == node._title)) {
+					if(!is_component_conflicted(node.type))
+						return removeHashFromNodeName(node.type);
+				}
+
+				return node._title;
+			}
+		});
+	}
 });
 
 
