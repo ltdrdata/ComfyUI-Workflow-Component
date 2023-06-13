@@ -1,5 +1,5 @@
 {
-  "last_node_id": 43,
+  "last_node_id": 46,
   "last_link_id": 53,
   "nodes": [
     {
@@ -14,7 +14,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 16,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -54,7 +54,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 15,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
@@ -82,36 +82,6 @@
       ]
     },
     {
-      "id": 21,
-      "type": "ComponentInput",
-      "pos": [
-        870,
-        730
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "links": [
-            31
-          ],
-          "slot_index": 0,
-          "label": "reference_image"
-        }
-      ],
-      "title": "03. Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 22,
       "type": "ComponentInput",
       "pos": [
@@ -123,7 +93,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
@@ -142,35 +112,6 @@
       "bgcolor": "#533"
     },
     {
-      "id": 29,
-      "type": "ComponentInput",
-      "pos": [
-        870,
-        960
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "strength",
-          "type": "FLOAT",
-          "links": [
-            40
-          ],
-          "label": "strength"
-        }
-      ],
-      "title": "05. Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 18,
       "type": "ControlNetLoader",
       "pos": [
@@ -182,7 +123,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 3,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -202,35 +143,6 @@
       ]
     },
     {
-      "id": 28,
-      "type": "ComponentInput",
-      "pos": [
-        870,
-        840
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "conditioning_to_strength",
-          "type": "FLOAT",
-          "links": [
-            39
-          ],
-          "label": "positive_reference_ratio"
-        }
-      ],
-      "title": "04. Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 26,
       "type": "FromBasicPipe",
       "pos": [
@@ -242,7 +154,7 @@
         "1": 106
       },
       "flags": {},
-      "order": 18,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -312,12 +224,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 5,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
           "name": "height",
-          "type": "INT",
+          "type": null,
           "links": [
             45
           ],
@@ -341,12 +253,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 6,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
           "name": "width",
-          "type": "INT",
+          "type": null,
           "links": [
             44
           ],
@@ -370,19 +282,19 @@
         "1": 26
       },
       "flags": {},
-      "order": 7,
+      "order": 4,
       "mode": 0,
       "outputs": [
         {
           "name": "batch_size",
-          "type": "INT",
+          "type": null,
           "links": [
             46
           ],
           "label": "batch_size"
         }
       ],
-      "title": "100.Component Input",
+      "title": "99.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -399,12 +311,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 8,
+      "order": 5,
       "mode": 0,
       "outputs": [
         {
           "name": "seed",
-          "type": "INT",
+          "type": null,
           "links": [
             47
           ],
@@ -428,12 +340,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 9,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
           "name": "steps",
-          "type": "INT",
+          "type": null,
           "links": [
             48
           ],
@@ -457,12 +369,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 10,
+      "order": 7,
       "mode": 0,
       "outputs": [
         {
           "name": "cfg",
-          "type": "FLOAT",
+          "type": null,
           "links": [
             49
           ],
@@ -486,12 +398,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 11,
+      "order": 8,
       "mode": 0,
       "outputs": [
         {
           "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2",
+          "type": null,
           "links": [
             50
           ],
@@ -515,12 +427,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 12,
+      "order": 9,
       "mode": 0,
       "outputs": [
         {
           "name": "scheduler",
-          "type": "normal,karras,exponential,simple,ddim_uniform",
+          "type": null,
           "links": [
             51
           ],
@@ -544,12 +456,12 @@
         "1": 26
       },
       "flags": {},
-      "order": 13,
+      "order": 10,
       "mode": 0,
       "outputs": [
         {
           "name": "denoise",
-          "type": "FLOAT",
+          "type": null,
           "links": [
             52
           ],
@@ -638,10 +550,10 @@
         2930,
         720
       ],
-      "size": [
-        210,
-        214
-      ],
+      "size": {
+        "0": 210,
+        "1": 214
+      },
       "flags": {},
       "order": 22,
       "mode": 0,
@@ -814,12 +726,12 @@
         2450,
         910
       ],
-      "size": [
-        210,
-        70
-      ],
+      "size": {
+        "0": 210,
+        "1": 74
+      },
       "flags": {},
-      "order": 17,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -902,10 +814,10 @@
         2450,
         710
       ],
-      "size": [
-        211.60000610351562,
-        94
-      ],
+      "size": {
+        "0": 211.60000610351562,
+        "1": 94
+      },
       "flags": {},
       "order": 21,
       "mode": 0,
@@ -970,10 +882,10 @@
         1988,
         566
       ],
-      "size": [
-        312.3999938964844,
-        74
-      ],
+      "size": {
+        "0": 312.3999938964844,
+        "1": 74
+      },
       "flags": {},
       "order": 20,
       "mode": 0,
@@ -1037,7 +949,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 14,
+      "order": 11,
       "mode": 0,
       "outputs": [
         {
@@ -1069,20 +981,108 @@
         "1": 26
       },
       "flags": {},
-      "order": 19,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "link": 53,
-          "label": "basic_pipe"
+          "label": "BASIC_PIPE"
         }
       ],
       "title": "1.Component Output",
       "properties": {},
       "color": "#223",
       "bgcolor": "#335"
+    },
+    {
+      "id": 29,
+      "type": "ComponentInput",
+      "pos": [
+        870,
+        820
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "strength",
+          "type": null,
+          "links": [
+            40
+          ],
+          "label": "base_strength"
+        }
+      ],
+      "title": "04. Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 21,
+      "type": "ComponentInput",
+      "pos": [
+        870,
+        720
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            31
+          ],
+          "slot_index": 0,
+          "label": "reference_image"
+        }
+      ],
+      "title": "03. Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 28,
+      "type": "ComponentInput",
+      "pos": [
+        870,
+        930
+      ],
+      "size": {
+        "0": 211.60000610351562,
+        "1": 26
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "conditioning_to_strength",
+          "type": null,
+          "links": [
+            39
+          ],
+          "label": "positive_reference_ratio"
+        }
+      ],
+      "title": "05. Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
