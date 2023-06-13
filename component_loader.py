@@ -120,7 +120,7 @@ def create_dynamic_class(component_name, workflow):
                 build_input_types(i, input_mapping, input_types, node, node_config_map)
             return input_types
         except Exception as e:
-            print(f"[Workflow-Component] BROKEN component - {e}")
+            print(f"[Workflow-Component] '{component_name}' is broken. Maybe there are missing nodes. (INFO: {e})")
             traceback.print_exc()
             return {"BROKEN component": ("BROKEN component", )}
 
