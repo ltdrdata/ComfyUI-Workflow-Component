@@ -30,6 +30,8 @@ from aiohttp import web
 import execution
 import uuid
 import workflow_execution
+import execution_experimental
+
 
 async def original_post_prompt(request):
     self = server.PromptServer.instance
@@ -51,7 +53,7 @@ async def original_post_prompt(request):
 
     if "prompt" in json_data:
         prompt = json_data["prompt"]
-        valid = execution.validate_prompt(prompt)
+        valid = execution_experimental.validate_prompt(prompt)
         extra_data = {}
         if "extra_data" in json_data:
             extra_data = json_data["extra_data"]
@@ -141,7 +143,43 @@ async def get_unresolved(request):
     return web.json_response({'nodes': list(unresolved_nodes)}, content_type='application/json')
 
 
+class ExecutionSwitch:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required":
+                    {
+                        "select": ("INT", {"default": 1, "min": 0, "max": 5}),
+                        "input1": ("*", ),
+                    },
+                "optional":
+                    {
+                        "input2_opt": ("*", ),
+                        "input3_opt": ("*", ),
+                        "input4_opt": ("*", ),
+                        "input5_opt": ("*", ),
+                    }
+                }
+
+    RETURN_TYPES = ("*", "*", "*", "*", "*", )
+    FUNCTION = "doit"
+
+    def doit(s, select, input1, input2_opt=None, input3_opt=None, input4_opt=None, input5_opt=None):
+        if select == 1:
+            return input1, None, None, None, None
+        elif select == 2:
+            return None, input2_opt, None, None, None
+        elif select == 3:
+            return None, None, input3_opt, None, None
+        elif select == 4:
+            return None, None, None, input4_opt, None
+        elif select == 5:
+            return None, None, None, None, input5_opt
+        else:
+            return None, None, None, None, None
+
+
 NODE_CLASS_MAPPINGS = {
+    "ExecutionSwitch": ExecutionSwitch
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {

@@ -58,10 +58,11 @@ There is a high possibility that the existing components created may not be comp
 - [x] reroute problem fix
 - [x] Resolve conflicts between components with the same name based on hash
 - [x] Set the currently configured ```widget value``` as the default value for component interface
-- [ ] A feature that enables selecting a graceful termination for a specific execution path in a node instead of a crash
+- [x] A feature that enables selecting a graceful termination for a specific execution path in a node instead of a crash
+  - 'None' input is regarded as stop execute current execution path
+- [x] ExecutionSwitch node
 - [ ] A feature that disable a specific optional input slot
   - [ ] Handling the workflow execution of a node composed solely of optional inputs
-- [ ] Switch node
 - [ ] Component nesting
 - [ ] Incomplete workflow checker
 - [ ] Unconnected output checker to avoid inefficient execution
