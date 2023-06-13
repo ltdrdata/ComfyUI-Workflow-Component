@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.19.2) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.20) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -143,16 +143,30 @@ async def get_unresolved(request):
     return web.json_response({'nodes': list(unresolved_nodes)}, content_type='application/json')
 
 
+class ExecutionBlocker:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                        "input": ("*", ),
+                        "signal": ("*", ),
+                     },
+                }
+
+    RETURN_TYPES = ("*", )
+    FUNCTION = "doit"
+
+    def doit(s, input, signal):
+        return input
+
+
 class ExecutionSwitch:
     @classmethod
     def INPUT_TYPES(s):
-        return {"required":
-                    {
+        return {"required": {
                         "select": ("INT", {"default": 1, "min": 0, "max": 5}),
                         "input1": ("*", ),
                     },
-                "optional":
-                    {
+                "optional": {
                         "input2_opt": ("*", ),
                         "input3_opt": ("*", ),
                         "input4_opt": ("*", ),
@@ -179,7 +193,8 @@ class ExecutionSwitch:
 
 
 NODE_CLASS_MAPPINGS = {
-    "ExecutionSwitch": ExecutionSwitch
+    "ExecutionSwitch": ExecutionSwitch,
+    "ExecutionBlocker": ExecutionBlocker
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {

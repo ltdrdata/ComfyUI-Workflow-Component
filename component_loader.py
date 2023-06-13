@@ -94,7 +94,7 @@ def get_linked_slots_config(json_data):
     return linked_slots_config
 
 
-def create_dynamic_class(component_name, workflow):
+def create_dynamic_class(component_name, workflow, category=None):
     nodes = workflow['nodes']
     prompt = workflow['output']
 
@@ -146,6 +146,8 @@ def create_dynamic_class(component_name, workflow):
     for i, node in enumerate(sorted_nodes):
         build_output_types(i, node, node_config_map, output_mapping, return_names, return_types)
 
+    category = "Workflow/Temp" if category is None else f"Workflow/{category}"
+
     class DynamicClass:
         @classmethod
         def INPUT_TYPES(s):
@@ -169,7 +171,7 @@ def create_dynamic_class(component_name, workflow):
 
         FUNCTION = "doit"
 
-        CATEGORY = "Workflow"
+        CATEGORY = category
 
         def doit(self, *args, **kwargs):
             return workflow_execution.execute(component_name, prompt, workflow,
@@ -334,7 +336,7 @@ def get_workflow_hash(workflow):
     return hash_obj.hexdigest()[:6]
 
 
-def load_component(component_name, is_full_name, workflow, direct_reflect=False):
+def load_component(component_name, is_full_name, workflow, direct_reflect=False, category=None):
     component_hash = get_workflow_hash(workflow)
     if is_full_name:
         node_name = component_name
@@ -343,7 +345,7 @@ def load_component(component_name, is_full_name, workflow, direct_reflect=False)
 
     try:
         if node_name not in comfy_nodes.NODE_CLASS_MAPPINGS:
-            obj = create_dynamic_class(node_name, workflow)
+            obj = create_dynamic_class(node_name, workflow, category)
 
             if direct_reflect:
                 comfy_nodes.NODE_CLASS_MAPPINGS[node_name] = obj
@@ -364,16 +366,27 @@ def load_component(component_name, is_full_name, workflow, direct_reflect=False)
 def load_all():
     global workflow_components
 
-    for filename in os.listdir(directory):
+    def doit(category, cur_dir, filename):
         if filename.endswith(".component.json"):
-            file_path = os.path.join(directory, filename)
+            file_path = os.path.join(cur_dir, filename)
 
             component_name = os.path.basename(filename)[:-15]
 
             with open(file_path, "r") as file:
                 data = json.load(file)
-                _, component_full_name = load_component(component_name, False, data)
+                _, component_full_name = load_component(component_name, False, data, category=category)
                 workflow_components[component_full_name] = data
+
+    for root, dirs, files in os.walk(directory):
+        relative_path = os.path.relpath(root, directory)
+
+        if os.path.basename(root).startswith("."):
+            continue
+
+        category = None if relative_path == "." else relative_path
+
+        for file in files:
+            doit(category, root, file)
 
     resolve_unresolved_map()
 
