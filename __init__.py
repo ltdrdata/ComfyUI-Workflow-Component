@@ -192,9 +192,21 @@ class ExecutionSwitch:
             return None, None, None, None, None
 
 
+class TensorToCPU:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {"tensor": ("*", ), }, }
+
+    RETURN_TYPES = ("*", )
+    FUNCTION = "doit"
+
+    def doit(self, tensor):
+        return (tensor.cpu(), )
+
 NODE_CLASS_MAPPINGS = {
     "ExecutionSwitch": ExecutionSwitch,
-    "ExecutionBlocker": ExecutionBlocker
+    "ExecutionBlocker": ExecutionBlocker,
+    "TensorToCPU": TensorToCPU
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
