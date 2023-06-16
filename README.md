@@ -61,11 +61,11 @@ There is a high possibility that the existing components created may not be comp
 - [x] A feature that enables selecting a graceful termination for a specific execution path in a node instead of a crash
   - 'None' input is regarded as stop execute current execution path
 - [x] ExecutionSwitch node
+- [x] Unconnected output checker to avoid inefficient execution
 - [ ] A feature that disable a specific optional input slot
   - [ ] Handling the workflow execution of a node composed solely of optional inputs
 - [ ] Component nesting
 - [ ] Incomplete workflow checker
-- [ ] Unconnected output checker to avoid inefficient execution
 - [ ] Provide random value executing inside component workflow.
 - [ ] Provide a validation checker when writing a component.
 - [ ] Provide a special input that can receive traces executed following a workflow.

@@ -69,7 +69,9 @@ def get_executor(component_name, internal_id_name_map, node_id):
 
     if node_id not in executor_dict:
         vs = VirtualServer(component_name, internal_id_name_map, node_id)
-        executor_dict[node_id] = (component_name, ExpPromptExecutor(vs))
+        executor = ExpPromptExecutor(vs)
+        executor.calculated_outputs = set()
+        executor_dict[node_id] = (component_name, executor)
 
     return executor_dict[node_id][1]
 
@@ -83,14 +85,39 @@ def get_virtual_prompt_id(node_id):
     return f"wc-{node_id}-{virtual_prompt_id}"
 
 
+def is_changed(component_name, internal_id_name_map, output_mapping, **kwargs):
+    node_id = kwargs['unique_id']
+    current_component_node = kwargs['extra_pnginfo']['workflow']['nodes'][int(node_id)]
+    pe = get_executor(component_name, internal_id_name_map, node_id)
+
+    for key in output_mapping:
+        order, _ = output_mapping[key]
+
+        if 'outputs' in current_component_node:
+            c_outputs = current_component_node['outputs']
+            if len(c_outputs) > order and 'links' in c_outputs[order]:
+                c_links = c_outputs[order]['links']
+                if c_links is not None and len(c_links) > 0:
+                    if order not in pe.calculated_outputs:
+                        return True
+
+    return False
+
+
 def execute(component_name, prompt, workflow, internal_id_name_map, optional_inputs, input_mapping, output_mapping,
             *args, **kwargs):
     node_id = kwargs['unique_id']
     pe = get_executor(component_name, internal_id_name_map, node_id)
     pe.server.occurred_event = None
     pe.server.update_node_status("Begin (0%)", 0)
+    pe.calculated_outputs = set()
 
     changed_inputs = set()
+
+    for node in kwargs['extra_pnginfo']['workflow']['nodes']:
+        if node['id'] == int(node_id):
+            current_component_node = node
+            break
 
     def not_equal(a, b):
         try:
@@ -133,9 +160,15 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
 
     execute_outputs = []
     for key in output_mapping:
-        _, output_node = output_mapping[key]
-        output_node_id = str(output_node['id'])
-        execute_outputs.append(output_node_id)
+        order, output_node = output_mapping[key]
+        # add to execute_outputs if feasible output
+        if 'outputs' in current_component_node:
+            c_outputs = current_component_node['outputs']
+            if len(c_outputs) > order and 'links' in c_outputs[order]:
+                c_links = c_outputs[order]['links']
+                if c_links is not None and len(c_links) > 0:
+                    output_node_id = str(output_node['id'])
+                    execute_outputs.append(output_node_id)
 
     # this must be calculated on-demand due to custom node loading order
     for node in workflow['nodes']:
@@ -182,6 +215,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
             unboxed_value = value[0]  # TODO: check
 
         results.append((order, unboxed_value))
+        pe.calculated_outputs.add(order)
 
     results.sort(key=lambda x: x[0])
 

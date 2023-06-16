@@ -156,12 +156,12 @@ def create_dynamic_class(component_name, workflow, category=None):
                 return {
                     "required": get_input_types_dynamic(),
                     "optional": input_optional_types,
-                    "hidden": {"unique_id": "UNIQUE_ID"},
+                    "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"},
                 }
             else:
                 return {
                     "required": get_input_types_dynamic(),
-                    "hidden": {"unique_id": "UNIQUE_ID"},
+                    "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"},
                 }
 
         RETURN_TYPES = tuple(return_types)
@@ -177,6 +177,10 @@ def create_dynamic_class(component_name, workflow, category=None):
             return workflow_execution.execute(component_name, prompt, workflow,
                                               internal_id_name_map, optional_inputs, input_mapping, output_mapping,
                                               *args, **kwargs)
+
+        @classmethod
+        def IS_CHANGED(cls, **kwargs):
+            return workflow_execution.is_changed(component_name, internal_id_name_map, output_mapping, **kwargs)
 
     return DynamicClass
 
@@ -202,7 +206,7 @@ def build_output_types(i, node, node_config_map, output_mapping, return_names, r
                     output_label = output_type
 
                 if output_type:
-                    output_mapping[output_label] = (i, node)
+                    output_mapping[node['id']] = (i, node)
                     return_types.append(output_type)
                     return_names.append(output_label)
 

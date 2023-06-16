@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.20) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.21) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -27,7 +27,6 @@ setup_js()
 import server
 from aiohttp import web
 
-import execution
 import uuid
 import workflow_execution
 import execution_experimental
