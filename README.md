@@ -66,6 +66,9 @@ There is a high possibility that the existing components created may not be comp
 - [ ] Component nesting
 - [ ] Incomplete workflow checker
 - [ ] Unconnected output checker to avoid inefficient execution
+- [ ] Provide random value executing inside component workflow.
+- [ ] Provide a validation checker when writing a component.
+- [ ] Provide a special input that can receive traces executed following a workflow.
 
 ## Credit
 
