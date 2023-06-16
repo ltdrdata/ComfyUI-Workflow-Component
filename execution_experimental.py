@@ -11,7 +11,7 @@ import torch
 import nodes
 
 import comfy.model_management
-from execution import get_input_data, get_output_data, map_node_over_list, format_value, full_type_name
+from execution import get_output_data, map_node_over_list, format_value, full_type_name
 from queue import Queue
 
 
@@ -39,6 +39,38 @@ class DummyNode:
             return (output,)
         else:
             pass
+
+
+def get_input_data(inputs, class_def, unique_id, outputs={}, prompt={}, extra_data={}):
+    valid_inputs = class_def.INPUT_TYPES()
+    input_data_all = {}
+    for x in inputs:
+        input_data = inputs[x]
+        if isinstance(input_data, list):
+            input_unique_id = input_data[0]
+            output_index = input_data[1]
+            if class_def.__name__ != "LoopControl":
+                if input_unique_id not in outputs or outputs[input_unique_id][input_data[1]] == [None]:
+                    return None
+
+            if input_unique_id in outputs and outputs[input_unique_id][input_data[1]] != [None]:
+                obj = outputs[input_unique_id][output_index]
+                input_data_all[x] = obj
+        else:
+            if ("required" in valid_inputs and x in valid_inputs["required"]) or ("optional" in valid_inputs and x in valid_inputs["optional"]):
+                input_data_all[x] = [input_data]
+
+    if "hidden" in valid_inputs:
+        h = valid_inputs["hidden"]
+        for x in h:
+            if h[x] == "PROMPT":
+                input_data_all[x] = [prompt]
+            if h[x] == "EXTRA_PNGINFO":
+                if "extra_pnginfo" in extra_data:
+                    input_data_all[x] = [extra_data['extra_pnginfo']]
+            if h[x] == "UNIQUE_ID":
+                input_data_all[x] = [unique_id]
+    return input_data_all
 
 
 def exception_helper(unique_id, input_data_all, executed, outputs, task):
@@ -87,12 +119,18 @@ def is_incomplete_input_slots(class_def, inputs, outputs):
     if len(required_inputs - inputs.keys()) > 0:
         return True
 
+    if class_def.__name__ == "LoopControl":
+        inputs = {
+                    'loop_condition': inputs['loop_condition'],
+                    'initial_input': inputs['initial_input'],
+                  }
+
     for x in inputs:
         input_data = inputs[x]
 
         if isinstance(input_data, list):
             input_unique_id = input_data[0]
-            if input_unique_id not in outputs or outputs[input_unique_id][input_data[1]] == [None]:
+            if input_unique_id not in outputs:
                 return True
 
     return False
@@ -209,6 +247,8 @@ def worklist_execute(server, prompt, outputs, extra_data, prompt_id, outputs_ui,
             return result  # error state
         else:
             if unique_id in next_nodes:
+                if class_def.__name__ == "LoopControl" and outputs[unique_id] == [[None]]:
+                    continue
 
                 for next_node in next_nodes[unique_id]:
                     if next_node in to_execute:
@@ -523,7 +563,12 @@ def validate_prompt(prompt):
 
     return (True, None, list(good_outputs), node_errors)
 
-def validate_inputs(prompt, item, validated):
+def validate_inputs(prompt, item, validated, visited=set()):
+    if item in visited:
+        return (True, [], item)
+    else:
+        visited.add(item)
+
     unique_id = item
     if unique_id in validated:
         return validated[unique_id]
@@ -589,7 +634,7 @@ def validate_inputs(prompt, item, validated):
                 errors.append(error)
                 continue
             try:
-                r = validate_inputs(prompt, o_id, validated)
+                r = validate_inputs(prompt, o_id, validated, visited)
                 if r[0] is False:
                     # `r` will be set in `validated[o_id]` already
                     valid = False
