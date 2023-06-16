@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.22) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.23) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -258,12 +258,47 @@ class TensorToCPU:
         return (tensor.cpu(), )
 
 
+# To facilitate the use of multiple inputs as loopback inputs, InputZip and InputUnzip are provided.
+class InputZip:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                        "input1": ("*", ),
+                        "input2": ("*", ),
+                    },
+                }
+
+    RETURN_TYPES = ("*", )
+    FUNCTION = "doit"
+
+    def doit(s, input1, input2):
+        return ((input1, input2), )
+
+
+class InputUnzip:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                        "zipped_input": ("*", ),
+                    },
+                }
+
+    RETURN_TYPES = ("*", "*", )
+    FUNCTION = "doit"
+
+    def doit(s, zipped_input):
+        input1, input2 = zipped_input
+        return (input1, input2, )
+
+
 NODE_CLASS_MAPPINGS = {
     "ExecutionSwitch": ExecutionSwitch,
     "ExecutionBlocker": ExecutionBlocker,
     "TensorToCPU": TensorToCPU,
     "LoopControl": LoopControl,
     "LoopCounterCondition": LoopCounterCondition,
+    "InputZip": InputZip,
+    "InputUnzip": InputUnzip,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
