@@ -49,13 +49,16 @@ def get_input_data(inputs, class_def, unique_id, outputs={}, prompt={}, extra_da
         if isinstance(input_data, list):
             input_unique_id = input_data[0]
             output_index = input_data[1]
-            if class_def.__name__ != "LoopControl":
-                if input_unique_id not in outputs or outputs[input_unique_id][input_data[1]] == [None]:
-                    return None
+            if input_unique_id in outputs and len(outputs[input_unique_id]) == 0:
+                input_data_all[x] = []
+            else:
+                if class_def.__name__ != "LoopControl" and class_def.__name__ != "ExecutionOneOf":
+                    if input_unique_id not in outputs or outputs[input_unique_id][input_data[1]] == [None]:
+                        return None
 
-            if input_unique_id in outputs and outputs[input_unique_id][input_data[1]] != [None]:
-                obj = outputs[input_unique_id][output_index]
-                input_data_all[x] = obj
+                if input_unique_id in outputs and outputs[input_unique_id][input_data[1]] != [None]:
+                    obj = outputs[input_unique_id][output_index]
+                    input_data_all[x] = obj
         else:
             if ("required" in valid_inputs and x in valid_inputs["required"]) or ("optional" in valid_inputs and x in valid_inputs["optional"]):
                 input_data_all[x] = [input_data]
@@ -119,6 +122,19 @@ def is_incomplete_input_slots(class_def, inputs, outputs):
     if len(required_inputs - inputs.keys()) > 0:
         return True
 
+    # "ExecutionOneof" node is a special node that allows only one of the multiple execution paths to be reached and passed through.
+    if class_def.__name__ == "ExecutionOneOf":
+        for x in inputs:
+            input_data = inputs[x]
+
+            if isinstance(input_data, list):
+                input_unique_id = input_data[0]
+                if input_unique_id in outputs and outputs[input_unique_id][input_data[1]] != [None]:
+                    return False
+
+        return True
+
+    # The "LoopControl" is a special node that can be executed even without loopback_input.
     if class_def.__name__ == "LoopControl":
         inputs = {
                     'loop_condition': inputs['loop_condition'],
@@ -130,7 +146,7 @@ def is_incomplete_input_slots(class_def, inputs, outputs):
 
         if isinstance(input_data, list):
             input_unique_id = input_data[0]
-            if input_unique_id not in outputs:
+            if input_unique_id not in outputs or outputs[input_unique_id][input_data[1]] == [None]:
                 return True
 
     return False

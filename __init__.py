@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.24) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.25) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -158,6 +158,39 @@ class ExecutionBlocker:
         return input
 
 
+class ExecutionOneOf:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                        "input1": ("*", ),
+            },
+            "optional": {
+                        "input2": ("*", ),
+                        "input3": ("*", ),
+                        "input4": ("*", ),
+                        "input5": ("*", ),
+                     },
+               }
+
+    RETURN_TYPES = ("*", )
+    FUNCTION = "doit"
+
+    def doit(s, **kwargs):
+        if 'input1' in kwargs and kwargs['input1'] is not None:
+            return (kwargs['input1'], )
+        elif 'input2' in kwargs and kwargs['input2'] is not None:
+            return (kwargs['input2'], )
+        elif 'input3' in kwargs and kwargs['input3'] is not None:
+            return (kwargs['input3'],)
+        elif 'input4' in kwargs and kwargs['input4'] is not None:
+            return (kwargs['input4'],)
+        elif 'input5' in kwargs and kwargs['input5'] is not None:
+            return (kwargs['input5'],)
+        else:
+            return None
+
+
 class ExecutionSwitch:
     @classmethod
     def INPUT_TYPES(s):
@@ -189,6 +222,45 @@ class ExecutionSwitch:
             return None, None, None, None, input5_opt
         else:
             return None, None, None, None, None
+
+
+class ExecutionControlString:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                        "A": ("STRING", {"default": ""}),
+                        "B_STR": ("*",),
+                        "condition_kind": (["A = B", "A != B", "A in B", "A not in B"], ),
+                        "pass_value": ("*", )
+                    },
+                }
+
+    RETURN_TYPES = ("*", )
+    FUNCTION = "doit"
+
+    def doit(s, A, B_STR, condition_kind, pass_value):
+        if (condition_kind == "A = B_STR" and A == B_STR) or \
+                (condition_kind == "A != B_STR" and A != B_STR) or \
+                (condition_kind == "A in B_STR" and A in B_STR) or \
+                (condition_kind == "A not in B_STR" and A in B_STR):
+            return (pass_value, )
+        else:
+            return None
+
+
+class ComboToString:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                        "spec": ("STRING", {"multiline": True}),
+                    },
+                }
+
+    RETURN_TYPES = ("*", )
+    FUNCTION = "doit"
+
+    def doit(s, spec):
+        return None
 
 
 class LoopControl:
@@ -294,6 +366,9 @@ class InputUnzip:
 NODE_CLASS_MAPPINGS = {
     "ExecutionSwitch": ExecutionSwitch,
     "ExecutionBlocker": ExecutionBlocker,
+    "ExecutionControlString": ExecutionControlString,
+    "ExecutionOneOf": ExecutionOneOf,
+    "ComboToString": ComboToString,
     "TensorToCPU": TensorToCPU,
     "LoopControl": LoopControl,
     "LoopCounterCondition": LoopCounterCondition,

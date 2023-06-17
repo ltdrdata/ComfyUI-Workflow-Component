@@ -443,6 +443,9 @@ app.registerExtension({
 				this.addInput("rename after connect", "*");
 
 				this.onConnectionsChange = function (type, index, connected, link_info) {
+					if(this.__inputType && this.__inputType != '*')
+						return;
+
 					if(!connected) {
 						this.backup_type = this.inputs[0].type;
 						this.backup_name = this.inputs[0].name;
@@ -510,7 +513,6 @@ app.registerExtension({
 
 				this.onConnectionsChange = function (type, index, connected, link_info) {
 					const outputs = this.outputs ? this.outputs[0].links || [] : [];
-
 					if(!connected && outputs.length == 0) {
 						this.outputs[0].type = "*";
 						this.__outputType = "*";
