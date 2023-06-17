@@ -89,7 +89,7 @@ class ProgressBadge {
 
 const excludeExtensions = new Set([".png", ".jpg", ".webp", ".jpeg", ".safetensors", ".ckpt", ".pt", ".pth"]);
 
-static workflow_security_filter(workflow) {
+function workflow_security_filter(workflow) {
 	workflow.nodes.forEach((node) => {
 		// filter for 0 weighted LoraLoader
 		if(node.widgets_values && node.widgets_values.length == 3){
