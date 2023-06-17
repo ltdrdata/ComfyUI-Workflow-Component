@@ -512,6 +512,9 @@ app.registerExtension({
 				this.addOutput("rename after connect", "*");
 
 				this.onConnectionsChange = function (type, index, connected, link_info) {
+					if(this.__outputType && this.__outputType != '*')
+						return;
+
 					const outputs = this.outputs ? this.outputs[0].links || [] : [];
 					if(!connected && outputs.length == 0) {
 						this.outputs[0].type = "*";
@@ -569,7 +572,7 @@ app.registerExtension({
 									? node.inputs[link.target_slot].name
 									: null;
 
-							if(outputType == "*") {
+							if(outputType == "*" && node.backup_type) {
 								outputType = node.backup_type;
 								node.inputs[0].name = node.backup_name;
 								node.inputs[0].label = node.backup_label;

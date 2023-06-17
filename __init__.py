@@ -8,7 +8,7 @@ sys.path.append(impact_path)
 
 import component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.25) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.26) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -236,13 +236,14 @@ class ExecutionControlString:
                 }
 
     RETURN_TYPES = ("*", )
+    RETURN_NAMES = ("pass_value", )
     FUNCTION = "doit"
 
     def doit(s, A, B_STR, condition_kind, pass_value):
-        if (condition_kind == "A = B_STR" and A == B_STR) or \
-                (condition_kind == "A != B_STR" and A != B_STR) or \
-                (condition_kind == "A in B_STR" and A in B_STR) or \
-                (condition_kind == "A not in B_STR" and A in B_STR):
+        if (condition_kind == "A = B" and A == B_STR) or \
+                (condition_kind == "A != B" and A != B_STR) or \
+                (condition_kind == "A in B" and A in B_STR) or \
+                (condition_kind == "A not in B" and A not in B_STR):
             return (pass_value, )
         else:
             return None
@@ -282,7 +283,11 @@ class LoopControl:
         else:
             current = kwargs['loopback_input']
 
-        return (kwargs['loop_condition'].get_next(kwargs['initial_input'], current), )
+        result = kwargs['loop_condition'].get_next(kwargs['initial_input'], current)
+        if result is None:
+            return None
+        else:
+            return (result, )
 
 
 class CounterCondition:

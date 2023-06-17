@@ -11,7 +11,7 @@ import torch
 import nodes
 
 import comfy.model_management
-from execution import get_output_data, map_node_over_list, format_value, full_type_name
+from execution import map_node_over_list, format_value, full_type_name
 from queue import Queue
 
 
@@ -39,6 +39,40 @@ class DummyNode:
             return (output,)
         else:
             pass
+
+
+def get_output_data(obj, input_data_all):
+    results = []
+    uis = []
+    return_values = map_node_over_list(obj, input_data_all, obj.FUNCTION, allow_interrupt=True)
+
+    for r in return_values:
+        if isinstance(r, dict):
+            if 'ui' in r:
+                uis.append(r['ui'])
+            if 'result' in r:
+                results.append(r['result'])
+        else:
+            results.append(r)
+
+    output = []
+    if len(results) > 0 and results[0] is not None:
+        # check which outputs need concatenating
+        output_is_list = [False] * len(results[0])
+        if hasattr(obj, "OUTPUT_IS_LIST"):
+            output_is_list = obj.OUTPUT_IS_LIST
+
+        # merge node execution results
+        for i, is_list in zip(range(len(results[0])), output_is_list):
+            if is_list:
+                output.append([x for o in results for x in o[i]])
+            else:
+                output.append([o[i] for o in results])
+
+    ui = dict()
+    if len(uis) > 0:
+        ui = {k: [y for x in uis for y in x[k]] for k in uis[0].keys()}
+    return output, ui
 
 
 def get_input_data(inputs, class_def, unique_id, outputs={}, prompt={}, extra_data={}):
@@ -146,7 +180,9 @@ def is_incomplete_input_slots(class_def, inputs, outputs):
 
         if isinstance(input_data, list):
             input_unique_id = input_data[0]
-            if input_unique_id not in outputs or outputs[input_unique_id][input_data[1]] == [None]:
+            if input_unique_id not in outputs or \
+                    len(outputs[input_unique_id]) == 0 or \
+                    outputs[input_unique_id][input_data[1]] == [None]:
                 return True
 
     return False

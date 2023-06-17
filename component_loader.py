@@ -384,7 +384,7 @@ def load_all():
     for root, dirs, files in os.walk(directory):
         relative_path = os.path.relpath(root, directory)
 
-        if os.path.basename(root).startswith("."):
+        if any(part.startswith(".") for part in root.split("/")):
             continue
 
         category = None if relative_path == "." else relative_path
