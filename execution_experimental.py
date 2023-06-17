@@ -226,6 +226,10 @@ def worklist_execute(server, prompt, outputs, extra_data, prompt_id, outputs_ui,
     def add_work(item):
         worklist.put(item)
         cnt = will_execute.get(item, 0)
+
+        if item in outputs:
+            del outputs[item]
+
         will_execute[item] = cnt + 1
 
     def get_work():
@@ -280,6 +284,10 @@ def worklist_execute(server, prompt, outputs, extra_data, prompt_id, outputs_ui,
                 add_work(unique_id)  # add to seed if all input is properly provided
 
         result = exception_helper(unique_id, input_data_all, executed, outputs, task)
+
+        if input_data_all is None:
+            continue
+
         if result is not None:
             return result  # error state
 
