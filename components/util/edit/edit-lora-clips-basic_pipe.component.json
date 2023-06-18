@@ -1,6 +1,6 @@
 {
   "last_node_id": 11,
-  "last_link_id": 14,
+  "last_link_id": 15,
   "nodes": [
     {
       "id": 4,
@@ -379,15 +379,17 @@
         },
         {
           "name": "lora_name",
-          "type": 0,
-          "link": 14,
+          "type": "LoraLoader\nlora_name",
+          "link": 15,
           "widget": {
             "name": "lora_name",
             "config": [
-              []
+              [
+                "emotionPuppeteerLora_v2Lora.safetensors",
+                "locon_anya_v2_from_v2_64_32_zwx.safetensors"
+              ]
             ]
-          },
-          "slot_index": 2
+          }
         }
       ],
       "outputs": [
@@ -436,10 +438,12 @@
       "outputs": [
         {
           "name": "lora_name",
-          "type": null,
+          "type": "LoraLoader\nlora_name",
           "links": [
-            14
-          ]
+            15
+          ],
+          "slot_index": 0,
+          "label": "lora_name"
         }
       ],
       "title": "2.Component Input",
@@ -546,12 +550,12 @@
       "MODEL"
     ],
     [
-      14,
+      15,
       11,
       0,
       10,
       2,
-      "*"
+      "LoraLoader\nlora_name"
     ]
   ],
   "groups": [],

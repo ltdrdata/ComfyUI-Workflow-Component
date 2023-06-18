@@ -1,67 +1,7 @@
 {
   "last_node_id": 33,
-  "last_link_id": 58,
+  "last_link_id": 64,
   "nodes": [
-    {
-      "id": 14,
-      "type": "ComponentInput",
-      "pos": [
-        20,
-        790
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "scheduler",
-          "type": null,
-          "links": [
-            52
-          ],
-          "slot_index": 0,
-          "label": "scheduler"
-        }
-      ],
-      "title": "8.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 15,
-      "type": "ComponentInput",
-      "pos": [
-        20,
-        880
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "denoise",
-          "type": null,
-          "links": [
-            53
-          ],
-          "slot_index": 0,
-          "label": "denoise"
-        }
-      ],
-      "title": "9.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
     {
       "id": 2,
       "type": "FromBasicPipe",
@@ -146,7 +86,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 2,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
@@ -234,300 +174,6 @@
       "bgcolor": "#335"
     },
     {
-      "id": 30,
-      "type": "BNK_TiledKSampler",
-      "pos": [
-        1018,
-        552
-      ],
-      "size": {
-        "0": 315,
-        "1": 334
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 44
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 45
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 46
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 47
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 50,
-          "widget": {
-            "name": "seed",
-            "config": [
-              "INT",
-              {
-                "default": 0,
-                "min": 0,
-                "max": 18446744073709552000
-              }
-            ]
-          }
-        },
-        {
-          "name": "steps",
-          "type": "INT",
-          "link": 48,
-          "widget": {
-            "name": "steps",
-            "config": [
-              "INT",
-              {
-                "default": 20,
-                "min": 1,
-                "max": 10000
-              }
-            ]
-          }
-        },
-        {
-          "name": "cfg",
-          "type": "FLOAT",
-          "link": 49,
-          "widget": {
-            "name": "cfg",
-            "config": [
-              "FLOAT",
-              {
-                "default": 8,
-                "min": 0,
-                "max": 100
-              }
-            ]
-          }
-        },
-        {
-          "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2",
-          "link": 51,
-          "widget": {
-            "name": "sampler_name",
-            "config": [
-              [
-                "euler",
-                "euler_ancestral",
-                "heun",
-                "dpm_2",
-                "dpm_2_ancestral",
-                "lms",
-                "dpm_fast",
-                "dpm_adaptive",
-                "dpmpp_2s_ancestral",
-                "dpmpp_sde",
-                "dpmpp_2m",
-                "dpmpp_2m_sde",
-                "ddim",
-                "uni_pc",
-                "uni_pc_bh2"
-              ]
-            ]
-          }
-        },
-        {
-          "name": "scheduler",
-          "type": "normal,karras,exponential,simple,ddim_uniform",
-          "link": 52,
-          "widget": {
-            "name": "scheduler",
-            "config": [
-              [
-                "normal",
-                "karras",
-                "exponential",
-                "simple",
-                "ddim_uniform"
-              ]
-            ]
-          }
-        },
-        {
-          "name": "denoise",
-          "type": "FLOAT",
-          "link": 53,
-          "widget": {
-            "name": "denoise",
-            "config": [
-              "FLOAT",
-              {
-                "default": 1,
-                "min": 0,
-                "max": 1,
-                "step": 0.01
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            54,
-            57
-          ],
-          "shape": 3,
-          "slot_index": 0,
-          "color": "#FF9CF9"
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BNK_TiledKSampler"
-      },
-      "widgets_values": [
-        0,
-        "randomize",
-        512,
-        512,
-        "random",
-        20,
-        8,
-        "euler",
-        "normal",
-        1
-      ]
-    },
-    {
-      "id": 13,
-      "type": "ComponentInput",
-      "pos": [
-        20,
-        620
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2",
-          "links": [
-            51
-          ],
-          "slot_index": 0,
-          "label": "sampler_name"
-        }
-      ],
-      "title": "5.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 11,
-      "type": "ComponentInput",
-      "pos": [
-        20,
-        700
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "cfg",
-          "type": "FLOAT",
-          "links": [
-            49
-          ],
-          "slot_index": 0,
-          "label": "cfg"
-        }
-      ],
-      "title": "6.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 10,
-      "type": "ComponentInput",
-      "pos": [
-        20,
-        530
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "steps",
-          "type": "INT",
-          "links": [
-            48
-          ],
-          "slot_index": 0,
-          "label": "steps"
-        }
-      ],
-      "title": "4.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 12,
-      "type": "ComponentInput",
-      "pos": [
-        20,
-        430
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "seed",
-          "type": "INT",
-          "links": [
-            50
-          ],
-          "slot_index": 0,
-          "label": "seed"
-        }
-      ],
-      "title": "3.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 32,
       "type": "VAEDecodeTiled",
       "pos": [
@@ -613,7 +259,7 @@
       "inputs": [
         {
           "name": "basic_pipe",
-          "type": "BASIC_PIPE",
+          "type": "*",
           "link": 58,
           "label": "basic_pipe"
         }
@@ -635,7 +281,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 7,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -651,6 +297,360 @@
         }
       ],
       "title": "1.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 12,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        430
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "seed",
+          "type": "INT",
+          "links": [
+            59
+          ],
+          "slot_index": 0,
+          "label": "seed"
+        }
+      ],
+      "title": "3.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 10,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        530
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "steps",
+          "type": "INT",
+          "links": [
+            60
+          ],
+          "slot_index": 0,
+          "label": "steps"
+        }
+      ],
+      "title": "4.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 13,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        620
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "sampler_name",
+          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2",
+          "links": [
+            62
+          ],
+          "slot_index": 0,
+          "label": "sampler_name"
+        }
+      ],
+      "title": "5.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 14,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        800
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "scheduler",
+          "type": "normal,karras,exponential,simple,ddim_uniform",
+          "links": [
+            63
+          ],
+          "slot_index": 0,
+          "label": "scheduler"
+        }
+      ],
+      "title": "8.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 30,
+      "type": "BNK_TiledKSampler",
+      "pos": [
+        1018,
+        552
+      ],
+      "size": {
+        "0": 315,
+        "1": 334
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 44
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 45
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 46
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 47
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 59,
+          "widget": {
+            "name": "seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 60,
+          "widget": {
+            "name": "steps",
+            "config": [
+              "INT",
+              {
+                "default": 20,
+                "min": 1,
+                "max": 10000
+              }
+            ]
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": 61,
+          "widget": {
+            "name": "cfg",
+            "config": [
+              "FLOAT",
+              {
+                "default": 8,
+                "min": 0,
+                "max": 100
+              }
+            ]
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2",
+          "link": 62,
+          "widget": {
+            "name": "sampler_name",
+            "config": [
+              [
+                "euler",
+                "euler_ancestral",
+                "heun",
+                "dpm_2",
+                "dpm_2_ancestral",
+                "lms",
+                "dpm_fast",
+                "dpm_adaptive",
+                "dpmpp_2s_ancestral",
+                "dpmpp_sde",
+                "dpmpp_2m",
+                "dpmpp_2m_sde",
+                "ddim",
+                "uni_pc",
+                "uni_pc_bh2"
+              ]
+            ]
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "normal,karras,exponential,simple,ddim_uniform",
+          "link": 63,
+          "widget": {
+            "name": "scheduler",
+            "config": [
+              [
+                "normal",
+                "karras",
+                "exponential",
+                "simple",
+                "ddim_uniform"
+              ]
+            ]
+          }
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": 64,
+          "widget": {
+            "name": "denoise",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": 0,
+                "max": 1,
+                "step": 0.01
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            54,
+            57
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": "#FF9CF9"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BNK_TiledKSampler"
+      },
+      "widgets_values": [
+        0,
+        "randomize",
+        512,
+        512,
+        "random",
+        20,
+        8,
+        "euler",
+        "normal",
+        1
+      ]
+    },
+    {
+      "id": 15,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        890
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "links": [
+            64
+          ],
+          "slot_index": 0,
+          "label": "denoise"
+        }
+      ],
+      "title": "9.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 11,
+      "type": "ComponentInput",
+      "pos": [
+        20,
+        710
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "links": [
+            61
+          ],
+          "slot_index": 0,
+          "label": "cfg"
+        }
+      ],
+      "title": "6.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -714,54 +714,6 @@
       "LATENT"
     ],
     [
-      48,
-      10,
-      0,
-      30,
-      5,
-      "INT"
-    ],
-    [
-      49,
-      11,
-      0,
-      30,
-      6,
-      "FLOAT"
-    ],
-    [
-      50,
-      12,
-      0,
-      30,
-      4,
-      "INT"
-    ],
-    [
-      51,
-      13,
-      0,
-      30,
-      7,
-      "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2"
-    ],
-    [
-      52,
-      14,
-      0,
-      30,
-      8,
-      "normal,karras,exponential,simple,ddim_uniform"
-    ],
-    [
-      53,
-      15,
-      0,
-      30,
-      9,
-      "FLOAT"
-    ],
-    [
       54,
       30,
       0,
@@ -800,6 +752,54 @@
       33,
       0,
       "*"
+    ],
+    [
+      59,
+      12,
+      0,
+      30,
+      4,
+      "INT"
+    ],
+    [
+      60,
+      10,
+      0,
+      30,
+      5,
+      "INT"
+    ],
+    [
+      61,
+      11,
+      0,
+      30,
+      6,
+      "FLOAT"
+    ],
+    [
+      62,
+      13,
+      0,
+      30,
+      7,
+      "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2"
+    ],
+    [
+      63,
+      14,
+      0,
+      30,
+      8,
+      "normal,karras,exponential,simple,ddim_uniform"
+    ],
+    [
+      64,
+      15,
+      0,
+      30,
+      9,
+      "FLOAT"
     ]
   ],
   "groups": [],

@@ -3,12 +3,12 @@ import sys
 import folder_paths
 import shutil
 
-impact_path = os.path.dirname(__file__)
-sys.path.append(impact_path)
+extension_path = os.path.dirname(__file__)
+sys.path.append(extension_path)
 
-import component_loader
+import workflow_component.component_loader as component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.26.3) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.27) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -19,354 +19,22 @@ def setup_js():
     js_dest_path = os.path.join(js_path, "workflow-component")
     if not os.path.exists(js_dest_path):
         os.makedirs(js_dest_path)
+
     js_src_path = os.path.join(this_extension_path, "js", "workflow-component.js")
+    shutil.copy(js_src_path, js_dest_path)
+
+    js_src_path = os.path.join(this_extension_path, "js", "image-refiner.js")
     shutil.copy(js_src_path, js_dest_path)
 
 setup_js()
 
-import server
-from aiohttp import web
 
-import uuid
-import workflow_execution
-import execution_experimental
+# DON'T REMOVE: load server apis -------------
+import image_refiner.custom_server
+import workflow_component.custom_server
+# --------------------------------------------
 
-
-async def original_post_prompt(request):
-    self = server.PromptServer.instance
-
-    print("got prompt")
-    resp_code = 200
-    out_string = ""
-    json_data = await request.json()
-
-    if "number" in json_data:
-        number = float(json_data['number'])
-    else:
-        number = self.number
-        if "front" in json_data:
-            if json_data['front']:
-                number = -number
-
-        self.number += 1
-
-    if "prompt" in json_data:
-        prompt = json_data["prompt"]
-        valid = execution_experimental.validate_prompt(prompt)
-        extra_data = {}
-        if "extra_data" in json_data:
-            extra_data = json_data["extra_data"]
-
-        if "client_id" in json_data:
-            extra_data["client_id"] = json_data["client_id"]
-        if valid[0]:
-            prompt_id = str(uuid.uuid4())
-            outputs_to_execute = valid[2]
-            self.prompt_queue.put((number, prompt_id, prompt, extra_data, outputs_to_execute))
-            return web.json_response({"prompt_id": prompt_id})
-        else:
-            print("invalid prompt:", valid[1])
-            return web.json_response({"error": valid[1], "node_errors": valid[3]}, status=400)
-    else:
-        return web.json_response({"error": "no prompt", "node_errors": []}, status=400)
-
-
-@server.PromptServer.instance.routes.post("/prompt")
-async def prompt_hook(request):
-    json_data = await request.json()
-
-    nodes = json_data['extra_data']['extra_pnginfo']['workflow']['nodes']
-    if any(node['type'] in ["ComponentInput", "ComponentOutput", "ComponentOptional"] for node in nodes):
-        msg = "<B>The Workflow Component being composed is not executable.</B><BR><BR>If ComponentInput, ComponentInputOptional, or ComponentOutput nodes are used, it is considered that the Component being composed is in progress."
-        return web.json_response({"error": {"message": msg}, "node_errors": {}}, status=400)
-
-    component_loader.resolve_unresolved_map()
-    if len(component_loader.unresolved_map) > 0:
-        unresolved_nodes = set()
-        for node in nodes:
-            if node['type'] in component_loader.unresolved_map:
-                unresolved_nodes.update(component_loader.unresolved_map[node['type']])
-
-        # excludes
-        unresolved_nodes -= set(['Reroute'])
-
-        if len(unresolved_nodes) > 0:
-            msg = f"<B>Non-installed custom nodes are being used within the component.</B><BR><BR>{unresolved_nodes}"
-            return web.json_response({"error": {"message": msg}, "node_errors": {}}, status=400)
-
-    if "prompt" in json_data:
-        prompt = json_data["prompt"]
-        workflow_execution.garbage_collect(prompt.keys())
-
-    return await original_post_prompt(request)
-
-
-server.PromptServer.instance.app.router.add_post('/prompt', prompt_hook)
-
-
-import json
-@server.PromptServer.instance.routes.post("/component/load")
-async def load_component(request):
-    post = await request.post()
-    component_name = post.get("component_or_filename")
-    json_text = post.get("content")
-    workflow = json.loads(json_text)
-
-    is_full_name = False
-    if component_name.endswith('.component.json'):
-        component_name = os.path.basename(component_name)[:-15]
-    else:
-        is_full_name = True
-
-    new_created, component_full_name = component_loader.load_component(component_name, is_full_name, workflow, True)
-
-    result = {'node_name': component_full_name,
-              "already_loaded": not new_created}
-
-    return web.json_response(result, content_type='application/json')
-
-
-@server.PromptServer.instance.routes.get("/component/get_workflows")
-async def get_workflows(request):
-    return web.json_response(component_loader.workflow_components, content_type='application/json')
-
-
-@server.PromptServer.instance.routes.get("/component/get_unresolved")
-async def get_unresolved(request):
-    component_loader.resolve_unresolved_map()
-
-    unresolved_nodes = set()
-    for nodes in component_loader.unresolved_map.values():
-        unresolved_nodes.update(nodes)
-
-    return web.json_response({'nodes': list(unresolved_nodes)}, content_type='application/json')
-
-
-class ExecutionBlocker:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "input": ("*", ),
-                        "signal": ("*", ),
-                     },
-                }
-
-    RETURN_TYPES = ("*", )
-    FUNCTION = "doit"
-
-    def doit(s, input, signal):
-        return input
-
-
-class ExecutionOneOf:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {
-            "required": {
-                        "input1": ("*", ),
-            },
-            "optional": {
-                        "input2": ("*", ),
-                        "input3": ("*", ),
-                        "input4": ("*", ),
-                        "input5": ("*", ),
-                     },
-               }
-
-    RETURN_TYPES = ("*", )
-    FUNCTION = "doit"
-
-    def doit(s, **kwargs):
-        if 'input1' in kwargs and kwargs['input1'] is not None:
-            return (kwargs['input1'], )
-        elif 'input2' in kwargs and kwargs['input2'] is not None:
-            return (kwargs['input2'], )
-        elif 'input3' in kwargs and kwargs['input3'] is not None:
-            return (kwargs['input3'],)
-        elif 'input4' in kwargs and kwargs['input4'] is not None:
-            return (kwargs['input4'],)
-        elif 'input5' in kwargs and kwargs['input5'] is not None:
-            return (kwargs['input5'],)
-        else:
-            return None
-
-
-class ExecutionSwitch:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "select": ("INT", {"default": 1, "min": 0, "max": 5}),
-                        "input1": ("*", ),
-                    },
-                "optional": {
-                        "input2_opt": ("*", ),
-                        "input3_opt": ("*", ),
-                        "input4_opt": ("*", ),
-                        "input5_opt": ("*", ),
-                    }
-                }
-
-    RETURN_TYPES = ("*", "*", "*", "*", "*", )
-    FUNCTION = "doit"
-
-    def doit(s, select, input1, input2_opt=None, input3_opt=None, input4_opt=None, input5_opt=None):
-        if select == 1:
-            return input1, None, None, None, None
-        elif select == 2:
-            return None, input2_opt, None, None, None
-        elif select == 3:
-            return None, None, input3_opt, None, None
-        elif select == 4:
-            return None, None, None, input4_opt, None
-        elif select == 5:
-            return None, None, None, None, input5_opt
-        else:
-            return None, None, None, None, None
-
-
-class ExecutionControlString:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "A": ("STRING", {"default": ""}),
-                        "B_STR": ("*",),
-                        "condition_kind": (["A = B", "A != B", "A in B", "A not in B"], ),
-                        "pass_value": ("*", )
-                    },
-                }
-
-    RETURN_TYPES = ("*", )
-    RETURN_NAMES = ("pass_value", )
-    FUNCTION = "doit"
-
-    def doit(s, A, B_STR, condition_kind, pass_value):
-        if (condition_kind == "A = B" and A == B_STR) or \
-                (condition_kind == "A != B" and A != B_STR) or \
-                (condition_kind == "A in B" and A in B_STR) or \
-                (condition_kind == "A not in B" and A not in B_STR):
-            return (pass_value, )
-        else:
-            return None
-
-
-class ComboToString:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "spec": ("STRING", {"multiline": True}),
-                    },
-                }
-
-    RETURN_TYPES = ("*", )
-    FUNCTION = "doit"
-
-    def doit(s, spec):
-        return None
-
-
-class LoopControl:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "loop_condition": ("LOOP_CONDITION", ),
-                        "initial_input": ("*", ),
-                        "loopback_input": ("*", ),
-                    },
-                }
-
-    RETURN_TYPES = ("*", )
-    FUNCTION = "doit"
-
-    def doit(s, **kwargs):
-        if 'loopback_input' not in kwargs or kwargs['loopback_input'] is None:
-            current = kwargs['initial_input']
-        else:
-            current = kwargs['loopback_input']
-
-        result = kwargs['loop_condition'].get_next(kwargs['initial_input'], current)
-        if result is None:
-            return None
-        else:
-            return (result, )
-
-
-class CounterCondition:
-    def __init__(self, value):
-        self.max = value
-        self.current = 0
-
-    def get_next(self, initial_value, value):
-        print(f"CounterCondition: {self.current}/{self.max}")
-
-        self.current += 1
-        if self.current == 1:
-            return initial_value
-        elif self.current <= self.max:
-            return value
-        else:
-            return None
-
-
-class LoopCounterCondition:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "count": ("INT", {"default": 1, "min": 0, "max": 9999999, "step": 1}),
-                        "trigger": (["A", "B"], )
-                    },
-                }
-
-    RETURN_TYPES = ("LOOP_CONDITION", )
-    FUNCTION = "doit"
-
-    def doit(s, count, trigger):
-        return (CounterCondition(count), )
-
-
-class TensorToCPU:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {"tensor": ("*", ), }, }
-
-    RETURN_TYPES = ("*", )
-    FUNCTION = "doit"
-
-    def doit(self, tensor):
-        return (tensor.cpu(), )
-
-
-# To facilitate the use of multiple inputs as loopback inputs, InputZip and InputUnzip are provided.
-class InputZip:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "input1": ("*", ),
-                        "input2": ("*", ),
-                    },
-                }
-
-    RETURN_TYPES = ("*", )
-    FUNCTION = "doit"
-
-    def doit(s, input1, input2):
-        return ((input1, input2), )
-
-
-class InputUnzip:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "zipped_input": ("*", ),
-                    },
-                }
-
-    RETURN_TYPES = ("*", "*", )
-    FUNCTION = "doit"
-
-    def doit(s, zipped_input):
-        input1, input2 = zipped_input
-        return (input1, input2, )
-
+from workflow_component.custom_nodes import *
 
 NODE_CLASS_MAPPINGS = {
     "ExecutionSwitch": ExecutionSwitch,
@@ -384,8 +52,9 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
 }
 
+directory = os.path.join(os.path.dirname(__file__), "components")
 
-component_loader.load_all()
+component_loader.load_all(directory)
 NODE_CLASS_MAPPINGS.update(component_loader.NODE_CLASS_MAPPINGS)
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']

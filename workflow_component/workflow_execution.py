@@ -1,4 +1,4 @@
-from execution_experimental import *
+from workflow_component.execution_experimental import *
 from server import PromptServer
 
 
@@ -136,7 +136,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
 
     # pass input interface to internal nodes
     for key, value in kwargs.items():
-        if key not in ["unique_id", "prompt", "extra_pnginfo"]:
+        if key not in ["unique_id", "prompt", "extra_pnginfo", 'used_output_names']:
             input_node = input_mapping[key]
             input_node_id = str(input_node['id'])
 
@@ -162,7 +162,12 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
     for key in output_mapping:
         order, output_node = output_mapping[key]
         # add to execute_outputs if feasible output
-        if 'outputs' in current_component_node:
+        # current_component_node == None -> virtual execution
+        if 'used_output_names' in kwargs:
+            if output_node['inputs'][0]['name'] in kwargs['used_output_names']:
+                execute_outputs.append(output_node['id'])
+
+        elif 'outputs' in current_component_node:
             c_outputs = current_component_node['outputs']
             if len(c_outputs) > order and 'links' in c_outputs[order]:
                 c_links = c_outputs[order]['links']

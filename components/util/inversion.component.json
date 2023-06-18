@@ -1,0 +1,263 @@
+{
+  "last_node_id": 8,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "ComponentOutput",
+      "pos": [
+        1161,
+        583
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "link": 1,
+          "label": null
+        }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 5,
+      "type": "ComponentInput",
+      "pos": [
+        479,
+        450
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            2
+          ],
+          "slot_index": 0,
+          "label": "image"
+        }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 2,
+      "type": "InvertMask",
+      "pos": [
+        823,
+        586
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 3,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            1
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": "#81C784"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "InvertMask"
+      }
+    },
+    {
+      "id": 1,
+      "type": "ImageInvert",
+      "pos": [
+        821,
+        485
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": "#64B5F6"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageInvert"
+      }
+    },
+    {
+      "id": 8,
+      "type": "ComponentOutput",
+      "pos": [
+        1162,
+        465
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 5,
+          "label": null
+        }
+      ],
+      "properties": {}
+    },
+    {
+      "id": 6,
+      "type": "ComponentInput",
+      "pos": [
+        477,
+        614
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": [
+            3
+          ],
+          "slot_index": 0,
+          "label": "mask"
+        }
+      ],
+      "properties": {}
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "*"
+    ],
+    [
+      2,
+      5,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ],
+    [
+      3,
+      6,
+      0,
+      2,
+      0,
+      "MASK"
+    ],
+    [
+      5,
+      1,
+      0,
+      8,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "output": {
+    "1": {
+      "inputs": {
+        "image": [
+          "5",
+          0
+        ]
+      },
+      "class_type": "ImageInvert"
+    },
+    "2": {
+      "inputs": {
+        "mask": [
+          "6",
+          0
+        ]
+      },
+      "class_type": "InvertMask"
+    },
+    "3": {
+      "inputs": {
+        "MASK": [
+          "2",
+          0
+        ]
+      }
+    },
+    "5": {
+      "inputs": {}
+    },
+    "6": {
+      "inputs": {}
+    },
+    "8": {
+      "inputs": {
+        "IMAGE": [
+          "1",
+          0
+        ]
+      }
+    }
+  }
+}

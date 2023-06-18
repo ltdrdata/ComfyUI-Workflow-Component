@@ -1,152 +1,7 @@
 {
   "last_node_id": 23,
-  "last_link_id": 28,
+  "last_link_id": 34,
   "nodes": [
-    {
-      "id": 14,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        420
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "steps",
-          "type": null,
-          "links": [
-            23
-          ],
-          "label": "steps"
-        }
-      ],
-      "title": "04.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 13,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        630
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "denoise",
-          "type": null,
-          "links": [
-            22
-          ],
-          "label": "denoise"
-        }
-      ],
-      "title": "06.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 16,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        730
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "noise_mask",
-          "type": null,
-          "links": [
-            25
-          ],
-          "label": "noise_mask"
-        }
-      ],
-      "title": "07.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 15,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        530
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "cfg",
-          "type": null,
-          "links": [
-            24
-          ],
-          "label": "cfg"
-        }
-      ],
-      "title": "05.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 12,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        310
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "guide_size",
-          "type": null,
-          "links": [
-            21
-          ],
-          "label": "guide_size"
-        }
-      ],
-      "title": "03.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
     {
       "id": 11,
       "type": "ComponentInput",
@@ -159,7 +14,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 5,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
@@ -188,7 +43,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 6,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -219,7 +74,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 7,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -290,35 +145,6 @@
       "properties": {},
       "color": "#223",
       "bgcolor": "#335"
-    },
-    {
-      "id": 21,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        850
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "seed",
-          "type": null,
-          "links": [
-            26
-          ],
-          "label": "seed"
-        }
-      ],
-      "title": "08.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
     },
     {
       "id": 17,
@@ -392,7 +218,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 9,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
@@ -405,6 +231,186 @@
         }
       ],
       "title": "10.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 23,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        1190
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "force_inpaint",
+          "type": "disabled,enabled",
+          "links": [
+            28
+          ],
+          "slot_index": 0,
+          "label": "force_inpaint"
+        }
+      ],
+      "title": "11.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 14,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        420
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "steps",
+          "type": "INT",
+          "links": [
+            29
+          ],
+          "slot_index": 0,
+          "label": "steps"
+        }
+      ],
+      "title": "04.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 13,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        630
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "links": [
+            30
+          ],
+          "slot_index": 0,
+          "label": "denoise"
+        }
+      ],
+      "title": "06.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 12,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        310
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "guide_size",
+          "type": "FLOAT",
+          "links": [
+            31
+          ],
+          "slot_index": 0,
+          "label": "guide_size"
+        }
+      ],
+      "title": "03.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 16,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        730
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "noise_mask",
+          "type": "enabled,disabled",
+          "links": [
+            32
+          ],
+          "slot_index": 0,
+          "label": "noise_mask"
+        }
+      ],
+      "title": "07.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 15,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        530
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "links": [
+            33
+          ],
+          "slot_index": 0,
+          "label": "cfg"
+        }
+      ],
+      "title": "05.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -442,7 +448,7 @@
         {
           "name": "guide_size",
           "type": "FLOAT",
-          "link": 21,
+          "link": 31,
           "widget": {
             "name": "guide_size",
             "config": [
@@ -459,7 +465,7 @@
         {
           "name": "denoise",
           "type": "FLOAT",
-          "link": 22,
+          "link": 30,
           "widget": {
             "name": "denoise",
             "config": [
@@ -476,7 +482,7 @@
         {
           "name": "steps",
           "type": "INT",
-          "link": 23,
+          "link": 29,
           "widget": {
             "name": "steps",
             "config": [
@@ -492,7 +498,7 @@
         {
           "name": "cfg",
           "type": "FLOAT",
-          "link": 24,
+          "link": 33,
           "widget": {
             "name": "cfg",
             "config": [
@@ -508,7 +514,7 @@
         {
           "name": "noise_mask",
           "type": "enabled,disabled",
-          "link": 25,
+          "link": 32,
           "widget": {
             "name": "noise_mask",
             "config": [
@@ -522,7 +528,7 @@
         {
           "name": "seed",
           "type": "INT",
-          "link": 26,
+          "link": 34,
           "widget": {
             "name": "seed",
             "config": [
@@ -583,11 +589,11 @@
       ]
     },
     {
-      "id": 23,
+      "id": 21,
       "type": "ComponentInput",
       "pos": [
         40,
-        1190
+        850
       ],
       "size": {
         "0": 178,
@@ -598,16 +604,16 @@
       "mode": 0,
       "outputs": [
         {
-          "name": "force_inpaint",
-          "type": "disabled,enabled",
+          "name": "seed",
+          "type": "INT",
           "links": [
-            28
+            34
           ],
           "slot_index": 0,
-          "label": "force_inpaint"
+          "label": "seed"
         }
       ],
-      "title": "11.Component Input",
+      "title": "08.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -663,54 +669,6 @@
       "*"
     ],
     [
-      21,
-      12,
-      0,
-      20,
-      3,
-      "FLOAT"
-    ],
-    [
-      22,
-      13,
-      0,
-      20,
-      4,
-      "FLOAT"
-    ],
-    [
-      23,
-      14,
-      0,
-      20,
-      5,
-      "INT"
-    ],
-    [
-      24,
-      15,
-      0,
-      20,
-      6,
-      "FLOAT"
-    ],
-    [
-      25,
-      16,
-      0,
-      20,
-      7,
-      "enabled,disabled"
-    ],
-    [
-      26,
-      21,
-      0,
-      20,
-      8,
-      "INT"
-    ],
-    [
       27,
       22,
       0,
@@ -725,6 +683,54 @@
       20,
       9,
       "disabled,enabled"
+    ],
+    [
+      29,
+      14,
+      0,
+      20,
+      5,
+      "INT"
+    ],
+    [
+      30,
+      13,
+      0,
+      20,
+      4,
+      "FLOAT"
+    ],
+    [
+      31,
+      12,
+      0,
+      20,
+      3,
+      "FLOAT"
+    ],
+    [
+      32,
+      16,
+      0,
+      20,
+      7,
+      "enabled,disabled"
+    ],
+    [
+      33,
+      15,
+      0,
+      20,
+      6,
+      "FLOAT"
+    ],
+    [
+      34,
+      21,
+      0,
+      20,
+      8,
+      "INT"
     ]
   ],
   "groups": [],

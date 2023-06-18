@@ -1,6 +1,6 @@
 {
-  "last_node_id": 15,
-  "last_link_id": 25,
+  "last_node_id": 18,
+  "last_link_id": 52,
   "nodes": [
     {
       "id": 1,
@@ -68,64 +68,6 @@
       }
     },
     {
-      "id": 13,
-      "type": "ComponentInput",
-      "pos": [
-        110,
-        740
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "lora_name",
-          "type": null,
-          "links": [
-            15
-          ],
-          "label": "lora2"
-        }
-      ],
-      "title": "4.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 11,
-      "type": "ComponentInput",
-      "pos": [
-        110,
-        510
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "lora_name",
-          "type": null,
-          "links": [
-            14
-          ],
-          "label": "lora1"
-        }
-      ],
-      "title": "2.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 6,
       "type": "ComponentInput",
       "pos": [
@@ -137,7 +79,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 3,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
@@ -244,327 +186,6 @@
       "bgcolor": "#335"
     },
     {
-      "id": 8,
-      "type": "ComponentInput",
-      "pos": [
-        110,
-        940
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": [
-            7
-          ],
-          "slot_index": 0,
-          "label": "positive"
-        }
-      ],
-      "title": "6.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 3,
-      "type": "CLIPTextEncode",
-      "pos": [
-        1520,
-        920
-      ],
-      "size": {
-        "0": 210,
-        "1": 54
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 18
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 7,
-          "widget": {
-            "name": "text",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            2
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        ""
-      ]
-    },
-    {
-      "id": 15,
-      "type": "ComponentInput",
-      "pos": [
-        110,
-        830
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "strength_model",
-          "type": "FLOAT",
-          "links": [
-            24,
-            25
-          ],
-          "label": "lora2_weight"
-        }
-      ],
-      "title": "5.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 10,
-      "type": "LoraLoader",
-      "pos": [
-        680,
-        350
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 10
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 11
-        },
-        {
-          "name": "lora_name",
-          "type": 0,
-          "link": 14,
-          "widget": {
-            "name": "lora_name",
-            "config": [
-              []
-            ]
-          },
-          "slot_index": 2
-        },
-        {
-          "name": "strength_model",
-          "type": "FLOAT",
-          "link": 22,
-          "widget": {
-            "name": "strength_model",
-            "config": [
-              "FLOAT",
-              {
-                "default": 1,
-                "min": -10,
-                "max": 10,
-                "step": 0.01
-              }
-            ]
-          },
-          "slot_index": 3
-        },
-        {
-          "name": "strength_clip",
-          "type": "FLOAT",
-          "link": 23,
-          "widget": {
-            "name": "strength_clip",
-            "config": [
-              "FLOAT",
-              {
-                "default": 1,
-                "min": -10,
-                "max": 10,
-                "step": 0.01
-              }
-            ]
-          },
-          "slot_index": 4
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            16
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            17
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        null,
-        1,
-        1
-      ]
-    },
-    {
-      "id": 12,
-      "type": "LoraLoader",
-      "pos": [
-        1050,
-        700
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 16
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 17
-        },
-        {
-          "name": "lora_name",
-          "type": 0,
-          "link": 15,
-          "widget": {
-            "name": "lora_name",
-            "config": [
-              []
-            ]
-          },
-          "slot_index": 2
-        },
-        {
-          "name": "strength_model",
-          "type": "FLOAT",
-          "link": 24,
-          "widget": {
-            "name": "strength_model",
-            "config": [
-              "FLOAT",
-              {
-                "default": 1,
-                "min": -10,
-                "max": 10,
-                "step": 0.01
-              }
-            ]
-          },
-          "slot_index": 3
-        },
-        {
-          "name": "strength_clip",
-          "type": "FLOAT",
-          "link": 25,
-          "widget": {
-            "name": "strength_clip",
-            "config": [
-              "FLOAT",
-              {
-                "default": 1,
-                "min": -10,
-                "max": 10,
-                "step": 0.01
-              }
-            ]
-          },
-          "slot_index": 4
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            20
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            18,
-            19,
-            21
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        null,
-        1,
-        1
-      ]
-    },
-    {
       "id": 14,
       "type": "ComponentInput",
       "pos": [
@@ -576,7 +197,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 5,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -659,7 +280,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 0,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -673,6 +294,390 @@
         }
       ],
       "title": "7.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 13,
+      "type": "ComponentInput",
+      "pos": [
+        110,
+        740
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "lora_name",
+          "type": "LoraLoader\nlora_name",
+          "links": [
+            51
+          ],
+          "slot_index": 0,
+          "label": "lora2"
+        }
+      ],
+      "title": "4.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1520,
+        920
+      ],
+      "size": {
+        "0": 210,
+        "1": 54
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 18
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 31,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            2
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 17,
+      "type": "ComponentInput",
+      "pos": [
+        110,
+        940
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            31
+          ],
+          "slot_index": 0,
+          "label": "positive"
+        }
+      ],
+      "title": "6.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 18,
+      "type": "ComponentInput",
+      "pos": [
+        110,
+        840
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "links": [
+            49,
+            50
+          ],
+          "label": "lora2_weight",
+          "slot_index": 0
+        }
+      ],
+      "title": "5.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 12,
+      "type": "LoraLoader",
+      "pos": [
+        1005.5555419921875,
+        730.0000610351562
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 16
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": 49,
+          "widget": {
+            "name": "strength_model",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": -10,
+                "max": 10,
+                "step": 0.01
+              }
+            ]
+          },
+          "slot_index": 3
+        },
+        {
+          "name": "strength_clip",
+          "type": "FLOAT",
+          "link": 50,
+          "widget": {
+            "name": "strength_clip",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": -10,
+                "max": 10,
+                "step": 0.01
+              }
+            ]
+          },
+          "slot_index": 4
+        },
+        {
+          "name": "lora_name",
+          "type": "LoraLoader\nlora_name",
+          "link": 51,
+          "widget": {
+            "name": "lora_name",
+            "config": [
+              [
+                "emotionPuppeteerLora_v2Lora.safetensors",
+                "locon_anya_v2_from_v2_64_32_zwx.safetensors"
+              ]
+            ]
+          },
+          "slot_index": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            20
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            18,
+            19,
+            21
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "emotionPuppeteerLora_v2Lora.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 10,
+      "type": "LoraLoader",
+      "pos": [
+        680,
+        350
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 10
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 11
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": 22,
+          "widget": {
+            "name": "strength_model",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": -10,
+                "max": 10,
+                "step": 0.01
+              }
+            ]
+          },
+          "slot_index": 3
+        },
+        {
+          "name": "strength_clip",
+          "type": "FLOAT",
+          "link": 23,
+          "widget": {
+            "name": "strength_clip",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": -10,
+                "max": 10,
+                "step": 0.01
+              }
+            ]
+          },
+          "slot_index": 4
+        },
+        {
+          "name": "lora_name",
+          "type": "LoraLoader\nlora_name",
+          "link": 52,
+          "widget": {
+            "name": "lora_name",
+            "config": [
+              []
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            16
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            17
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "emotionPuppeteerLora_v2Lora.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 11,
+      "type": "ComponentInput",
+      "pos": [
+        110,
+        510
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "lora_name",
+          "type": "LoraLoader\nlora_name",
+          "links": [
+            52
+          ],
+          "slot_index": 0,
+          "label": "lora1"
+        }
+      ],
+      "title": "2.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -712,14 +717,6 @@
       "*"
     ],
     [
-      7,
-      8,
-      0,
-      3,
-      1,
-      "STRING"
-    ],
-    [
       8,
       9,
       0,
@@ -750,22 +747,6 @@
       10,
       1,
       "CLIP"
-    ],
-    [
-      14,
-      11,
-      0,
-      10,
-      2,
-      "*"
-    ],
-    [
-      15,
-      13,
-      0,
-      12,
-      2,
-      null
     ],
     [
       16,
@@ -820,7 +801,7 @@
       14,
       0,
       10,
-      3,
+      2,
       "FLOAT"
     ],
     [
@@ -828,24 +809,48 @@
       14,
       0,
       10,
-      4,
+      3,
       "FLOAT"
     ],
     [
-      24,
-      15,
+      31,
+      17,
+      0,
+      3,
+      1,
+      "STRING"
+    ],
+    [
+      49,
+      18,
+      0,
+      12,
+      2,
+      "FLOAT"
+    ],
+    [
+      50,
+      18,
       0,
       12,
       3,
       "FLOAT"
     ],
     [
-      25,
-      15,
+      51,
+      13,
       0,
       12,
       4,
-      "FLOAT"
+      "LoraLoader\nlora_name"
+    ],
+    [
+      52,
+      11,
+      0,
+      10,
+      4,
+      "LoraLoader\nlora_name"
     ]
   ],
   "groups": [],
@@ -865,7 +870,7 @@
     "3": {
       "inputs": {
         "text": [
-          "8",
+          "17",
           0
         ],
         "clip": [
@@ -924,9 +929,6 @@
         ]
       }
     },
-    "8": {
-      "inputs": {}
-    },
     "9": {
       "inputs": {}
     },
@@ -965,11 +967,11 @@
           0
         ],
         "strength_model": [
-          "15",
+          "18",
           0
         ],
         "strength_clip": [
-          "15",
+          "18",
           0
         ],
         "model": [
@@ -989,7 +991,10 @@
     "14": {
       "inputs": {}
     },
-    "15": {
+    "17": {
+      "inputs": {}
+    },
+    "18": {
       "inputs": {}
     }
   }

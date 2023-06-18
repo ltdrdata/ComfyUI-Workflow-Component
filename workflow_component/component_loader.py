@@ -2,11 +2,9 @@ import os
 import json
 import traceback
 
-import workflow_execution
+import workflow_component.workflow_execution as workflow_execution
 import nodes as comfy_nodes
 import hashlib
-
-directory = os.path.join(os.path.dirname(__file__), "components")
 
 NODE_CLASS_MAPPINGS = {}
 unresolved_map = {}
@@ -242,6 +240,8 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
 
                     if 'label' in node['outputs'][0]:
                         input_label = node['outputs'][0]['label']
+                    elif 'name' in node['outputs'][0]:
+                        input_label = node['outputs'][0]['name']
                     else:
                         input_label = None
 
@@ -367,7 +367,7 @@ def load_component(component_name, is_full_name, workflow, direct_reflect=False,
         return (False, None)
 
 
-def load_all():
+def load_all(directory):
     global workflow_components
 
     def doit(category, cur_dir, filename):
@@ -379,6 +379,7 @@ def load_all():
             with open(file_path, "r") as file:
                 data = json.load(file)
                 _, component_full_name = load_component(component_name, False, data, category=category)
+                # print(f"LOAD: {component_full_name}")
                 workflow_components[component_full_name] = data
 
     for root, dirs, files in os.walk(directory):

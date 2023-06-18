@@ -1,6 +1,6 @@
 {
   "last_node_id": 39,
-  "last_link_id": 44,
+  "last_link_id": 45,
   "nodes": [
     {
       "id": 15,
@@ -139,36 +139,6 @@
       "bgcolor": "#533"
     },
     {
-      "id": 38,
-      "type": "ComponentInput",
-      "pos": [
-        80,
-        670
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "*",
-          "type": null,
-          "links": [
-            43
-          ],
-          "slot_index": 0,
-          "label": "denoise"
-        }
-      ],
-      "title": "7.ComponentInput",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
       "id": 31,
       "type": "ComponentOutput",
       "pos": [
@@ -247,7 +217,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -319,7 +289,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -350,7 +320,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
@@ -381,7 +351,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "outputs": [
         {
@@ -411,7 +381,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "outputs": [
         {
@@ -425,6 +395,32 @@
         }
       ],
       "title": "5.ComponentInput",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 39,
+      "type": "ComponentOutput",
+      "pos": [
+        1500,
+        380
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "link": 44,
+          "label": null
+        }
+      ],
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -468,7 +464,7 @@
         {
           "name": "denoise",
           "type": "FLOAT",
-          "link": 43,
+          "link": 45,
           "widget": {
             "name": "denoise",
             "config": [
@@ -510,27 +506,31 @@
       ]
     },
     {
-      "id": 39,
-      "type": "ComponentOutput",
+      "id": 38,
+      "type": "ComponentInput",
       "pos": [
-        1500,
-        380
+        80,
+        670
       ],
       "size": {
         "0": 178,
         "1": 26
       },
       "flags": {},
-      "order": 12,
+      "order": 6,
       "mode": 0,
-      "inputs": [
+      "outputs": [
         {
-          "name": "LATENT",
-          "type": "LATENT",
-          "link": 44,
-          "label": null
+          "name": "denoise",
+          "type": "FLOAT",
+          "links": [
+            45
+          ],
+          "slot_index": 0,
+          "label": "denoise"
         }
       ],
+      "title": "7.ComponentInput",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -642,20 +642,20 @@
       "STRING"
     ],
     [
-      43,
-      38,
-      0,
-      16,
-      4,
-      "FLOAT"
-    ],
-    [
       44,
       16,
       0,
       39,
       0,
       "*"
+    ],
+    [
+      45,
+      38,
+      0,
+      16,
+      4,
+      "FLOAT"
     ]
   ],
   "groups": [],
