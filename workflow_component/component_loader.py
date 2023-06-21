@@ -244,6 +244,9 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                 if input_link in node_config_map:
                     input_type, node_config, node_type, input_slot, widget_values = node_config_map[input_link]
 
+                    if input_type == '*':
+                        input_type = node['outputs'][0]['type']
+
                     if 'label' in node['outputs'][0]:
                         input_label = node['outputs'][0]['label']
                     elif 'name' in node['outputs'][0]:

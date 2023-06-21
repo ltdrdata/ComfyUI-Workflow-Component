@@ -224,23 +224,21 @@ function prepareRGB(image, backupCanvas, backupCtx) {
 	backupCtx.putImageData(backupData, 0, 0);
 }
 
-function is_available_component(name, component) {
+function is_available_component(class_def, name, component) {
 	var input_image_count = 0;
 	var input_latent_count = 0;
 	var input_mask_count = 0;
 
 	let inputs = [];
-	let outputs = [];
-	for(let x in component.nodes) {
-		let node = component.nodes[x];
-		switch(node.type) {
-		case "ComponentInput":
-			inputs.push(node.outputs[0].type);
-			break;
+	let outputs = class_def.output;
+	for(let name in class_def.input.required) {
+		let type = class_def.input.required[name][0];
 
-		case "ComponentOutput":
-			outputs.push(node.inputs[0].type);
-			break;
+		if(Array.isArray(type)) {
+			inputs.push("COMBO");
+		}
+		else {
+			inputs.push(type);
 		}
 	}
 
@@ -284,7 +282,7 @@ function is_available_component(name, component) {
 				return false;
 			}
 
-			if(kind.includes(","))
+			if(kind == "COMBO" || kind.includes(","))
 				continue;
 
 			return false;
@@ -721,13 +719,15 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	async invalidateComponentSelectCombo() {
+		const defs = await api.getNodeDefs();
+
 		if(this.componentSelectCombo) {
 			let listItems = [];
 
 			let components = JSON.parse(localStorage['loaded_components']);
 
 			for(let name in components) {
-				if(is_available_component(name, components[name]))
+				if(is_available_component(defs[name], name, components[name]))
 					listItems.push({ value: name, text: name });
 			}
 
@@ -754,6 +754,9 @@ class ImageRefinerDialog extends ComfyDialog {
 		if(this.componentSelectCombo.value != "none") {
 			let components = JSON.parse(localStorage['loaded_components']);
 			let component = components[this.componentSelectCombo.value];
+
+			if(!component)
+				return;
 
 			// node map
 			let node_map = {};
