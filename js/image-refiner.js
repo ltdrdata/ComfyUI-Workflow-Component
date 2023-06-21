@@ -1197,7 +1197,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		});
 
 		this.saveButton = this.createLeftButton("Save", async () => {
-				self.fillButton = true;
+				self.fillButton.disabled = true;
 				this.disabled = true;
 				document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
 				document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
@@ -1205,7 +1205,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				ComfyApp.onClipspaceEditorSave();
 				self.close();
 				this.disabled = false;
-				self.fillButton = false;
+				self.fillButton.disabled = false;
 			});
 
 		this.componentSelectCombo = this.createComponentSelectCombo();
