@@ -354,7 +354,136 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	open_cands_selector(cands, mask) {
+		let self = this;
 
+		var modal = document.createElement('div');
+		modal.style.position = 'fixed';
+		modal.style.top = '0';
+		modal.style.left = '0';
+		modal.style.width = '100%';
+		modal.style.height = '100%';
+		modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+		modal.style.display = 'flex';
+		modal.style.flexDirection = 'column';
+		modal.style.justifyContent = 'center';
+		modal.style.alignItems = 'center';
+		modal.style.zIndex = '9997';
+		modal.id = "ImageRefiner-Candidate-Selector";
+
+		var gallery = document.createElement('div');
+		gallery.style.display = 'flex';
+		gallery.style.flexWrap = 'wrap';
+		gallery.style.maxHeight = '600px';
+		gallery.style.overflow = 'auto';
+		var selectedImage = null;
+		var selectedMaskImage = null;
+
+		cands.forEach(function(cand) {
+			var image = document.createElement('img');
+			image.style.width = '300px';
+			image.style.height = '300px';
+			image.style.margin = '10px';
+			image.style.objectFit = 'cover';
+			image.style.cursor = 'pointer';
+			modal.style.zIndex = '9998';
+
+			image.onload = function() {
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
+				canvas.width = image.width;
+				canvas.height = image.height;
+				ctx.drawImage(image, 0, 0);
+				ctx.globalCompositeOperation = 'destination-out';
+				ctx.drawImage(mask, 0, 0);
+
+				var maskedImage = document.createElement('img');
+				maskedImage.src = canvas.toDataURL();
+				maskedImage.style.width = '300px';
+				maskedImage.style.height = '300px';
+				maskedImage.style.margin = '10px';
+				maskedImage.style.objectFit = 'cover';
+
+				gallery.appendChild(maskedImage);
+
+				maskedImage.addEventListener('click', function() {
+					if (selectedMaskImage) {
+						selectedMaskImage.style.border = 'none';
+					}
+					selectedImage = image;
+					selectedMaskImage = maskedImage;
+					selectedMaskImage.style.border = '2px solid #006699';
+				});
+			};
+
+			image.src = `view?filename=${cand.filename}&subfolder=${cand.subfolder}&type=${cand.type}${app.getPreviewFormatParam()}`;
+			image.cand = cand;
+		});
+
+
+		var confirmButton = document.createElement('button');
+		confirmButton.textContent = 'Apply';
+		confirmButton.style.padding = '10px 20px';
+		confirmButton.style.marginRight = "10px";
+		confirmButton.style.border = 'none';
+		confirmButton.style.borderRadius = '5px';
+		confirmButton.style.fontFamily = 'Arial, sans-serif';
+		confirmButton.style.fontSize = '16px';
+		confirmButton.style.fontWeight = 'bold';
+		confirmButton.style.color = '#fff';
+		confirmButton.style.background = 'linear-gradient(to bottom, #0070B8, #003D66)';
+		confirmButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.4)';
+
+		confirmButton.addEventListener('click', function() {
+			if (selectedImage) {
+				self.addLayer(selectedImage.cand, mask);
+				self.maskCtx.clearRect(0,0,self.maskCanvas.width,self.maskCanvas.height);
+				closeModal();
+			} else {
+				alert('Please choose the image.');
+			}
+		});
+
+		var cancelButton = document.createElement('button');
+		cancelButton.textContent = 'Cancel';
+		confirmButton.style.marginLeft = "10px";
+		cancelButton.style.padding = '10px 20px';
+		cancelButton.style.border = 'none';
+		cancelButton.style.borderRadius = '5px';
+		cancelButton.style.fontFamily = 'Arial, sans-serif';
+		cancelButton.style.fontSize = '16px';
+		cancelButton.style.fontWeight = 'bold';
+		cancelButton.style.color = '#fff';
+		cancelButton.style.background = 'linear-gradient(to bottom, #0070B8, #003D66)';
+		cancelButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.4)';
+
+		cancelButton.addEventListener('click', function() {
+			var confirmClose = confirm('Are you sure you want to discard the generated image?');
+			if (confirmClose) {
+				closeModal();
+			}
+		});
+
+		var container = document.createElement('div');
+		container.style.display = 'flex';
+		container.style.justifyContent = 'space-between';
+		container.style.height = "50px";
+
+		container.appendChild(confirmButton);
+		container.appendChild(cancelButton);
+
+		modal.appendChild(container);
+
+		var lineBreak = document.createElement('div');
+		lineBreak.style.clear = 'both';
+		modal.appendChild(lineBreak);
+
+		modal.appendChild(gallery);
+
+		function closeModal() {
+			document.body.removeChild(modal);
+		}
+
+		document.body.appendChild(modal);
 	}
 
 	createRightSlider(self, name, callback) {
@@ -898,8 +1027,6 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.saveButton = true;
 
 			try {
-				this.batchSelectCombo.value = 1; // temporary restriction
-
 				if(this.seeds.length == 0 || this.batchSelectCombo.value == 1) {
 					let prompt_data = this.getPrompts();
 					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
@@ -912,11 +1039,13 @@ class ImageRefinerDialog extends ComfyDialog {
 					let cands = [];
 
 					// increase seed
-					for(let x in this.seeds) {
-						if(this.seeds[x].value == this.seeds[x].max)
-							this.seeds[x].value = this.seeds[x].min;
-						else
-							this.seeds[x].value += this.seeds[x].step;
+					for(let i = 0; i<this.batchSelectCombo.value; i++) {
+						for(let x in this.seeds) {
+							if(this.seeds[x].value == this.seeds[x].max)
+								this.seeds[x].value = this.seeds[x].min;
+							else
+								this.seeds[x].value += this.seeds[x].step;
+						}
 
 						let prompt_data = this.getPrompts();
 						let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
@@ -927,10 +1056,10 @@ class ImageRefinerDialog extends ComfyDialog {
 				}
 			}
 			catch(exception) {
-
+				console.log(exception);
 			}
 
-			this.fillButton.innerText = "Fill";
+			this.fillButton.innerText = "Regenerate";
 			this.fillButton.style.backgroundColor = null;
 			this.fillButton.style.Color = null;
 
@@ -1315,6 +1444,9 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	onResize(orig_image) {
+		if(this.imgCanvas.parentElement.clientWidth == 0 || this.imgCanvas.parentElement.clientHeight == 0)
+			return;
+
 		this.imgCanvas.width = this.imgCanvas.parentElement.clientWidth;
 		this.imgCanvas.height = this.imgCanvas.parentElement.clientHeight;
 
