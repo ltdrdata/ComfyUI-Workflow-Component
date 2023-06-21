@@ -235,6 +235,12 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
         else:
             if len(input_links) > 0:
                 input_link = input_links[0]  # we need only 1 link for a slot
+
+                for i in input_links:
+                    if node_config_map[i][1] is not None or node_config_map[i][2] is not None or node_config_map[i][3] is not None or node_config_map[i][4] is not None:
+                        input_link = i
+                        break
+
                 if input_link in node_config_map:
                     input_type, node_config, node_type, input_slot, widget_values = node_config_map[input_link]
 
