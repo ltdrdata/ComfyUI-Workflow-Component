@@ -1,6 +1,6 @@
-import { app } from "/scripts/app.js";
+import { app, ComfyApp } from "/scripts/app.js";
+import { api } from "/scripts/api.js";
 import { ComfyDialog, $el } from "/scripts/ui.js";
-import { ComfyApp } from "/scripts/app.js";
 import { ClipspaceDialog } from "/extensions/core/clipspace.js";
 
 function addMenuHandler(nodeType, cb) {
@@ -294,7 +294,7 @@ function is_available_component(name, component) {
 	if((input_image_count + input_latent_count) != 1)
 		return false;
 
-	if(input_mask_count != 1)
+	if(input_mask_count > 1)
 		return false;
 
 	var output_image_count = 0;
@@ -587,67 +587,6 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 	}
 
-	addDraggableListItem(text) {
-		let listItem = document.createElement("li");
-		listItem.draggable = true;
-
-		let isDragging = false;
-		let dragStartIndex;
-		let dragOverIndex;
-
-		let self = this;
-
-		listItem.addEventListener("dragstart", function (event) {
-			isDragging = true;
-			dragStartIndex = Array.from(self.layer_list.children).indexOf(listItem);
-			event.dataTransfer.effectAllowed = "move";
-			event.dataTransfer.setData("text/plain", "");
-			this.classList.add("dragging");
-		});
-
-		listItem.addEventListener("dragover", function (event) {
-			event.preventDefault();
-			if (!isDragging) return;
-
-			dragOverIndex = Array.from(self.layer_list.children).indexOf(listItem);
-
-			if (dragStartIndex !== dragOverIndex) {
-				const children = Array.from(layer_list.children);
-				const targetIndex = dragStartIndex < dragOverIndex ? dragOverIndex + 1 : dragOverIndex;
-				layer_list.insertBefore(listItem, children[targetIndex]);
-			}
-		});
-
-		// checkbox
-		let label = document.createElement("span");
-		label.textContent = text;
-
-		let checkbox = document.createElement("input");
-		checkbox.type = "checkbox";
-		checkbox.checked = true;
-		checkbox.addEventListener("change", function() {
-			if (this.checked) {
-				console.log("Checked: " + text);
-			} else {
-				console.log("Unchecked: " + text);
-			}
-		});
-
-		listItem.style.listStyleType = "none";
-		listItem.style.color = "var(--descrip-text)";
-		listItem.style.backgroundColor = "#3F3F3F";
-
-		listItem.appendChild(checkbox);
-		listItem.appendChild(label);
-
-		listItem.addEventListener("dragend", function () {
-			isDragging = false;
-			this.classList.remove("dragging");
-		});
-
-		this.layer_list.appendChild(listItem);
-	}
-
 	async invalidatePromptControls() {
 		this.prompts = {};
 
@@ -930,25 +869,37 @@ class ImageRefinerDialog extends ComfyDialog {
 		return prompts;
 	}
 
-
-	async invalidateLayers() {
-//		let listItems = ["Base layer"];
-//
-//		listItems.forEach(item => {
-//			this.addDraggableListItem(item);
-//		});
-	}
-
 	async generative_fill() {
-		this.disabled = true;
-		this.fillButton = true;
-		let prompt_data = this.getPrompts();
-		let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
-		let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
-		await this.addLayer(generated_image, mask);
-		this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
-		this.disabled = false;
-		this.fillButton = false;
+		if(!this.is_generating) {
+			this.is_generating = true;
+
+			this.fillButton.innerText = "Cancel";
+			this.fillButton.style.backgroundColor = "red";
+			this.fillButton.style.Color = "white";
+
+			this.saveButton = true;
+
+			try {
+				let prompt_data = this.getPrompts();
+				let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
+				let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
+				await this.addLayer(generated_image, mask);
+				this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
+			}
+			catch(exception) {
+
+			}
+
+			this.fillButton.innerText = "Fill";
+			this.fillButton.style.backgroundColor = null;
+			this.fillButton.style.Color = null;
+
+			this.is_generating = false;
+			this.saveButton = false;
+		}
+		else {
+			api.interrupt();
+		}
 	}
 
 	setlayout(imgCanvas, maskCanvas) {
@@ -1126,6 +1077,23 @@ class ImageRefinerDialog extends ComfyDialog {
 		});
 		layerItem.appendChild(visibilityCheckbox);
 
+		const flattenButton = document.createElement("button");
+		flattenButton.innerText = "F";
+		flattenButton.style.fontSize = "10px";
+		flattenButton.style.height = "20px";
+		flattenButton.addEventListener("click", () => {
+			this.flattenLayer(layer);
+			this.removeLayer(layer);
+		});
+
+		const maskButton = document.createElement("button");
+		maskButton.innerText = "M";
+		maskButton.style.fontSize = "10px";
+		maskButton.style.height = "20px";
+		maskButton.addEventListener("click", () => {
+			this.maskRestoreFromLayer(layer);
+		});
+
 		const deleteButton = document.createElement("button");
 		deleteButton.innerText = "X";
 		deleteButton.style.fontSize = "10px";
@@ -1133,12 +1101,17 @@ class ImageRefinerDialog extends ComfyDialog {
 		deleteButton.addEventListener("click", () => {
 			this.removeLayer(layer);
 		});
+
+
 		let label = document.createElement('span');
 		label.textContent = `Layer ${layer.id}`;
 		label.style.color = 'var(--descrip-text)';
 		label.style.display = 'inline-block';
-		label.style.width = "155px";
+		label.style.width = "100px";
+
 		layerItem.appendChild(label);
+//		layerItem.appendChild(flattenButton);
+		layerItem.appendChild(maskButton);
 		layerItem.appendChild(deleteButton);
 		const callButton = document.createElement("button");
 		callButton.innerText = "Call";
@@ -1167,6 +1140,41 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.leftDiv.removeChild(layer.canvas);
 			this.layers.splice(layerIndex, 1);
 		}
+	}
+
+	flattenLayer(item) {
+
+	}
+
+	maskRestoreFromLayer(item) {
+		let maskCtx = this.maskCanvas.getContext('2d');
+		maskCtx.clearRect(0, 0, this.maskCanvas.width, this.maskCanvas.height);
+
+		// Create a temporary canvas for modifying the alpha channel
+		let tempCanvas = document.createElement('canvas');
+		let tempCtx = tempCanvas.getContext('2d');
+
+		// Set the dimensions of the temporary canvas
+		tempCanvas.width = item.mask.width;
+		tempCanvas.height = item.mask.height;
+
+		// Draw the original item.mask onto the temporary canvas
+		tempCtx.drawImage(item.mask, 0, 0);
+
+		// Get the image data of the temporary canvas
+		let imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+		let data = imageData.data;
+
+		// Invert the alpha channel
+		for (let i = 0; i < data.length; i += 4) {
+		data[i + 3] = 255 - data[i + 3]; // Invert alpha channel
+		}
+
+		// Put the modified image data back onto the temporary canvas
+		tempCtx.putImageData(imageData, 0, 0);
+
+		// Draw the modified temporary canvas onto the maskCanvas
+		maskCtx.drawImage(tempCanvas, 0, 0, this.maskCanvas.width, this.maskCanvas.height);
 	}
 
 	clearLayers() {
@@ -1206,7 +1214,6 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			this.setlayout(imgCanvas, maskCanvas);
 			this.invalidateComponentSelectCombo();
-			this.invalidateLayers();
 			this.invalidatePromptControls();
 
 			// prepare content
