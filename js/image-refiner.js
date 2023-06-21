@@ -1040,7 +1040,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.fillButton.style.backgroundColor = "red";
 			this.fillButton.style.Color = "white";
 
-			this.saveButton = true;
+			this.saveButton.disabled = true;
 
 			try {
 				if(this.seeds.length == 0 || this.batchSelectCombo.value == 1) {
@@ -1082,7 +1082,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.fillButton.style.Color = null;
 
 			this.is_generating = false;
-			this.saveButton = false;
+			this.saveButton.disabled = false;
 		}
 		else {
 			api.interrupt();
