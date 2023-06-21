@@ -1059,9 +1059,9 @@ class ImageRefinerDialog extends ComfyDialog {
 						for(let x in this.seeds) {
 							if(this.seeds[x].numberInput) {
 								if(this.seeds[x].numberInput.value == this.seeds[x].numberInput.max)
-									this.seeds[x].numberInput.value = this.seeds[x].numberInput.min;
+									this.seeds[x].numberInput.value = Number(this.seeds[x].numberInput.min);
 								else
-									this.seeds[x].numberInput.value += this.seeds[x].numberInput.step;
+									this.seeds[x].numberInput.value = Number(this.seeds[x].numberInput.value) + Number(this.seeds[x].numberInput.step);
 							}
 						}
 
