@@ -379,44 +379,60 @@ class ImageRefinerDialog extends ComfyDialog {
 		var selectedMaskImage = null;
 
 		cands.forEach(function(cand) {
-			var image = document.createElement('img');
-			image.style.width = '300px';
-			image.style.height = '300px';
-			image.style.margin = '10px';
-			image.style.objectFit = 'cover';
-			image.style.cursor = 'pointer';
-			modal.style.zIndex = '9998';
+				var image = document.createElement('img');
+				var maxDimension = 300; // 최대 길이
 
-			image.onload = function() {
-				var canvas = document.createElement('canvas');
-				var ctx = canvas.getContext('2d');
-				canvas.width = image.width;
-				canvas.height = image.height;
-				ctx.drawImage(image, 0, 0);
-				ctx.globalCompositeOperation = 'destination-out';
-				ctx.drawImage(mask, 0, 0);
+				image.style.maxWidth = maxDimension + 'px';
+				image.style.maxHeight = maxDimension + 'px';
+				image.style.margin = '10px';
+				image.style.objectFit = 'cover';
+				image.style.cursor = 'pointer';
 
-				var maskedImage = document.createElement('img');
-				maskedImage.src = canvas.toDataURL();
-				maskedImage.style.width = '300px';
-				maskedImage.style.height = '300px';
-				maskedImage.style.margin = '10px';
-				maskedImage.style.objectFit = 'cover';
+				image.onload = function() {
+						var canvas = document.createElement('canvas');
+						var ctx = canvas.getContext('2d');
+						var width = image.width;
+						var height = image.height;
+						var scaleFactor = 1;
 
-				gallery.appendChild(maskedImage);
+						// 이미지의 크기가 최대 길이를 넘어갈 경우 비율에 맞게 조정
+						if (width > maxDimension || height > maxDimension) {
+								if (width > height) {
+										scaleFactor = maxDimension / width;
+								} else {
+										scaleFactor = maxDimension / height;
+								}
+								width *= scaleFactor;
+								height *= scaleFactor;
+						}
 
-				maskedImage.addEventListener('click', function() {
-					if (selectedMaskImage) {
-						selectedMaskImage.style.border = 'none';
-					}
-					selectedImage = image;
-					selectedMaskImage = maskedImage;
-					selectedMaskImage.style.border = '2px solid #006699';
-				});
-			};
+						canvas.width = width;
+						canvas.height = height;
+						ctx.drawImage(image, 0, 0, width, height);
+						ctx.globalCompositeOperation = 'destination-out';
+						ctx.drawImage(mask, 0, 0);
 
-			image.src = `view?filename=${cand.filename}&subfolder=${cand.subfolder}&type=${cand.type}${app.getPreviewFormatParam()}`;
-			image.cand = cand;
+						var maskedImage = document.createElement('img');
+						maskedImage.src = canvas.toDataURL();
+						maskedImage.style.width = width + 'px';
+						maskedImage.style.height = height + 'px';
+						maskedImage.style.margin = '10px';
+						maskedImage.style.objectFit = 'cover';
+
+						gallery.appendChild(maskedImage);
+
+						maskedImage.addEventListener('click', function() {
+								if (selectedMaskImage) {
+										selectedMaskImage.style.border = 'none';
+								}
+								selectedImage = image;
+								selectedMaskImage = maskedImage;
+								selectedMaskImage.style.border = '2px solid #006699';
+						});
+				};
+
+				image.src = `view?filename=${cand.filename}&subfolder=${cand.subfolder}&type=${cand.type}${app.getPreviewFormatParam()}`;
+				image.cand = cand;
 		});
 
 
@@ -1041,10 +1057,12 @@ class ImageRefinerDialog extends ComfyDialog {
 					// increase seed
 					for(let i = 0; i<this.batchSelectCombo.value; i++) {
 						for(let x in this.seeds) {
-							if(this.seeds[x].value == this.seeds[x].max)
-								this.seeds[x].value = this.seeds[x].min;
-							else
-								this.seeds[x].value += this.seeds[x].step;
+							if(this.seeds[x].numberInput) {
+								if(this.seeds[x].numberInput.value == this.seeds[x].numberInput.max)
+									this.seeds[x].numberInput.value = this.seeds[x].numberInput.min;
+								else
+									this.seeds[x].numberInput.value += this.seeds[x].numberInput.step;
+							}
 						}
 
 						let prompt_data = this.getPrompts();
