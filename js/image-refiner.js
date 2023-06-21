@@ -353,10 +353,14 @@ class ImageRefinerDialog extends ComfyDialog {
 		return button;
 	}
 
-	createLeftSlider(self, name, callback) {
+	open_cands_selector(cands, mask) {
+
+	}
+
+	createRightSlider(self, name, callback) {
 		const divElement = document.createElement('div');
 		divElement.id = "image-refiner-slider";
-		divElement.style.cssFloat = "left";
+		divElement.style.cssFloat = "right";
 		divElement.style.fontFamily = "sans-serif";
 		divElement.style.marginRight = "4px";
 		divElement.style.color = "var(--input-text)";
@@ -504,7 +508,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			await self.invalidatePromptControls();
 		});
 
-		combo.style.cssFloat = "left";
+		combo.style.cssFloat = "right";
 		combo.style.fontSize = "14px";
 		combo.style.padding = "4px";
 		combo.style.background = "black";
@@ -525,7 +529,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		combo.step = 1;
 
-		combo.style.cssFloat = "left";
+		combo.style.cssFloat = "right";
 		combo.style.marginLeft = "3px";
 		combo.style.marginRight = "5px";
 		combo.style.marginTop = "2px";
@@ -535,7 +539,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		combo.style.textAlign = "center";
 
 		const label = document.createElement("label");
-		label.style.cssFloat = "left";
+		label.style.cssFloat = "right";
 		label.style.marginLeft = "5px";
 		label.style.marginTop = "7px";
 		label.style.height = "24px";
@@ -670,6 +674,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			var checkpoint_added = false;
 			this.mask_name = null;
+			this.seeds = [];
 
 			for(let x in inputs) {
 				let name = inputs[x].name;
@@ -786,6 +791,10 @@ class ImageRefinerDialog extends ComfyDialog {
 						else
 							item.FLOAT = control.numberInput;
 
+						if(name.startsWith("seed.") || name == "seed") {
+							this.seeds.push(control);
+						}
+
 						this.prompts[name] = item;
 					}
 					break;
@@ -805,6 +814,15 @@ class ImageRefinerDialog extends ComfyDialog {
 						this.prompts[name] = item;
 					}
 				}
+			}
+
+			if(this.seeds.length) {
+				this.batchSelectCombo.style.display = "block";
+				this.batchSelectLabel.style.display = "block";
+			}
+			else {
+				this.batchSelectCombo.style.display = "none";
+				this.batchSelectLabel.style.display = "none";
 			}
 		}
 	}
@@ -880,11 +898,33 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.saveButton = true;
 
 			try {
-				let prompt_data = this.getPrompts();
-				let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
-				let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
-				await this.addLayer(generated_image, mask);
-				this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
+				this.batchSelectCombo.value = 1; // temporary restriction
+
+				if(this.seeds.length == 0 || this.batchSelectCombo.value == 1) {
+					let prompt_data = this.getPrompts();
+					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
+					let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
+					await this.addLayer(generated_image, mask);
+					this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
+				}
+				else {
+					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
+					let cands = [];
+
+					// increase seed
+					for(let x in this.seeds) {
+						if(this.seeds[x].value == this.seeds[x].max)
+							this.seeds[x].value = this.seeds[x].min;
+						else
+							this.seeds[x].value += this.seeds[x].step;
+
+						let prompt_data = this.getPrompts();
+						let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
+						cands.push(generated_image);
+					}
+
+					this.open_cands_selector(cands, mask);
+				}
 			}
 			catch(exception) {
 
@@ -979,26 +1019,29 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.brush = brush;
 		document.body.appendChild(brush);
 
-		let brush_size_slider = this.createLeftSlider(self, "Thickness", (event) => {
+		let brush_size_slider = this.createRightSlider(self, "Thickness", (event) => {
 			self.brush_size = event.target.value;
 			self.updateBrushPreview(self, null, null);
 		});
 
-		let clearButton = this.createLeftButton("Clear",
+		let clearButton = this.createRightButton("Clear",
 			() => {
 				self.maskCtx.clearRect(0, 0, self.maskCanvas.width, self.maskCanvas.height);
 				self.backupCtx.clearRect(0, 0, self.backupCanvas.width, self.backupCanvas.height);
 			});
 
-		this.fillButton = this.createLeftButton("Fill", () => this.generative_fill.call(self));
+		clearButton.style.marginRight = "20px";
 
-		let cancelButton = this.createRightButton("Cancel", () => {
+		this.fillButton = this.createRightButton("Regenerate", () => this.generative_fill.call(self));
+		this.fillButton.style.width = "220px";
+
+		let cancelButton = this.createLeftButton("Cancel", () => {
 			document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
 			document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
 			self.close();
 		});
 
-		this.saveButton = this.createRightButton("Save", async () => {
+		this.saveButton = this.createLeftButton("Save", async () => {
 				self.fillButton = true;
 				this.disabled = true;
 				document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
@@ -1013,6 +1056,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.componentSelectCombo = this.createComponentSelectCombo();
 		let batchSelectCombo = this.createSelectCombo('# of cand', 3, 1, 100);
 		this.batchSelectCombo = batchSelectCombo.combo;
+		this.batchSelectLabel = batchSelectCombo.label;
 
 		let featherSelectCombo = this.createSelectCombo('feather', 3, 0, 100);
 		this.featherSelectCombo = featherSelectCombo.combo;
@@ -1020,18 +1064,20 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.leftDiv.appendChild(imgCanvas);
 		this.leftDiv.appendChild(maskCanvas);
 
-		this.bottomPanel.appendChild(this.componentSelectCombo);
-		this.bottomPanel.appendChild(batchSelectCombo.label);
-		this.bottomPanel.appendChild(this.batchSelectCombo);
-		this.bottomPanel.appendChild(featherSelectCombo.label);
-		this.bottomPanel.appendChild(this.featherSelectCombo);
+		this.bottomPanel.appendChild(this.saveButton);
+		this.bottomPanel.appendChild(cancelButton);
 
 		this.bottomPanel.appendChild(this.fillButton);
+		this.bottomPanel.appendChild(this.batchSelectCombo);
+		this.bottomPanel.appendChild(batchSelectCombo.label);
+//		this.bottomPanel.appendChild(featherSelectCombo.label);
+//		this.bottomPanel.appendChild(this.featherSelectCombo);
+
+		this.bottomPanel.appendChild(this.componentSelectCombo);
+
 		this.bottomPanel.appendChild(brush_size_slider);
 		this.bottomPanel.appendChild(clearButton);
 
-		this.bottomPanel.appendChild(this.saveButton);
-		this.bottomPanel.appendChild(cancelButton);
 
 		imgCanvas.style.position = "absolute";
 		imgCanvas.style.top = "0";
