@@ -387,6 +387,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				image.style.margin = '10px';
 				image.style.objectFit = 'cover';
 				image.style.cursor = 'pointer';
+				modal.style.zIndex = '9998';
 
 				image.onload = function() {
 						var canvas = document.createElement('canvas');
@@ -395,7 +396,6 @@ class ImageRefinerDialog extends ComfyDialog {
 						var height = image.height;
 						var scaleFactor = 1;
 
-						// 이미지의 크기가 최대 길이를 넘어갈 경우 비율에 맞게 조정
 						if (width > maxDimension || height > maxDimension) {
 								if (width > height) {
 										scaleFactor = maxDimension / width;
@@ -410,7 +410,14 @@ class ImageRefinerDialog extends ComfyDialog {
 						canvas.height = height;
 						ctx.drawImage(image, 0, 0, width, height);
 						ctx.globalCompositeOperation = 'destination-out';
-						ctx.drawImage(mask, 0, 0);
+
+						var maskResized = document.createElement('canvas');
+						var maskCtx = maskResized.getContext('2d');
+						maskResized.width = width;
+						maskResized.height = height;
+						maskCtx.drawImage(mask, 0, 0, width, height);
+
+						ctx.drawImage(maskResized, 0, 0);
 
 						var maskedImage = document.createElement('img');
 						maskedImage.src = canvas.toDataURL();
@@ -434,6 +441,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				image.src = `view?filename=${cand.filename}&subfolder=${cand.subfolder}&type=${cand.type}${app.getPreviewFormatParam()}`;
 				image.cand = cand;
 		});
+
 
 
 		var confirmButton = document.createElement('button');
