@@ -541,19 +541,19 @@ class ImageRefinerDialog extends ComfyDialog {
 		return divElement;
 	}
 
-	createNumberPrompt(name, config) {
+	createNumberPrompt(name, detail) {
 		const numberInput = document.createElement("input");
 		numberInput.type = "number";
 
 		numberInput.id = `number-${name}`;
-		numberInput.value = config.default;
-		numberInput.min = config.min;
-		numberInput.max = config.max;
+		numberInput.value = detail.default;
+		numberInput.min = detail.min;
+		numberInput.max = detail.max;
 
-		if(!config.step)
+		if(!detail.step)
 			numberInput.step = 1;
 		else
-			numberInput.step = config.step;
+			numberInput.step = detail.step;
 
 		numberInput.style.marginLeft = "1px";
 		numberInput.style.width = "190px";
@@ -719,15 +719,13 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	async invalidateComponentSelectCombo() {
-		const defs = await api.getNodeDefs();
-
 		if(this.componentSelectCombo) {
 			let listItems = [];
 
 			let components = JSON.parse(localStorage['loaded_components']);
 
 			for(let name in components) {
-				if(is_available_component(defs[name], name, components[name]))
+				if(is_available_component(this.defs[name], name, components[name]))
 					listItems.push({ value: name, text: name });
 			}
 
@@ -755,6 +753,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			let components = JSON.parse(localStorage['loaded_components']);
 			let component = components[this.componentSelectCombo.value];
 
+			let class_def = this.defs[this.componentSelectCombo.value];
+
 			if(!component)
 				return;
 
@@ -780,36 +780,32 @@ class ImageRefinerDialog extends ComfyDialog {
 			var is_input_pixel = true; // otherwise, LATENT
 			var is_output_pixel = true;
 
+			for(let name in class_def.input.required) {
+				let type = class_def.input.required[name][0];
+				let detail = class_def.input.required[name][1];
+				if(Array.isArray(type)) {
+					let item = { type: "COMBO", name: name, detail: type };
+					inputs.push(item);
+				}
+				else {
+					let item = { type: type, name: name, detail: detail };
+					inputs.push(item);
+
+					if(item.type == "LATENT") {
+						is_input_pixel = false;
+						this.input_image = { LATENT: item.name };
+					}
+					else if(item.type == "IMAGE") {
+						is_input_pixel = true;
+						this.input_image = { IMAGE: item.name };
+					}
+				}
+			}
+
 			for(let x in component.nodes) {
 				let node = component.nodes[x];
+
 				switch(node.type) {
-				case "ComponentInput":
-					{
-						if(!node.outputs || node.outputs.length == 0)
-							continue;
-
-						let node_output = node.outputs[0];
-
-						if(!node_output.links || node_output.links.length == 0)
-							continue;
-
-						let link = link_map[node_output.links[0]];
-						let dest_slot = node_map[link.id].inputs[link.slot];
-
-						let item = { type: node_output.type, name: node_output.name, detail: dest_slot };
-						inputs.push(item);
-
-						if(item.type == "LATENT") {
-							is_input_pixel = false;
-							this.input_image = { LATENT: item.name  };
-						}
-						else if(item.type == "IMAGE") {
-							is_input_pixel = true;
-							this.input_image = { IMAGE: item.name  };
-						}
-					}
-					break;
-
 				case "ComponentOutput":
 					{
 						let kind = node.inputs[0].type;
@@ -935,7 +931,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				case "INT":
 				case "FLOAT":
 					{
-						let control = this.createNumberPrompt(inputs[x].name, inputs[x].detail.widget.config[1]);
+						let control = this.createNumberPrompt(inputs[x].name, inputs[x].detail);
 						this.prompt_controls.appendChild(control.label);
 						this.prompt_controls.appendChild(control.numberInput);
 						this.prompt_controls.appendChild($el("br", {}, []));
@@ -957,8 +953,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 				default:
 					{
-						let items = inputs[x].type.split(",");
-						let control = this.createComboPrompt(inputs[x].name, items);
+						let control = this.createComboPrompt(inputs[x].name, inputs[x].detail);
 						this.prompt_controls.appendChild(control.label);
 						this.prompt_controls.appendChild(control.combo);
 						this.prompt_controls.appendChild($el("br", {}, []));
@@ -1403,8 +1398,9 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 	}
 
-	show() {
+	async show() {
 		this.clearLayers();
+		this.defs = await api.getNodeDefs();
 
 		if(!this.is_layout_created) {
 			// layout
