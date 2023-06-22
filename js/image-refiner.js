@@ -1087,12 +1087,12 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	async generative_fill() {
-		if(this.isCanvasEmpty(this.maskCanvas)) {
-			alert("Empty mask!!!");
-			return;
-		}
-
 		if(!this.is_generating) {
+			if(this.isCanvasEmpty(this.maskCanvas)) {
+				alert("Cannot regenerate image. Mask is empty!!!");
+				return;
+			}
+
 			this.is_generating = true;
 
 			this.fillButton.innerText = "Cancel";
