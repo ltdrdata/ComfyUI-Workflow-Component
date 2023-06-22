@@ -351,7 +351,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		return button;
 	}
 
-	open_cands_selector(cands, mask) {
+	open_cands_selector(layer) {
 		let self = this;
 
 		var modal = document.createElement('div');
@@ -376,124 +376,121 @@ class ImageRefinerDialog extends ComfyDialog {
 		var selectedImage = null;
 		var selectedMaskImage = null;
 
-		cands.forEach(function(cand) {
-				var image = document.createElement('img');
-				var maxDimension = 300; // 최대 길이
+		layer.cands.forEach(function(cand) {
+			var image = document.createElement('img');
+			var maxDimension = 300;
 
-				image.style.maxWidth = maxDimension + 'px';
-				image.style.maxHeight = maxDimension + 'px';
-				image.style.margin = '10px';
-				image.style.objectFit = 'cover';
-				image.style.cursor = 'pointer';
-				modal.style.zIndex = '9998';
+			image.style.maxWidth = maxDimension + 'px';
+			image.style.maxHeight = maxDimension + 'px';
+			image.style.margin = '10px';
+			image.style.objectFit = 'cover';
+			image.style.cursor = 'pointer';
+			modal.style.zIndex = '9998';
 
-				image.onload = function() {
-						var canvas = document.createElement('canvas');
-						var ctx = canvas.getContext('2d');
-						var width = image.width;
-						var height = image.height;
-						var scaleFactor = 1;
+			image.onload = function() {
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
+				var width = image.width;
+				var height = image.height;
+				canvas.width = image.width;
+				canvas.height = image.height;
+				ctx.drawImage(image, 0, 0, width, height);
+				ctx.globalCompositeOperation = 'destination-out';
 
-						if (width > maxDimension || height > maxDimension) {
-								if (width > height) {
-										scaleFactor = maxDimension / width;
-								} else {
-										scaleFactor = maxDimension / height;
-								}
-								width *= scaleFactor;
-								height *= scaleFactor;
+				// Find the bounding box of the non-transparent pixels in the mask
+				var maskCtx = layer.mask.getContext('2d');
+				var imageData = maskCtx.getImageData(0, 0, width, height);
+				var pixels = imageData.data;
+				var minX = width;
+				var minY = height;
+				var maxX = 0;
+				var maxY = 0;
+
+				for (var y = 0; y < height; y++) {
+					for (var x = 0; x < width; x++) {
+						var alpha = pixels[(y * width + x) * 4 + 3];
+						if (alpha == 0) {
+							minX = Math.min(minX, x);
+							minY = Math.min(minY, y);
+							maxX = Math.max(maxX, x);
+							maxY = Math.max(maxY, y);
 						}
+					}
+				}
 
-						canvas.width = width;
-						canvas.height = height;
-						ctx.drawImage(image, 0, 0, width, height);
-						ctx.globalCompositeOperation = 'destination-out';
+				// Crop the canvas to the bounding box of non-transparent pixels
+				var croppedWidth = maxX - minX + 1;
+				var croppedHeight = maxY - minY + 1;
 
-						var maskResized = document.createElement('canvas');
-						var maskCtx = maskResized.getContext('2d');
-						maskResized.width = width;
-						maskResized.height = height;
-						maskCtx.drawImage(mask, 0, 0, width, height);
+				var scaleFactor = 1;
+				var width = croppedWidth;
+				var height = croppedHeight
 
-						ctx.drawImage(maskResized, 0, 0);
+				if (width > maxDimension || height > maxDimension) {
+					if (width > height) {
+						scaleFactor = maxDimension / width;
+					} else {
+						scaleFactor = maxDimension / height;
+					}
+					width *= scaleFactor;
+					height *= scaleFactor;
+				}
 
-						var maskedImage = document.createElement('img');
-						maskedImage.src = canvas.toDataURL();
-						maskedImage.style.width = width + 'px';
-						maskedImage.style.height = height + 'px';
-						maskedImage.style.margin = '10px';
-						maskedImage.style.objectFit = 'cover';
+				let resizedCanvas = document.createElement('canvas');
+				resizedCanvas.width = width;
+				resizedCanvas.height = height;
+				let resizedCtx = resizedCanvas.getContext('2d');
 
-						gallery.appendChild(maskedImage);
+				resizedCtx.clearRect(0, 0, croppedWidth, croppedHeight);
+				resizedCtx.drawImage(
+					canvas,
+					minX, minY, croppedWidth, croppedHeight,
+					0, 0, width, height
+				);
 
-						maskedImage.addEventListener('click', function() {
-								if (selectedMaskImage) {
-										selectedMaskImage.style.border = 'none';
-								}
-								selectedImage = image;
-								selectedMaskImage = maskedImage;
-								selectedMaskImage.style.border = '2px solid #006699';
-						});
-				};
+				let maskedImage = document.createElement('img');
+				maskedImage.src = resizedCanvas.toDataURL();
+				maskedImage.style.width = croppedWidth + 'px';
+				maskedImage.style.height = croppedHeight + 'px';
+				maskedImage.style.margin = '10px';
+				maskedImage.style.objectFit = 'cover';
 
-				image.src = `view?filename=${cand.filename}&subfolder=${cand.subfolder}&type=${cand.type}${app.getPreviewFormatParam()}`;
-				image.cand = cand;
+				gallery.appendChild(maskedImage);
+
+				maskedImage.addEventListener('click', function() {
+					if (selectedMaskImage) {
+						selectedMaskImage.style.border = 'none';
+					}
+					selectedImage = image;
+					selectedMaskImage = maskedImage;
+					selectedMaskImage.style.border = '2px solid #006699';
+
+					layer.image = cand;
+					self.invalidateLayerItem(layer);
+				});
+			};
+
+			image.src = cand.src;
+			image.cand = cand;
 		});
 
+		var doneButton = document.createElement('button');
+		doneButton.textContent = 'Done';
+		doneButton.style.padding = '10px 20px';
+		doneButton.style.border = 'none';
+		doneButton.style.borderRadius = '5px';
+		doneButton.style.fontFamily = 'Arial, sans-serif';
+		doneButton.style.fontSize = '16px';
+		doneButton.style.fontWeight = 'bold';
+		doneButton.style.color = '#fff';
+		doneButton.style.background = 'linear-gradient(to bottom, #0070B8, #003D66)';
+		doneButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.4)';
 
-
-		var confirmButton = document.createElement('button');
-		confirmButton.textContent = 'Apply';
-		confirmButton.style.padding = '10px 20px';
-		confirmButton.style.marginRight = "10px";
-		confirmButton.style.border = 'none';
-		confirmButton.style.borderRadius = '5px';
-		confirmButton.style.fontFamily = 'Arial, sans-serif';
-		confirmButton.style.fontSize = '16px';
-		confirmButton.style.fontWeight = 'bold';
-		confirmButton.style.color = '#fff';
-		confirmButton.style.background = 'linear-gradient(to bottom, #0070B8, #003D66)';
-		confirmButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.4)';
-
-		confirmButton.addEventListener('click', function() {
-			if (selectedImage) {
-				self.addLayer(selectedImage.cand, mask);
-				self.maskCtx.clearRect(0,0,self.maskCanvas.width,self.maskCanvas.height);
-				closeModal();
-			} else {
-				alert('Please choose the image.');
-			}
+		doneButton.addEventListener('click', function() {
+			closeModal();
 		});
 
-		var cancelButton = document.createElement('button');
-		cancelButton.textContent = 'Cancel';
-		confirmButton.style.marginLeft = "10px";
-		cancelButton.style.padding = '10px 20px';
-		cancelButton.style.border = 'none';
-		cancelButton.style.borderRadius = '5px';
-		cancelButton.style.fontFamily = 'Arial, sans-serif';
-		cancelButton.style.fontSize = '16px';
-		cancelButton.style.fontWeight = 'bold';
-		cancelButton.style.color = '#fff';
-		cancelButton.style.background = 'linear-gradient(to bottom, #0070B8, #003D66)';
-		cancelButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.4)';
-
-		cancelButton.addEventListener('click', function() {
-			var confirmClose = confirm('Are you sure you want to discard the generated image?');
-			if (confirmClose) {
-				closeModal();
-			}
-		});
-
-		var container = document.createElement('div');
-		container.style.display = 'flex';
-		container.style.justifyContent = 'space-between';
-		container.style.height = "50px";
-
-		container.appendChild(confirmButton);
-		container.appendChild(cancelButton);
-
-		modal.appendChild(container);
+		modal.appendChild(doneButton);
 
 		var lineBreak = document.createElement('div');
 		lineBreak.style.clear = 'both';
@@ -1053,7 +1050,7 @@ class ImageRefinerDialog extends ComfyDialog {
 					let prompt_data = this.getPrompts();
 					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
 					let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
-					await this.addLayer(generated_image, mask);
+					await this.addLayer([generated_image], mask);
 					this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
 				}
 				else {
@@ -1076,7 +1073,9 @@ class ImageRefinerDialog extends ComfyDialog {
 						cands.push(generated_image);
 					}
 
-					this.open_cands_selector(cands, mask);
+					let layer = await this.addLayer(cands, mask);
+					this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
+					this.open_cands_selector(layer);
 				}
 			}
 			catch(exception) {
@@ -1239,7 +1238,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		maskCanvas.style.position = "absolute";
 	}
 
-	async addLayer(image_path, mask) {
+	async addLayer(image_paths, mask) {
 		let self = this;
 		let image = new Image();
 
@@ -1249,10 +1248,10 @@ class ImageRefinerDialog extends ComfyDialog {
 		const layer = {
 			id: this.layer_id,
 			canvas: document.createElement("canvas"),
-			image: image,
 			mask: mask,
 			layerItem: layerItem,
 			visibilityCheckbox: visibilityCheckbox,
+			cands: [],
 		};
 		this.layers.push(layer);
 		this.layer_id++;
@@ -1285,6 +1284,25 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.removeLayer(layer);
 		});
 
+		const regenerateButton = document.createElement("button");
+		regenerateButton.innerText = "R";
+		regenerateButton.style.fontSize = "10px";
+		regenerateButton.style.height = "20px";
+		regenerateButton.addEventListener("click", () => {
+			this.regenerateLayer(layer);
+		});
+
+		var reselectButton = null;
+		if(image_paths.length > 1) {
+			reselectButton = document.createElement("button");
+			reselectButton.innerText = "S";
+			reselectButton.style.fontSize = "10px";
+			reselectButton.style.height = "20px";
+			reselectButton.addEventListener("click", () => {
+				this.open_cands_selector(layer);
+			});
+		}
+
 		const maskButton = document.createElement("button");
 		maskButton.innerText = "M";
 		maskButton.style.fontSize = "10px";
@@ -1301,7 +1319,6 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.removeLayer(layer);
 		});
 
-
 		let label = document.createElement('span');
 		label.textContent = `Layer ${layer.id}`;
 		label.style.color = 'var(--descrip-text)';
@@ -1310,6 +1327,10 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		layerItem.appendChild(label);
 //		layerItem.appendChild(flattenButton);
+
+		if(reselectButton)
+			layerItem.appendChild(reselectButton);
+
 		layerItem.appendChild(maskButton);
 		layerItem.appendChild(deleteButton);
 		const callButton = document.createElement("button");
@@ -1320,15 +1341,27 @@ class ImageRefinerDialog extends ComfyDialog {
 		});
 
 		// draw
-		image.onload = function() {
-			self.invalidateLayerItem(layer);
-		};
-		image.src = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}`;
+		for(let i in image_paths) {
+			let image = new Image();
+			let image_path = image_paths[i];
+
+			if(i == 0) {
+				image.onload = function() {
+					self.invalidateLayerItem(layer);
+				};
+				layer.image = image;
+			}
+
+			image.src = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}`;
+		    layer.cands.push(image);
+		}
 
 		layer.canvas.style.position = "absolute";
 		layer.canvas.id = `imagerefine-layer-${layer.id}`;
 		this.leftDiv.insertBefore(layer.canvas, this.maskCanvas);
 		this.layer_list.appendChild(layerItem);
+
+		return layer;
 	}
 
 	removeLayer(item) {
@@ -1342,6 +1375,10 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	flattenLayer(item) {
+
+	}
+
+	regenerateLayer(item) {
 
 	}
 
