@@ -1,0 +1,142 @@
+{
+  "last_node_id": 8,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 8,
+      "type": "ComponentOutput",
+      "pos": [
+        620,
+        80
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 5,
+          "label": null
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 5,
+      "type": "ComponentInput",
+      "pos": [
+        60,
+        80
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            2
+          ],
+          "slot_index": 0,
+          "label": "image"
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 1,
+      "type": "ImageInvert",
+      "pos": [
+        320,
+        80
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": "#64B5F6"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageInvert"
+      }
+    }
+  ],
+  "links": [
+    [
+      2,
+      5,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      1,
+      0,
+      8,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "output": {
+    "1": {
+      "inputs": {
+        "image": [
+          "5",
+          0
+        ]
+      },
+      "class_type": "ImageInvert"
+    },
+    "5": {
+      "inputs": {}
+    },
+    "8": {
+      "inputs": {
+        "IMAGE": [
+          "1",
+          0
+        ]
+      }
+    }
+  }
+}

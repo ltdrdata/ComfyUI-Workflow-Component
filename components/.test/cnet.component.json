@@ -1,0 +1,894 @@
+{
+  "last_node_id": 45,
+  "last_link_id": 63,
+  "nodes": [
+    {
+      "id": 27,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        120
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "links": [
+            20,
+            21
+          ],
+          "slot_index": 0,
+          "label": "conditioning"
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 26,
+      "type": "ControlNetApply",
+      "pos": [
+        1335,
+        689
+      ],
+      "size": {
+        "0": 317.4000244140625,
+        "1": 98
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 21
+        },
+        {
+          "name": "control_net",
+          "type": "CONTROL_NET",
+          "link": 26
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            32
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ControlNetApply"
+      },
+      "widgets_values": [
+        1
+      ]
+    },
+    {
+      "id": 21,
+      "type": "CannyEdgePreprocessor",
+      "pos": [
+        980,
+        300
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 62
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17,
+            33
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CannyEdgePreprocessor"
+      },
+      "widgets_values": [
+        100,
+        205,
+        "disable"
+      ]
+    },
+    {
+      "id": 24,
+      "type": "LeReS-DepthMapPreprocessor",
+      "pos": [
+        961,
+        861
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 63
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            18,
+            34
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LeReS-DepthMapPreprocessor"
+      },
+      "widgets_values": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": 31,
+      "type": "ExecutionOneOf",
+      "pos": [
+        1840,
+        760
+      ],
+      "size": {
+        "0": 210,
+        "1": 106
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 33
+        },
+        {
+          "name": "input2",
+          "type": "*",
+          "link": 34
+        },
+        {
+          "name": "input3",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input4",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input5",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            42
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": ""
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionOneOf"
+      }
+    },
+    {
+      "id": 25,
+      "type": "ControlNetApply",
+      "pos": [
+        1335,
+        122
+      ],
+      "size": {
+        "0": 317.4000244140625,
+        "1": 98
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 20
+        },
+        {
+          "name": "control_net",
+          "type": "CONTROL_NET",
+          "link": 25
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            31
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": "#FFA931"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ControlNetApply"
+      },
+      "widgets_values": [
+        1.1600000000000001
+      ]
+    },
+    {
+      "id": 30,
+      "type": "ExecutionOneOf",
+      "pos": [
+        1843,
+        406
+      ],
+      "size": {
+        "0": 210,
+        "1": 106
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 31
+        },
+        {
+          "name": "input2",
+          "type": "*",
+          "link": 32
+        },
+        {
+          "name": "input3",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input4",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input5",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            47
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": ""
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionOneOf"
+      }
+    },
+    {
+      "id": 36,
+      "type": "ComponentOutput",
+      "pos": [
+        2240,
+        410
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "*",
+          "link": 47,
+          "label": "conditioning"
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 33,
+      "type": "ComponentOutput",
+      "pos": [
+        2240,
+        760
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "*",
+          "link": 42,
+          "label": "image"
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 39,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        310
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "control_net_name",
+          "type": "*",
+          "links": [
+            51,
+            60,
+            61
+          ],
+          "slot_index": 0,
+          "label": "control_net_name"
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 28,
+      "type": "ControlNetLoader",
+      "pos": [
+        480,
+        310
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "control_net_name",
+          "type": "control_v11p_sd15_canny_fp16.safetensors,control_v11p_sd15_lineart_fp16.safetensors,t2iadapter_style_sd14v1.pth",
+          "link": 51,
+          "widget": {
+            "name": "control_net_name",
+            "config": [
+              [
+                "control_v11p_sd15_canny_fp16.safetensors",
+                "control_v11p_sd15_lineart_fp16.safetensors",
+                "t2iadapter_style_sd14v1.pth"
+              ]
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONTROL_NET",
+          "type": "CONTROL_NET",
+          "links": [
+            25,
+            26
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ControlNetLoader"
+      },
+      "widgets_values": [
+        "control_v11p_sd15_canny_fp16.safetensors"
+      ]
+    },
+    {
+      "id": 40,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        880
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "images",
+          "links": [
+            58,
+            59
+          ],
+          "slot_index": 0,
+          "type": "*",
+          "label": "images"
+        }
+      ],
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 45,
+      "type": "ExecutionControlString",
+      "pos": [
+        480,
+        490
+      ],
+      "size": {
+        "0": 315,
+        "1": 102
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "B_STR",
+          "type": "*",
+          "link": 60
+        },
+        {
+          "name": "pass_value",
+          "type": "*",
+          "link": 59
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            62
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionControlString"
+      },
+      "widgets_values": [
+        "canny",
+        "A in B"
+      ]
+    },
+    {
+      "id": 44,
+      "type": "ExecutionControlString",
+      "pos": [
+        490,
+        860
+      ],
+      "size": {
+        "0": 315,
+        "1": 102
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "B_STR",
+          "type": "*",
+          "link": 61
+        },
+        {
+          "name": "pass_value",
+          "type": "*",
+          "link": 58
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            63
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionControlString"
+      },
+      "widgets_values": [
+        "depth",
+        "A in B"
+      ]
+    }
+  ],
+  "links": [
+    [
+      17,
+      21,
+      0,
+      25,
+      2,
+      "IMAGE"
+    ],
+    [
+      18,
+      24,
+      0,
+      26,
+      2,
+      "IMAGE"
+    ],
+    [
+      20,
+      27,
+      0,
+      25,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      21,
+      27,
+      0,
+      26,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      25,
+      28,
+      0,
+      25,
+      1,
+      "CONTROL_NET"
+    ],
+    [
+      26,
+      28,
+      0,
+      26,
+      1,
+      "CONTROL_NET"
+    ],
+    [
+      31,
+      25,
+      0,
+      30,
+      0,
+      "*"
+    ],
+    [
+      32,
+      26,
+      0,
+      30,
+      1,
+      "*"
+    ],
+    [
+      33,
+      21,
+      0,
+      31,
+      0,
+      "*"
+    ],
+    [
+      34,
+      24,
+      0,
+      31,
+      1,
+      "*"
+    ],
+    [
+      42,
+      31,
+      0,
+      33,
+      0,
+      "IMAGE"
+    ],
+    [
+      47,
+      30,
+      0,
+      36,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      51,
+      39,
+      0,
+      28,
+      0,
+      "control_v11p_sd15_canny_fp16.safetensors,control_v11p_sd15_lineart_fp16.safetensors,t2iadapter_style_sd14v1.pth"
+    ],
+    [
+      58,
+      40,
+      0,
+      44,
+      1,
+      "*"
+    ],
+    [
+      59,
+      40,
+      0,
+      45,
+      1,
+      "*"
+    ],
+    [
+      60,
+      39,
+      0,
+      45,
+      0,
+      "*"
+    ],
+    [
+      61,
+      39,
+      0,
+      44,
+      0,
+      "*"
+    ],
+    [
+      62,
+      45,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ],
+    [
+      63,
+      44,
+      0,
+      24,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "output": {
+    "21": {
+      "inputs": {
+        "low_threshold": 100,
+        "high_threshold": 205,
+        "l2gradient": "disable",
+        "image": [
+          "45",
+          0
+        ]
+      },
+      "class_type": "CannyEdgePreprocessor"
+    },
+    "24": {
+      "inputs": {
+        "rm_nearest": 0,
+        "rm_background": 0,
+        "image": [
+          "44",
+          0
+        ]
+      },
+      "class_type": "LeReS-DepthMapPreprocessor"
+    },
+    "25": {
+      "inputs": {
+        "strength": 1.1600000000000001,
+        "conditioning": [
+          "27",
+          0
+        ],
+        "control_net": [
+          "28",
+          0
+        ],
+        "image": [
+          "21",
+          0
+        ]
+      },
+      "class_type": "ControlNetApply"
+    },
+    "26": {
+      "inputs": {
+        "strength": 1,
+        "conditioning": [
+          "27",
+          0
+        ],
+        "control_net": [
+          "28",
+          0
+        ],
+        "image": [
+          "24",
+          0
+        ]
+      },
+      "class_type": "ControlNetApply"
+    },
+    "27": {
+      "inputs": {}
+    },
+    "28": {
+      "inputs": {
+        "control_net_name": [
+          "39",
+          0
+        ]
+      },
+      "class_type": "ControlNetLoader"
+    },
+    "30": {
+      "inputs": {
+        "input1": [
+          "25",
+          0
+        ],
+        "input2": [
+          "26",
+          0
+        ]
+      },
+      "class_type": "ExecutionOneOf"
+    },
+    "31": {
+      "inputs": {
+        "input1": [
+          "21",
+          0
+        ],
+        "input2": [
+          "24",
+          0
+        ]
+      },
+      "class_type": "ExecutionOneOf"
+    },
+    "33": {
+      "inputs": {
+        "IMAGE": [
+          "31",
+          0
+        ]
+      }
+    },
+    "36": {
+      "inputs": {
+        "CONDITIONING": [
+          "30",
+          0
+        ]
+      }
+    },
+    "39": {
+      "inputs": {}
+    },
+    "40": {
+      "inputs": {}
+    },
+    "44": {
+      "inputs": {
+        "A": "depth",
+        "condition_kind": "A in B",
+        "B_STR": [
+          "39",
+          0
+        ],
+        "pass_value": [
+          "40",
+          0
+        ]
+      },
+      "class_type": "ExecutionControlString"
+    },
+    "45": {
+      "inputs": {
+        "A": "canny",
+        "condition_kind": "A in B",
+        "B_STR": [
+          "39",
+          0
+        ],
+        "pass_value": [
+          "40",
+          0
+        ]
+      },
+      "class_type": "ExecutionControlString"
+    }
+  }
+}
