@@ -220,6 +220,14 @@ async function save_to_clipspace(base_image, layers) {
 	if(ComfyApp.clipspace.images)
 		ComfyApp.clipspace.images[ComfyApp.clipspace['selectedIndex']] = savepath;
 
+	if(ComfyApp.clipspace.widgets) {
+		const index = ComfyApp.clipspace.widgets.findIndex(obj => obj.name === 'image');
+
+		if(index >= 0)
+			ComfyApp.clipspace.widgets[index].value = savepath;
+	}
+
+
 	ClipspaceDialog.invalidatePreview();
 }
 
@@ -741,10 +749,16 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			let components = JSON.parse(localStorage['loaded_components']);
 
+			let postponed = [];
 			for(let name in components) {
 				if(is_available_component(this.defs[name], name, components[name]))
-					listItems.push({ value: name, text: name });
+					if(name.includes(".ir "))
+						listItems.push({ value: name, text: name });
+					else
+						postponed.push({ value: name, text: name });
 			}
+
+			listItems.push(...postponed);
 
 			if(!listItems.length) {
 				listItems.push({ value: "none", text: "N/A (.components.json)" });
