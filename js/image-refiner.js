@@ -1072,7 +1072,26 @@ class ImageRefinerDialog extends ComfyDialog {
 		return prompts;
 	}
 
+	isCanvasEmpty(canvas) {
+		const context = canvas.getContext('2d');
+		const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+		const data = imageData.data;
+
+		for (let i = 0; i < data.length; i += 4) {
+			if (data[i] !== 0 || data[i + 1] !== 0 || data[i + 2] !== 0 || data[i + 3] !== 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	async generative_fill() {
+		if(this.isCanvasEmpty(this.maskCanvas)) {
+			alert("Empty mask!!!");
+			return;
+		}
+
 		if(!this.is_generating) {
 			this.is_generating = true;
 
