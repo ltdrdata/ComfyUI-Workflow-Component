@@ -130,15 +130,35 @@ async function generate(component_name, prompt_data, mask_canvas, base_image, la
 
 	prompt_data.image_paths = [{id:0, image:image_to_filepath(base_image)}];
 	var id = 0;
-	for(let x in layers) {
-		if(!layers[x].visibilityCheckbox.checked)
-			continue;
 
-		id++;
-		prompt_data.image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
-		let dataURL = layers[x].mask.toDataURL();
-		let blob = dataURLToBlob(dataURL);
-		formData.append(id+"", blob);
+	if(layers) {
+		for(let x in layers) {
+			if(!layers[x].visibilityCheckbox.checked)
+				continue;
+
+			id++;
+			let image_path = image_to_filepath(layers[x].image);
+
+			// mask won't passed by this (this mask is for front)
+			prompt_data.image_paths.push({id:id, image:image_path, mask:layers[x].mask});
+
+			// mask will be passed by this
+			let dataURL = layers[x].mask.toDataURL();
+			let blob = dataURLToBlob(dataURL);
+			formData.append(id+"", blob);
+		}
+	}
+	else {
+		// regenerate mode
+		for(let x in prompt_data.image_paths) {
+			if(x == 0)
+				continue;
+
+			let item = prompt_data.image_paths[x];
+			let dataURL = item.mask.toDataURL();
+			let blob = dataURLToBlob(dataURL);
+			formData.append(id+"", blob);
+		}
 	}
 
 	prompt_data.component_name = component_name;
@@ -1014,9 +1034,12 @@ class ImageRefinerDialog extends ComfyDialog {
 						};
 					break;
 
-				case "STRING":
 				case "INT":
 				case "FLOAT":
+					new_item = { type:key, value: item[key].value, min: item[key].min, max: item[key].max };
+					break;
+
+				case "STRING":
 				case "COMBO":
 					new_item = { type:key, value: item[key].value };
 					break;
@@ -1050,7 +1073,7 @@ class ImageRefinerDialog extends ComfyDialog {
 					let prompt_data = this.getPrompts();
 					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image);
 					let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
-					await this.addLayer([generated_image], mask);
+					await this.addLayer([generated_image], mask, prompt_data);
 					this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
 				}
 				else {
@@ -1058,6 +1081,7 @@ class ImageRefinerDialog extends ComfyDialog {
 					let cands = [];
 
 					// increase seed
+					var prompt_data;
 					for(let i = 0; i<this.batchSelectCombo.value; i++) {
 						for(let x in this.seeds) {
 							if(this.seeds[x].numberInput) {
@@ -1068,12 +1092,12 @@ class ImageRefinerDialog extends ComfyDialog {
 							}
 						}
 
-						let prompt_data = this.getPrompts();
+						prompt_data = this.getPrompts();
 						let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
 						cands.push(generated_image);
 					}
 
-					let layer = await this.addLayer(cands, mask);
+					let layer = await this.addLayer(cands, mask, prompt_data); // save last prompt_data
 					this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
 					this.open_cands_selector(layer);
 				}
@@ -1238,7 +1262,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		maskCanvas.style.position = "absolute";
 	}
 
-	async addLayer(image_paths, mask) {
+	async addLayer(image_paths, mask, prompt_data) {
 		let self = this;
 		let image = new Image();
 
@@ -1251,6 +1275,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			mask: mask,
 			layerItem: layerItem,
 			visibilityCheckbox: visibilityCheckbox,
+			prompt_data,
 			cands: [],
 		};
 		this.layers.push(layer);
@@ -1323,10 +1348,12 @@ class ImageRefinerDialog extends ComfyDialog {
 		label.textContent = `Layer ${layer.id}`;
 		label.style.color = 'var(--descrip-text)';
 		label.style.display = 'inline-block';
-		label.style.width = "100px";
+		label.style.width = "90px";
 
 		layerItem.appendChild(label);
 //		layerItem.appendChild(flattenButton);
+
+		layerItem.appendChild(regenerateButton);
 
 		if(reselectButton)
 			layerItem.appendChild(reselectButton);
@@ -1340,21 +1367,7 @@ class ImageRefinerDialog extends ComfyDialog {
 //			this.selectLayer(layer.id);
 		});
 
-		// draw
-		for(let i in image_paths) {
-			let image = new Image();
-			let image_path = image_paths[i];
-
-			if(i == 0) {
-				image.onload = function() {
-					self.invalidateLayerItem(layer);
-				};
-				layer.image = image;
-			}
-
-			image.src = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}`;
-		    layer.cands.push(image);
-		}
+		await this.resolve_image_for_image(layer, image_paths);
 
 		layer.canvas.style.position = "absolute";
 		layer.canvas.id = `imagerefine-layer-${layer.id}`;
@@ -1378,8 +1391,65 @@ class ImageRefinerDialog extends ComfyDialog {
 
 	}
 
-	regenerateLayer(item) {
+	async resolve_image_for_image(layer, image_paths) {
+		let self = this;
+		for(let i in image_paths) {
+			let image = new Image();
+			let image_path = image_paths[i];
 
+			if(i == 0) {
+				image.onload = function() {
+					self.invalidateLayerItem(layer);
+				};
+				layer.image = image;
+			}
+
+			image.src = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}`;
+		    layer.cands.push(image);
+		}
+	}
+
+	async regenerateLayer(layer) {
+		if(!this.is_generating) {
+			this.is_generating = true;
+			this.saveButton.disabled = true;
+
+			this.fillButton.innerText = "Cancel";
+			this.fillButton.style.backgroundColor = "red";
+			this.fillButton.style.Color = "white";
+
+			let mask = layer.mask;
+			let cands = [];
+
+			const new_prompt = Object.assign({}, layer.prompt_data);
+
+			// increase seed
+			for(let i = 0; i<this.batchSelectCombo.value; i++) {
+				for(let name in new_prompt) {
+					if(name == "seed" || name.startsWith("seed.")) {
+						let seed = new_prompt[name];
+						const min = parseFloat(seed.min);
+						const max = parseFloat(seed.max);
+						seed.value =  Math.floor(Math.random() * (max - min + 1)) + min;
+					}
+				}
+
+				let prompt_data = this.getPrompts();
+				let generated_image = await generate(this.componentSelectCombo.value, new_prompt, mask, this.image, null);
+				cands.push(generated_image);
+			}
+
+			layer.cands = []; // remove prev result
+			await this.resolve_image_for_image(layer, cands);
+			this.open_cands_selector(layer);
+
+			this.fillButton.innerText = "Regenerate";
+			this.fillButton.style.backgroundColor = null;
+			this.fillButton.style.Color = null;
+
+			this.is_generating = false;
+			this.saveButton.disabled = false;
+		}
 	}
 
 	maskRestoreFromLayer(item) {
