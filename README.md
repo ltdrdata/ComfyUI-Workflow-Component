@@ -32,7 +32,6 @@ There is a high possibility that the existing components created may not be comp
 
 * If the  ```Require confirmation for the component edit mode when loading a .component.json file.``` checkbox is unchecked, the .component.json file will always be loaded in the usage mode when loaded. To enable editing, please check the corresponding checkbox and click "OK" in the edit mode confirmation window to proceed.
 
-
 ## Example
 ![workflow](misc/sample-workflow.png)
 * Once you install the Workflow Component and download this image, you can drag and drop it into comfyui. This will load the component and open the workflow.
@@ -40,35 +39,69 @@ There is a high possibility that the existing components created may not be comp
 ![sample](misc/sample.png) 
 
 
+# Image Refiner
+![image-refiner](misc/image-refiner.png)
+
+## How To Use
+* Image Refiner is an interactive image enhancement tool that operates based on Workflow Components.
+* There is an interface component in the bottom component combo box that accepts one image as input and outputs one image as output. If the input interface of the component has interfaces other than ```INT, FLOAT, STRING, COMBO, BASIC_PIPE, MODEL, VAE, CONDITIONING, LATENT, IMAGE```, it cannot be used.
+  * However, currently, ```LATENT, CONDITIONING``` are not supported.
+* Components that end with .ir are displayed above other components. Please save the component designed for Image Refiner as ***component_name*.ir.component.json**.
+* When you press the "Generate" button, it will generate images by inpainting the masked areas based on the number specified in "# of cand." It will also add layers to the generated images.
+  * [√]: If checked, the layer will be visible. If unchecked, the layer will be hidden.
+  * R: Discard the current layer image and regenerate it with the same settings but with a changed seed for the specified number of candidates (# of cand).
+  * S: Show a gallery dialog where you can view and switch between the generated candidate images for the current layer.
+  * M: Load the mask used for generating the current layer.
+  * X: Permanently delete the current layer.
+* The base image for inpainting is the currently displayed image. If you uncheck and hide a layer, it will be excluded from the inpainting process.
+
+# Tutorial video
+* [Basic Usage](https://www.youtube.com/watch?v=waUv0R5wnac)
+* [Handfix Workflow](https://www.youtube.com/watch?v=qbsU9zA8YQI)
+
 # Requirements
-* 
+* -
 
 ## Todo
-- [x] Default interface name
-- [x] Support of refresh combo (ex. ckpt, images, lora, ...)
-- [x] Hot loading
-- [x] used components must be included into workflow
-  - [x] Save .json
-  - [x] Load .json
-  - [x] Save .png/.latent
-  - [x] Load .png/.latent
-- [x] Efficient traversal
-- [x] Better internal error message
-- [x] Report missing nodes in components when component is loaded
-- [x] reroute problem fix
-- [x] Resolve conflicts between components with the same name based on hash
-- [x] Set the currently configured ```widget value``` as the default value for component interface
-- [x] A feature that enables selecting a graceful termination for a specific execution path in a node instead of a crash
-  - 'None' input is regarded as stop execute current execution path
-- [x] ExecutionSwitch node
-- [x] Unconnected output checker to avoid inefficient execution
-- [ ] A feature that disable a specific optional input slot
-  - [ ] Handling the workflow execution of a node composed solely of optional inputs
-- [ ] Component nesting
-- [ ] Incomplete workflow checker
-- [ ] Provide random value executing inside component workflow.
-- [ ] Provide a validation checker when writing a component.
-- [ ] Provide a special input that can receive traces executed following a workflow.
+* Workflow Component
+  - [x] Default interface name
+  - [x] Support of refresh combo (ex. ckpt, images, lora, ...)
+  - [x] Hot loading
+  - [x] used components must be included into workflow
+    - [x] Save .json
+    - [x] Load .json
+    - [x] Save .png/.latent
+    - [x] Load .png/.latent
+  - [x] Efficient traversal
+  - [x] Better internal error message
+  - [x] Report missing nodes in components when component is loaded
+  - [x] reroute problem fix
+  - [x] Resolve conflicts between components with the same name based on hash
+  - [x] Set the currently configured ```widget value``` as the default value for component interface
+  - [x] A feature that enables selecting a graceful termination for a specific execution path in a node instead of a crash
+    - 'None' input is regarded as stop execute current execution path
+  - [x] ExecutionSwitch node
+  - [x] Unconnected output checker to avoid inefficient execution
+  - [ ] A feature that disable a specific optional input slot
+    - [ ] Handling the workflow execution of a node composed solely of optional inputs
+  - [ ] Component nesting
+  - [ ] Incomplete workflow checker
+  - [ ] Provide random value executing inside component workflow.
+  - [ ] Provide a validation checker when writing a component.
+  - [ ] Provide a special input that can receive traces executed following a workflow.
+* Image Refiner
+  - [ ] Layer flattening feature
+  - [ ] Cropped inpainting feature
+  - [ ] Progress with preview
+  - [ ] Support LATENT, CONDITIONING
+  - [ ] Preset values for components
+  - [ ] Simple painting feature
+    - [ ] Drawing layer
+    - [ ] Pass drawings to prompt
+    - [ ] Color palette
+  - [ ] Mask editing feature for generated layer
+  - [ ] Layer reodering
+  - [ ] Improving the mask to make it less ugly
 
 ## Credit
 

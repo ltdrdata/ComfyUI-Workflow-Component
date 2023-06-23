@@ -1344,6 +1344,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		const regenerateButton = document.createElement("button");
 		regenerateButton.innerText = "R";
+		regenerateButton.title = "Discard the image of this layer and create a new one";
 		regenerateButton.style.fontSize = "10px";
 		regenerateButton.style.height = "20px";
 		regenerateButton.addEventListener("click", () => {
@@ -1353,6 +1354,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		var reselectButton = null;
 		if(image_paths.length > 1) {
 			reselectButton = document.createElement("button");
+			reselectButton.title = "Re-select the candidate image of this layer";
 			reselectButton.innerText = "S";
 			reselectButton.style.fontSize = "10px";
 			reselectButton.style.height = "20px";
@@ -1362,6 +1364,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 
 		const maskButton = document.createElement("button");
+		maskButton.title = "Retrieve the mask of this layer";
 		maskButton.innerText = "M";
 		maskButton.style.fontSize = "10px";
 		maskButton.style.height = "20px";
@@ -1370,6 +1373,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		});
 
 		const deleteButton = document.createElement("button");
+		deleteButton.title = "Discard layer";
 		deleteButton.innerText = "X";
 		deleteButton.style.fontSize = "10px";
 		deleteButton.style.height = "20px";
