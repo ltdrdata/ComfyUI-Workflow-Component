@@ -2068,8 +2068,8 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 		else if(event.buttons == 2 || event.buttons == 5 || event.buttons == 32) {
 			const maskRect = self.maskCanvas.getBoundingClientRect();
-			const x = event.offsetX || event.targetTouches[0].clientX - maskRect.left;
-			const y = event.offsetY || event.targetTouches[0].clientY - maskRect.top;
+			const x = (event.offsetX || event.targetTouches[0].clientX - maskRect.left) / self.zoom_ratio;
+			const y = (event.offsetY || event.targetTouches[0].clientY - maskRect.top) / self.zoom_ratio;
 
 			var brush_size = this.brush_size;
 			if(event instanceof PointerEvent && event.pointerType == 'pen') {
