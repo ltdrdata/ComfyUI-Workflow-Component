@@ -122,6 +122,46 @@ function image_to_filepath(img) {
 	return item;
 }
 
+async function gen_flatten(base_image, layers) {
+	const formData = new FormData();
+
+	let image_paths = [{id:0, image:image_to_filepath(base_image)}];
+	var id = 0;
+	for(let x in layers) {
+		id++;
+		image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
+		let dataURL = layers[x].mask.toDataURL();
+		let blob = dataURLToBlob(dataURL);
+		formData.append(id+"", blob);
+	}
+
+	const filename = "imagerefiner-" + performance.now() + ".png";
+	const savepath =
+		{
+			"filename": filename,
+			"subfolder": "clipspace",
+			"type": "input",
+		};
+
+	let save_info = {
+			image_paths: image_paths,
+			savepath: savepath
+		};
+
+	formData.append('save_info', JSON.stringify(save_info));
+
+	let response = await fetch('/imagerefiner/save', {
+		method: 'POST',
+		body: formData
+	}).catch(error => {
+		console.error('Error:', error);
+	});
+
+
+	let json = await response.json();
+	return "/view?" + new URLSearchParams(savepath).toString();
+}
+
 async function generate(component_name, prompt_data, mask_canvas, base_image, layers) {
 	const formData = new FormData();
 
@@ -227,8 +267,27 @@ async function save_to_clipspace(base_image, layers) {
 			ComfyApp.clipspace.widgets[index].value = savepath;
 	}
 
-
 	ClipspaceDialog.invalidatePreview();
+}
+
+async function uploadFile(file, updateNode) {
+	try {
+		const body = new FormData();
+		body.append("image", file);
+		const resp = await fetch("/upload/image", {
+			method: "POST",
+			body,
+		});
+
+		if (resp.status === 200) {
+			const data = await resp.json();
+			return `view?filename=${data.name}&subfolder=${data.subfolder}&type=${data.type}`;
+		} else {
+			alert(resp.status + " - " + resp.statusText);
+		}
+	} catch (error) {
+		alert(error);
+	}
 }
 
 function prepareRGB(image, backupCanvas, backupCtx) {
@@ -406,7 +465,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		layer.cands.forEach(function(cand) {
 			var image = document.createElement('img');
-			var maxDimension = 300;
+			var maxDimension = 500;
 
 			image.style.maxWidth = maxDimension + 'px';
 			image.style.maxHeight = maxDimension + 'px';
@@ -478,8 +537,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 				let maskedImage = document.createElement('img');
 				maskedImage.src = resizedCanvas.toDataURL();
-				maskedImage.style.width = croppedWidth + 'px';
-				maskedImage.style.height = croppedHeight + 'px';
+				maskedImage.style.width = resizedCanvas.width + 'px';
+				maskedImage.style.height = resizedCanvas.height + 'px';
 				maskedImage.style.margin = '10px';
 				maskedImage.style.objectFit = 'cover';
 
@@ -1086,6 +1145,32 @@ class ImageRefinerDialog extends ComfyDialog {
 		return true;
 	}
 
+	async saveToFile() {
+
+
+	}
+
+	async loadAndReplaceImage() {
+		const fileInput = document.createElement("input");
+		Object.assign(fileInput, {
+			type: "file",
+			accept: "image/jpeg,image/png,image/webp",
+			style: "display: none",
+			onchange: async () => {
+				if (fileInput.files.length) {
+					if(confirm("Current results will be lost. Do you want to continue?")) {
+						let url = await uploadFile(fileInput.files[0], true);
+
+						ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src = url;
+						this.show();
+					}
+				}
+			},
+		});
+
+		fileInput.click();
+	}
+
 	async generative_fill() {
 		if(!this.is_generating) {
 			if(this.isCanvasEmpty(this.maskCanvas)) {
@@ -1095,7 +1180,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			this.is_generating = true;
 
-			this.fillButton.innerText = "Cancel";
+			this.fillButton.innerText = "Stop";
 			this.fillButton.style.backgroundColor = "red";
 			this.fillButton.style.Color = "white";
 
@@ -1161,15 +1246,21 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.bottomPanel.style.top = "calc(100% - 60px)";
 		this.bottomPanel.style.position = "absolute";
 		this.bottomPanel.style.alignItems = "center";
-		this.bottomPanel.style.marginTop = "10px";
+		this.bottomPanel.style.marginTop = "17px";
 		this.bottomPanel.id = "my-control-div";
 
 		// Title
-		this.title = document.createElement("div");
-		this.title.innerHTML = "<B><Font color='White'>Image Refiner</font><B>";
+		this.topPanel = document.createElement("div");
+		this.topPanel.style.margin = "0 10px";
+		this.topPanel.style.height = "40px";
 
-		this.title.style.margin = "0 10px";
-		this.title.style.height = "30px";
+		const titleLabel = document.createElement("label");
+		titleLabel.textContent = 'Image Refiner';
+		titleLabel.style.cssFloat = "left";
+		titleLabel.style.color = 'white';
+		titleLabel.style.fontWeight = 'bold';
+		titleLabel.style.fontSize = "20px";
+		this.topPanel.appendChild(titleLabel);
 
 		// Left div
 		this.leftDiv = document.createElement("div");
@@ -1177,7 +1268,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.leftDiv.style.width = "calc(100% - 280px)";
 		this.leftDiv.style.height = "calc(100% - 120px)";
 		this.leftDiv.style.position = "absolute";
-//		this.leftDiv.style.background = "red";
+//		this.leftDiv.style.background = "black";
 
 		// Right div
 		this.rightDiv = document.createElement("div");
@@ -1196,6 +1287,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.layer_list.style.width = "100%";
 		this.layer_list.style.height = "30%";
 		this.layer_list.style.overflowY = "scroll";
+		this.layer_list.style.background = "#0F0F0F";
 
 		// prompt controls
 		this.prompt_controls = document.createElement("div");
@@ -1204,14 +1296,19 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.prompt_controls.style.height = "70%";
 		this.prompt_controls.style.top = "30%";
 		this.prompt_controls.style.overflowY = "scroll";
+		this.prompt_controls.style.background = "#0F0F0F";
 
 		// Append the elements to the layer control
-		this.element.appendChild(this.title);
+		this.element.appendChild(this.topPanel);
 		this.element.appendChild(this.bottomPanel);
 		this.element.appendChild(this.rightDiv);
 		this.element.appendChild(this.leftDiv);
 
+		var lineBreak = document.createElement('div');
+		lineBreak.style.height = "3px";
+
 		this.rightDiv.appendChild(this.layer_list);
+		this.rightDiv.appendChild(lineBreak);
 		this.rightDiv.appendChild(this.prompt_controls);
 
 		var brush = document.createElement("div");
@@ -1239,18 +1336,39 @@ class ImageRefinerDialog extends ComfyDialog {
 				self.backupCtx.clearRect(0, 0, self.backupCanvas.width, self.backupCanvas.height);
 			});
 
+		let openImageButton = this.createLeftButton("Show image", async () => {
+			let url = await gen_flatten(this.image, this.layers);
+			window.open(url, "_blank");
+		});
+
+		let loadImageButton = this.createLeftButton("Load image", () => {
+			self.loadAndReplaceImage();
+		});
+
+		this.bottomPanel.appendChild(openImageButton);
+		this.bottomPanel.appendChild(loadImageButton);
+
 		clearButton.style.marginRight = "20px";
 
 		this.fillButton = this.createRightButton("Regenerate", () => this.generative_fill.call(self));
 		this.fillButton.style.width = "220px";
 
-		let cancelButton = this.createLeftButton("Cancel", () => {
+		let flattenButton = this.createRightButton("Flatten", async () => {
+			if(confirm('Once all layers are merged, it cannot be undone. Do you want to continue?')) {
+				let url = await gen_flatten(this.image, this.layers);
+
+				ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src = url;
+				this.show();
+			}
+		});
+
+		let cancelButton = this.createRightButton("Cancel", () => {
 			document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
 			document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
 			self.close();
 		});
 
-		this.saveButton = this.createLeftButton("Save", async () => {
+		this.saveButton = this.createRightButton("Save", async () => {
 				self.fillButton.disabled = true;
 				this.disabled = true;
 				document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
@@ -1273,8 +1391,9 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.leftDiv.appendChild(imgCanvas);
 		this.leftDiv.appendChild(maskCanvas);
 
-		this.bottomPanel.appendChild(this.saveButton);
-		this.bottomPanel.appendChild(cancelButton);
+		this.topPanel.appendChild(this.saveButton);
+		this.topPanel.appendChild(cancelButton);
+		this.topPanel.appendChild(flattenButton);
 
 		this.bottomPanel.appendChild(this.fillButton);
 		this.bottomPanel.appendChild(this.batchSelectCombo);
