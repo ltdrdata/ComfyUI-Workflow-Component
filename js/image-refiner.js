@@ -1693,6 +1693,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			mutations.forEach(function(mutation) {
 					if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
 						if(self.last_display_style && self.last_display_style != 'none' && self.element.style.display == 'none') {
+							document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
+							document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
 							ComfyApp.onClipspaceEditorClosed();
 						}
 
@@ -1866,28 +1868,36 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	setEventHandler(maskCanvas) {
-		maskCanvas.addEventListener("contextmenu", (event) => {
-			event.preventDefault();
-		});
-
 		const self = this;
-		this.element.addEventListener('wheel', (event) => this.handleWheelEvent.call(self,event));
-		maskCanvas.addEventListener('pointerdown', (event) => this.handlePointerDown(self,event));
-		document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
-		maskCanvas.addEventListener('pointermove', (event) => this.draw_move(self,event));
-		maskCanvas.addEventListener('touchmove', (event) => this.draw_move(self,event));
-		this.element.addEventListener('pointermove', (event) => this.pointMoveEvent(self,event));
-		this.element.addEventListener('touchmove', (event) => this.pointMoveEvent(self,event));
-		maskCanvas.addEventListener('pointerover', (event) => { this.brush.style.display = "block"; });
-		maskCanvas.addEventListener('pointerleave', (event) => { this.brush.style.display = "none"; });
-		document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
-		this.element.addEventListener('dragstart', (event) => {
-			console.log(event);
-			if(event.ctrlKey) {
-				console.log('oops');
+
+		if(!this.handler_registered) {
+			maskCanvas.addEventListener("contextmenu", (event) => {
 				event.preventDefault();
-			}
-		});
+			});
+
+			this.element.addEventListener('wheel', (event) => this.handleWheelEvent.call(self,event));
+			this.element.addEventListener('pointermove', (event) => this.pointMoveEvent(self,event));
+			this.element.addEventListener('touchmove', (event) => this.pointMoveEvent(self,event));
+
+			this.element.addEventListener('dragstart', (event) => {
+				console.log(event);
+				if(event.ctrlKey) {
+					console.log('oops');
+					event.preventDefault();
+				}
+			});
+
+			maskCanvas.addEventListener('pointerdown', (event) => this.handlePointerDown(self,event));
+			maskCanvas.addEventListener('pointermove', (event) => this.draw_move(self,event));
+			maskCanvas.addEventListener('touchmove', (event) => this.draw_move(self,event));
+			maskCanvas.addEventListener('pointerover', (event) => { this.brush.style.display = "block"; });
+			maskCanvas.addEventListener('pointerleave', (event) => { this.brush.style.display = "none"; });
+
+			this.handler_registered = true;
+		}
+
+		document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
+		document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
 	}
 
 	brush_size = 10;
