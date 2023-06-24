@@ -54,6 +54,18 @@ There is a high possibility that the existing components created may not be comp
   * M: Load the mask used for generating the current layer.
   * X: Permanently delete the current layer.
 * The base image for inpainting is the currently displayed image. If you uncheck and hide a layer, it will be excluded from the inpainting process.
+* Flatten: Combines all the current layers into a base image, maintaining their current appearance.
+* Show image: Opens a new tab with the current visible state as the resulting image.
+* Load image: Discards the current work and performs a new operation with the loaded image.
+  * This feature is useful when incorporating work done with external painting tools.
+* Control
+  * Wheel: brush size adjustment
+  * Left button-Drag: draw mask
+  * Right button-Drag: erase mask
+  * Ctrl-Wheel: Zoom adjustment
+  * Ctrl-Drag: Pan
+  * Enter: Regenerate
+  * Esc: Close
 
 # Tutorial video
 * [Basic Usage](https://www.youtube.com/watch?v=waUv0R5wnac)
