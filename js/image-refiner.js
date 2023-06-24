@@ -1695,6 +1695,7 @@ class ImageRefinerDialog extends ComfyDialog {
 						if(self.last_display_style && self.last_display_style != 'none' && self.element.style.display == 'none') {
 							document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
 							document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
+							self.brush.style.display = "none";
 							ComfyApp.onClipspaceEditorClosed();
 						}
 
