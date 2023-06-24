@@ -12,38 +12,6 @@ function addMenuHandler(nodeType, cb) {
 	};
 }
 
-function applyAlphaMaskToCanvas(image, maskCanvas, outputCanvas, outputWidth, outputHeight) {
-	let width = maskCanvas.width;
-	let height = maskCanvas.height;
-
-	var tempCanvas = document.createElement("canvas");
-	var tempCtx = tempCanvas.getContext("2d");
-
-	tempCanvas.width = width;
-	tempCanvas.height = height;
-
-	tempCtx.drawImage(image, 0, 0, width, height);
-
-	var maskCtx = maskCanvas.getContext("2d");
-	var maskImageData = maskCtx.getImageData(0, 0, width, height);
-	var maskData = maskImageData.data;
-
-	var imageData = tempCtx.getImageData(0, 0, width, height);
-	var pixelData = imageData.data;
-
-	for (var i = 0; i < pixelData.length; i += 4) {
-		pixelData[i + 3] = 255-maskData[i + 3];
-	}
-
-	tempCtx.putImageData(imageData, 0, 0);
-
-	var outputCtx = outputCanvas.getContext("2d");
-
-	outputCanvas.width = outputWidth;
-	outputCanvas.height = outputHeight;
-	outputCtx.drawImage(tempCanvas, 0, 0, width, height, 0, 0, outputWidth, outputHeight);
-}
-
 function getOriginalSizeMaskCanvas(mask_canvas, orig_image) {
 	let new_canvas = document.createElement("canvas");
 	new_canvas.width = orig_image.width;
@@ -787,19 +755,35 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	async invalidateLayerItem(item) {
-		let drawWidth = this.image.width;
-		let drawHeight = this.image.height;
-		if (this.image.width > this.imgCanvas.width) {
-			drawWidth = this.imgCanvas.width;
-			drawHeight = (drawWidth / this.image.width) * this.image.height;
+		let maskCanvas = item.mask;
+		let outputCanvas = item.canvas;
+
+		let width = this.image.width;
+		let height = this.image.height;
+
+		var tempCanvas = document.createElement("canvas");
+		var tempCtx = tempCanvas.getContext("2d");
+
+		tempCanvas.width = width;
+		tempCanvas.height = height;
+
+		tempCtx.drawImage(item.image, 0, 0, width, height);
+
+		var maskCtx = maskCanvas.getContext("2d");
+		var maskImageData = maskCtx.getImageData(0, 0, width, height);
+		var maskData = maskImageData.data;
+
+		var imageData = tempCtx.getImageData(0, 0, width, height);
+		var pixelData = imageData.data;
+
+		for (var i = 0; i < pixelData.length; i += 4) {
+			pixelData[i + 3] = 255-maskData[i + 3];
 		}
 
-		if (drawHeight > this.imgCanvas.height) {
-			drawHeight = this.imgCanvas.height;
-			drawWidth = (drawHeight / this.image.height) * this.image.width;
-		}
+		tempCtx.putImageData(imageData, 0, 0);
 
-		applyAlphaMaskToCanvas(item.image, item.mask, item.canvas, drawWidth, drawHeight);
+		var outputCtx = outputCanvas.getContext("2d");
+		outputCtx.drawImage(tempCanvas, 0, 0, width, height, 0, 0, width, height);
 	}
 
 	async invalidateComponentSelectCombo() {
@@ -1268,6 +1252,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.leftDiv.style.width = "calc(100% - 280px)";
 		this.leftDiv.style.height = "calc(100% - 120px)";
 		this.leftDiv.style.position = "absolute";
+		this.leftDiv.style.overflow = "hidden";
 //		this.leftDiv.style.background = "black";
 
 		// Right div
@@ -1433,8 +1418,9 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.layers.push(layer);
 		this.layer_id++;
 
-		layer.canvas.width = this.element.offsetWidth - 250;
-		layer.canvas.height = this.element.offsetHeight - 200;
+		layer.canvas.width = this.image.width;
+		layer.canvas.height = this.image.height;
+		this.invalidatePanZoom(layer.canvas);
 
 		this.element.appendChild(layer.canvas);
 
@@ -1580,7 +1566,12 @@ class ImageRefinerDialog extends ComfyDialog {
 			const new_prompt = Object.assign({}, layer.prompt_data);
 
 			// increase seed
-			for(let i = 0; i<this.batchSelectCombo.value; i++) {
+			let regen_count = this.batchSelectCombo.value;
+			if(this.batchSelectCombo.style.display == "none") {
+				regen_count = 1;
+			}
+
+			for(let i = 0; i<regen_count; i++) {
 				for(let name in new_prompt) {
 					if(name == "seed" || name.startsWith("seed.")) {
 						let seed = new_prompt[name];
@@ -1597,7 +1588,9 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			layer.cands = []; // remove prev result
 			await this.resolve_image_for_image(layer, cands);
-			this.open_cands_selector(layer);
+
+			if(regen_count > 1)
+				this.open_cands_selector(layer);
 
 			this.fillButton.innerText = "Regenerate";
 			this.fillButton.style.backgroundColor = null;
@@ -1662,6 +1655,10 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	async show() {
+		this.zoom_ratio = 1.0;
+		this.pan_x = 0;
+		this.pan_y = 0;
+
 		this.clearLayers();
 		this.defs = await api.getNodeDefs();
 
@@ -1719,11 +1716,11 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.saveButton.disabled = false;
 
 		this.element.style.display = "block";
-		this.element.style.width = "85%"; // 브라우저 너비의 85%로 설정
-		this.element.style.margin = "0 7.5%"; // 좌우 여백 7.5%로 설정
-		this.element.style.height = "100vh"; // 브라우저 높이에 맞게 설정
-		this.element.style.top = "50%"; // 상대적인 위치 설정
-		this.element.style.left = "42%"; // 상대적인 위치 설정
+		this.element.style.width = "85%";
+		this.element.style.margin = "0 7.5%";
+		this.element.style.height = "100vh";
+		this.element.style.top = "50%";
+		this.element.style.left = "42%";
 		this.element.style.zIndex = 8888; // NOTE: alert dialog must be high priority.
 	}
 
@@ -1731,61 +1728,18 @@ class ImageRefinerDialog extends ComfyDialog {
 		return this.element.style.display == "block";
 	}
 
-	onResize(orig_image) {
-		if(this.imgCanvas.parentElement.clientWidth == 0 || this.imgCanvas.parentElement.clientHeight == 0)
-			return;
+	invalidateCanvas(orig_image) {
+		this.imgCanvas.width = orig_image.width;
+		this.imgCanvas.height = orig_image.height;
 
-		this.imgCanvas.width = this.imgCanvas.parentElement.clientWidth;
-		this.imgCanvas.height = this.imgCanvas.parentElement.clientHeight;
-
-		let drawWidth = orig_image.width;
-		let drawHeight = orig_image.height;
-		if (orig_image.width > this.imgCanvas.width) {
-			drawWidth = this.imgCanvas.width;
-			drawHeight = (drawWidth / orig_image.width) * orig_image.height;
-		}
-
-		if (drawHeight > this.imgCanvas.height) {
-			drawHeight = this.imgCanvas.height;
-			drawWidth = (drawHeight / orig_image.height) * orig_image.width;
-		}
+		this.maskCanvas.width = orig_image.width;
+		this.maskCanvas.height = orig_image.height;
 
 		let imgCtx = this.imgCanvas.getContext('2d');
 		let maskCtx = this.maskCanvas.getContext('2d');
-		let backupCtx = this.backupCanvas.getContext('2d');
 
-		imgCtx.drawImage(orig_image, 0, 0, drawWidth, drawHeight);
-
-		this.maskCanvas.width = drawWidth;
-		this.maskCanvas.height = drawHeight;
-		this.maskCanvas.style.top = this.imgCanvas.offsetTop + "px";
-		this.maskCanvas.style.left = this.imgCanvas.offsetLeft + "px";
-
-		this.backupCanvas.width = drawWidth;
-		this.backupCanvas.height = drawHeight;
-
-		backupCtx.drawImage(
-			this.maskCanvas,
-			0,
-			0,
-			this.maskCanvas.width,
-			this.maskCanvas.height,
-			0,
-			0,
-			this.backupCanvas.width,
-			this.backupCanvas.height
-		);
-		maskCtx.drawImage(
-			this.backupCanvas,
-			0,
-			0,
-			this.backupCanvas.width,
-			this.backupCanvas.height,
-			0,
-			0,
-			this.maskCanvas.width,
-			this.maskCanvas.height
-		);
+		imgCtx.drawImage(orig_image, 0, 0, orig_image.width, orig_image.height);
+		maskCtx.clearRect(0, 0, orig_image.width, orig_image.height);
 
 		for (const layer of this.layers) {
 			this.invalidateLayerItem(layer);
@@ -1793,6 +1747,8 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	setImages(imgCanvas, backupCanvas) {
+		let self = this;
+
 		const imgCtx = imgCanvas.getContext('2d');
 		const backupCtx = backupCanvas.getContext('2d');
 		const maskCtx = this.maskCtx;
@@ -1804,8 +1760,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		// image load
 		const orig_image = new Image();
-		window.addEventListener("resize", () => this.onResize.call(this, orig_image) );
-
+//		window.addEventListener("resize", () => this.onResize.call(this, orig_image) );
 		const filepath = ComfyApp.clipspace.images;
 
 		const touched_image = new Image();
@@ -1825,7 +1780,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		// original image load
 		orig_image.onload = function() {
-			window.dispatchEvent(new Event('resize'));
+			self.invalidateCanvas(orig_image);
+			self.initializeCanvasPanZoom();
 		};
 
 		const rgb_url = new URL(ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src);
@@ -1835,20 +1791,103 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.image = orig_image;
 	}
 
+	initializeCanvasPanZoom() {
+		// set initialize
+		let drawWidth = this.image.width;
+		let drawHeight = this.image.height;
+
+		let width = this.leftDiv.clientWidth;
+		let height = this.leftDiv.clientHeight;
+
+		if (this.image.width > width) {
+			drawWidth = width;
+			drawHeight = (drawWidth / this.image.width) * this.image.height;
+		}
+
+		if (drawHeight > height) {
+			drawHeight = height;
+			drawWidth = (drawHeight / this.image.height) * this.image.width;
+		}
+
+		this.zoom_ratio = drawWidth/this.image.width;
+
+		const canvasX = (width - drawWidth) / 2;
+		const canvasY = (height - drawHeight) / 2;
+		this.pan_x = canvasX;
+		this.pan_y = canvasY;
+
+		this.invalidatePanZoom();
+	}
+
+	// canvas == null -> invalidate all
+	invalidatePanZoom(canvas) {
+		let raw_width = this.image.width * this.zoom_ratio;
+		let raw_height = this.image.height * this.zoom_ratio;
+
+		if(this.pan_x + raw_width < 10) {
+			this.pan_x = 10 - raw_width;
+		}
+
+		if(this.pan_y + raw_height < 10) {
+			this.pan_y = 10 - raw_height;
+		}
+
+		let width = `${raw_width}px`;
+		let height = `${raw_height}px`;
+
+		let left = `${this.pan_x}px`;
+		let top = `${this.pan_y}px`;
+
+		if(canvas) {
+			canvas.style.width = width;
+			canvas.style.height = height;
+			canvas.style.left = left;
+			canvas.style.top = top;
+		}
+		else {
+			this.imgCanvas.style.width = width;
+			this.imgCanvas.style.height = height;
+			this.imgCanvas.style.left = left;
+			this.imgCanvas.style.top = top;
+
+			this.maskCanvas.style.width = width;
+			this.maskCanvas.style.height = height;
+			this.maskCanvas.style.left = left;
+			this.maskCanvas.style.top = top;
+
+			for(let x in this.layers) {
+				let canvas = this.layers[x].canvas;
+				canvas.style.width = width;
+				canvas.style.height = height;
+				canvas.style.left = left;
+				canvas.style.top = top;
+			}
+		}
+	}
+
 	setEventHandler(maskCanvas) {
 		maskCanvas.addEventListener("contextmenu", (event) => {
 			event.preventDefault();
 		});
 
 		const self = this;
-		maskCanvas.addEventListener('wheel', (event) => this.handleWheelEvent(self,event));
+		this.element.addEventListener('wheel', (event) => this.handleWheelEvent.call(self,event));
 		maskCanvas.addEventListener('pointerdown', (event) => this.handlePointerDown(self,event));
 		document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
 		maskCanvas.addEventListener('pointermove', (event) => this.draw_move(self,event));
 		maskCanvas.addEventListener('touchmove', (event) => this.draw_move(self,event));
+		this.element.addEventListener('pointermove', (event) => this.pointMoveEvent(self,event));
+		this.element.addEventListener('touchmove', (event) => this.pointMoveEvent(self,event));
 		maskCanvas.addEventListener('pointerover', (event) => { this.brush.style.display = "block"; });
 		maskCanvas.addEventListener('pointerleave', (event) => { this.brush.style.display = "none"; });
 		document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
+		this.element.addEventListener('dragstart', (event) => {
+			console.log(event);
+			if(event.ctrlKey) {
+				console.log('oops');
+				event.preventDefault();
+			}
+		});
 	}
 
 	brush_size = 10;
@@ -1872,6 +1911,10 @@ class ImageRefinerDialog extends ComfyDialog {
 
 	static handlePointerUp(event) {
 		event.preventDefault();
+
+		this.mousedown_x = null;
+		this.mousedown_y = null;
+
 		ImageRefinerDialog.instance.drawing_mode = false;
 	}
 
@@ -1881,30 +1924,69 @@ class ImageRefinerDialog extends ComfyDialog {
 		var centerX = self.cursorX;
 		var centerY = self.cursorY;
 
-		brush.style.width = self.brush_size * 2 + "px";
-		brush.style.height = self.brush_size * 2 + "px";
-		brush.style.left = (centerX - self.brush_size) + "px";
-		brush.style.top = (centerY - self.brush_size) + "px";
+		brush.style.width = self.brush_size * 2 * this.zoom_ratio + "px";
+		brush.style.height = self.brush_size * 2 * this.zoom_ratio + "px";
+		brush.style.left = (centerX - self.brush_size * this.zoom_ratio) + "px";
+		brush.style.top = (centerY - self.brush_size * this.zoom_ratio) + "px";
 	}
 
-	handleWheelEvent(self, event) {
-		if(event.deltaY < 0)
-			self.brush_size = Math.min(self.brush_size+2, 100);
-		else
-			self.brush_size = Math.max(self.brush_size-2, 1);
-
-		self.brush_slider_input.value = self.brush_size;
-
-		self.updateBrushPreview(self);
-	}
-
-	draw_move(self, event) {
+	handleWheelEvent(event) {
 		event.preventDefault();
 
+		if(event.ctrlKey) {
+			// zoom canvas
+			if(event.deltaY < 0) {
+				this.zoom_ratio = Math.min(10.0, this.zoom_ratio+0.2);
+			}
+			else {
+				this.zoom_ratio = Math.max(0.2, this.zoom_ratio-0.2);
+			}
+
+			this.invalidatePanZoom();
+		}
+		else {
+			// adjust brush size
+			if(event.deltaY < 0)
+				this.brush_size = Math.min(this.brush_size+2, 100);
+			else
+				this.brush_size = Math.max(this.brush_size-2, 1);
+
+			this.brush_slider_input.value = this.brush_size;
+
+			this.updateBrushPreview(this);
+		}
+	}
+
+	pointMoveEvent(self, event) {
 		this.cursorX = event.pageX;
 		this.cursorY = event.pageY;
 
 		self.updateBrushPreview(self);
+
+		if(event.ctrlKey) {
+			event.preventDefault();
+			self.pan_move(self, event);
+		}
+	}
+
+	pan_move(self, event) {
+		if(event.buttons == 1) {
+			if(this.mousedown_x) {
+				let deltaX = this.mousedown_x - event.clientX;
+				let deltaY = this.mousedown_y - event.clientY;
+
+				self.pan_x = this.mousedown_pan_x - deltaX;
+				self.pan_y = this.mousedown_pan_y - deltaY;
+
+				self.invalidatePanZoom();
+			}
+		}
+	}
+
+	draw_move(self, event) {
+		if(event.ctrlKey) {
+			return;
+		}
 
 		if (window.TouchEvent && event instanceof TouchEvent || event.buttons == 1) {
 			var diff = performance.now() - self.lasttime;
@@ -1921,6 +2003,9 @@ class ImageRefinerDialog extends ComfyDialog {
 			if(event.offsetY == null) {
 				y = event.targetTouches[0].clientY - maskRect.top;
 			}
+
+			x /= self.zoom_ratio;
+			y /= self.zoom_ratio;
 
 			var brush_size = this.brush_size;
 			if(event instanceof PointerEvent && event.pointerType == 'pen') {
@@ -2023,6 +2108,17 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	handlePointerDown(self, event) {
+		if(event.ctrlKey) {
+			if (event.buttons == 1) {
+				this.mousedown_x = event.clientX;
+				this.mousedown_y = event.clientY;
+
+				this.mousedown_pan_x = this.pan_x;
+				this.mousedown_pan_y = this.pan_y;
+			}
+			return;
+		}
+
 		var brush_size = this.brush_size;
 		if(event instanceof PointerEvent && event.pointerType == 'pen') {
 			brush_size *= event.pressure;
@@ -2034,8 +2130,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			event.preventDefault();
 			const maskRect = self.maskCanvas.getBoundingClientRect();
-			const x = event.offsetX || event.targetTouches[0].clientX - maskRect.left;
-			const y = event.offsetY || event.targetTouches[0].clientY - maskRect.top;
+			const x = (event.offsetX || event.targetTouches[0].clientX - maskRect.left) / self.zoom_ratio;
+			const y = (event.offsetY || event.targetTouches[0].clientY - maskRect.top) / self.zoom_ratio;
 
 			self.maskCtx.beginPath();
 			if (event.button == 0) {
