@@ -46,12 +46,17 @@ async def imagerefiner_generate(request):
     images = []
     for x in prompt_data['image_paths']:
         if x['id'] != 0:
-            layer_mask = post.get(str(x['id']))
-            layer_mask_pil = Image.open(layer_mask.file).convert('RGBA').getchannel('A')
-            layer_mask_pil_inverted = ImageOps.invert(layer_mask_pil)
-            image_pil = get_image_from_fileitem(x['image']).convert('RGBA')
-            image_pil.putalpha(layer_mask_pil_inverted)
-            images.append(image_pil)
+            if x['is_mask_mode']:
+                layer_mask = post.get(str(x['id']))
+                layer_mask_pil = Image.open(layer_mask.file).convert('RGBA').getchannel('A')
+                layer_mask_pil_inverted = ImageOps.invert(layer_mask_pil)
+                image_pil = get_image_from_fileitem(x['image']).convert('RGBA')
+                image_pil.putalpha(layer_mask_pil_inverted)
+                images.append(image_pil)
+            else:
+                layer_draw = post.get(str(x['id']))
+                layer_draw_pil = Image.open(layer_draw.file).convert('RGBA')
+                images.append(layer_draw_pil)
         else:
             base_pil = get_image_from_fileitem(x['image']).convert('RGBA')
 

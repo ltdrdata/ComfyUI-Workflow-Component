@@ -58,6 +58,8 @@ There is a high possibility that the existing components created may not be comp
 * Show image: Opens a new tab with the current visible state as the resulting image.
 * Load image: Discards the current work and performs a new operation with the loaded image.
   * This feature is useful when incorporating work done with external painting tools.
+* Mask/Pen toggle:
+  * When in Pen mode, the current drawing is added to the layer, and when in Mask mode, generation is performed using the current mask area.
 * Control
   * Wheel: brush size adjustment
   * Left button-Drag: draw mask
@@ -102,15 +104,15 @@ There is a high possibility that the existing components created may not be comp
   - [ ] Provide a validation checker when writing a component.
   - [ ] Provide a special input that can receive traces executed following a workflow.
 * Image Refiner
-  - [ ] Layer flattening feature
+  - [x] Layer flattening feature
+  - [x] Simple painting feature
+    - [x] Drawing layer
+    - [x] Pass drawings to prompt
+    - [x] Color palette
   - [ ] Cropped inpainting feature
   - [ ] Progress with preview
   - [ ] Support LATENT, CONDITIONING
   - [ ] Preset values for components
-  - [ ] Simple painting feature
-    - [ ] Drawing layer
-    - [ ] Pass drawings to prompt
-    - [ ] Color palette
   - [ ] Mask editing feature for generated layer
   - [ ] Layer reodering
   - [ ] Improving the mask to make it less ugly
