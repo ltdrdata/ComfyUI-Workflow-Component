@@ -72,6 +72,7 @@ There is a high possibility that the existing components created may not be comp
 # Tutorial video
 * [Basic Usage](https://www.youtube.com/watch?v=waUv0R5wnac)
 * [Handfix Workflow](https://www.youtube.com/watch?v=qbsU9zA8YQI)
+* [Painting](https://youtu.be/ivi34PESgjU)
 
 # Requirements
 * -
