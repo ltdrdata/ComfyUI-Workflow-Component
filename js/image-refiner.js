@@ -3,6 +3,41 @@ import { api } from "/scripts/api.js";
 import { ComfyDialog, $el } from "/scripts/ui.js";
 import { ClipspaceDialog } from "/extensions/core/clipspace.js";
 
+function itemToImagepath(data) {
+	let name = data.filename;
+	var subfolder = "";
+	if(data.subfolder) {
+		subfolder = `&subfolder=${data.subfolder}`;
+	}
+
+	return `view?filename=${name}${subfolder}&type=${data.type}&no-cache=${Date.now()}`;
+}
+
+function loadImage(imagePath) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+
+        image.onload = function() {
+          resolve(image);
+        };
+
+        image.src = imagePath;
+    });
+}
+
+function drawImageToCanvas(image, canvas) {
+    canvas.width = image.width;
+    canvas.height = image.height;
+
+    const ctx = canvas.getContext('2d', {willReadFrequently: true });
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+}
+
+async function load_image_to_canvas(imagePath, canvas) {
+    const image = await loadImage(imagePath);
+    drawImageToCanvas(image, canvas);
+    return image;
+}
 
 function createToggleControl() {
 	var control = document.createElement('div');
@@ -128,7 +163,7 @@ function getOriginalSizeMaskCanvas(mask_canvas, orig_image, dont_touch) {
 	new_canvas.width = orig_image.width;
 	new_canvas.height = orig_image.height;
 
-	const new_ctx = new_canvas.getContext('2d');
+	const new_ctx = new_canvas.getContext('2d', {willReadFrequently: true });
 
 	new_ctx.drawImage(mask_canvas, 0, 0, mask_canvas.width, mask_canvas.height);
 
@@ -170,7 +205,7 @@ function loadedImageToBlob(image) {
 	canvas.width = image.width;
 	canvas.height = image.height;
 
-	const ctx = canvas.getContext('2d');
+	const ctx = canvas.getContext('2d', {willReadFrequently: true });
 
 	ctx.drawImage(image, 0, 0);
 
@@ -240,7 +275,7 @@ async function gen_flatten(base_image, layers) {
 	return "/view?" + new URLSearchParams(savepath).toString();
 }
 
-async function generate(component_name, prompt_data, mask_canvas, base_image, layers) {
+function prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, is_archive_mode) {
 	const formData = new FormData();
 
 	const dataURL = mask_canvas.toDataURL();
@@ -251,19 +286,44 @@ async function generate(component_name, prompt_data, mask_canvas, base_image, la
 
 	if(layers) {
 		for(let x in layers) {
+			var is_hidden = false;
 			if(!layers[x].visibilityCheckbox.checked)
-				continue;
+				if(!is_archive_mode)
+					continue;
+				else
+					is_hidden = true;
 
 			id++;
+
+			var base_item;
+
+			if(is_archive_mode) {
+				let cands = [];
+				for(let i in layers[x].cands) {
+					let img = layers[x].cands[i];
+					cands.push(image_to_filepath(img));
+				}
+
+				base_item = {
+					id:id,
+					mask:layers[x].mask,
+					is_visible:layers[x].visibilityCheckbox.checked,
+					prompt_data:layers[x].prompt_data,
+					cands: cands
+				};
+			}
+			else {
+				base_item = {id:id, mask:layers[x].mask};
+			}
 
 			if(layers[x].prompt_data) {
 				let image_path = image_to_filepath(layers[x].image);
 
 				// mask won't passed by this (this mask is for front)
-				prompt_data.image_paths.push({id:id, image:image_path, mask:layers[x].mask, is_mask_mode:true});
+				prompt_data.image_paths.push({...base_item, image:image_path, is_mask_mode:true});
 			}
 			else {
-				prompt_data.image_paths.push({id:id, mask:layers[x].mask, is_mask_mode:false});
+				prompt_data.image_paths.push({...base_item, is_mask_mode:false});
 			}
 
 			// mask will be passed by this
@@ -290,6 +350,68 @@ async function generate(component_name, prompt_data, mask_canvas, base_image, la
 	formData.append('mask', blob);
 	formData.append('prompt_data', JSON.stringify(prompt_data));
 
+	return formData;
+}
+
+function prepare_export_data_layer(formData, layer) {
+    let result = {};
+
+    // common
+    result.id = layer.id;
+    result.is_visible = layer.visibilityCheckbox.checked;
+
+    let dataURL = layer.mask.toDataURL();
+    let blob = dataURLToBlob(dataURL);
+    formData.append(result.id+"", blob);
+
+    if(layer.prompt_data) {
+        // mask mode layer: image, prompt_data, cands
+        result.image = image_to_filepath(layer.image);
+
+        result.cands = [];
+        for(let i in layer.cands) {
+            result.cands.push(image_to_filepath(layer.cands[i]));
+        }
+
+        result.prompt_data = layer.prompt_data;
+    }
+
+    return result;
+}
+
+function prepare_export_data(component_name, prompt_data, mask_canvas, base_image, layers) {
+	const formData = new FormData();
+
+	prompt_data.base_image_path = image_to_filepath(base_image);
+	var id = 0;
+
+    let layers_data = [];
+	if(layers) {
+		for(let x in layers) {
+		    let info = prepare_export_data_layer(formData, layers[x]);
+		    layers_data.push(info);
+		}
+	}
+
+	prompt_data.component_name = component_name;
+
+    let data =
+        {
+            prompt_data: prompt_data,
+            layers_data: layers_data
+        }
+
+	const dataURL = mask_canvas.toDataURL();
+	const blob = dataURLToBlob(dataURL);
+	formData.append('mask', blob);
+	formData.append('data', JSON.stringify(data));
+
+	return formData;
+}
+
+async function generate(component_name, prompt_data, mask_canvas, base_image, layers) {
+	let formData = prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, false);
+
 	let response = await fetch('/imagerefiner/generate', {
 		method: 'POST',
 		body: formData
@@ -301,6 +423,42 @@ async function generate(component_name, prompt_data, mask_canvas, base_image, la
 	return json;
 }
 
+
+async function export_work(component_name, prompt_data, mask_canvas, base_image, layers) {
+	let formData = prepare_export_data(component_name, prompt_data, mask_canvas, base_image, layers, true);
+
+	fetch('/imagerefiner/get_archive', {
+		method: 'POST',
+		body: formData,
+	})
+		.then(response => {
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+
+                return { response, filename };
+			})
+		.then(({ response, filename }) => response.blob().then(blob => ({ blob, filename })))
+		.then(({ blob, filename }) => {
+			if (navigator.msSaveBlob) {
+				navigator.msSaveBlob(blob, filename);
+			} else {
+				const link = document.createElement('a');
+				const url = URL.createObjectURL(blob);
+				link.href = url;
+				link.download = filename;
+
+				link.click();
+
+				URL.revokeObjectURL(url);
+			}
+		})
+		.catch(error => {
+			console.error('File export error:', error);
+		});
+
+}
+
+
 async function save_to_clipspace(base_image, layers) {
 	const formData = new FormData();
 
@@ -308,11 +466,19 @@ async function save_to_clipspace(base_image, layers) {
 	var id = 0;
 	for(let x in layers) {
 		id++;
-		image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
-		let dataURL = layers[x].mask.toDataURL();
-		let blob = dataURLToBlob(dataURL);
-		formData.append(id+"", blob);
-	}
+        if(layers[x].visibilityCheckbox.checked) {
+            if(layers[x].image) {
+                image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
+            }
+            else {
+                image_paths.push({id:id});
+            }
+
+            let dataURL = layers[x].mask.toDataURL();
+            let blob = dataURLToBlob(dataURL);
+            formData.append(id+"", blob);
+        }
+    }
 
 	const filename = "imagerefiner-" + performance.now() + ".png";
 	const savepath =
@@ -365,7 +531,7 @@ async function uploadFile(file, updateNode) {
 
 		if (resp.status === 200) {
 			const data = await resp.json();
-			return `view?filename=${data.name}&subfolder=${data.subfolder}&type=${data.type}`;
+			return `view?filename=${data.name}&subfolder=${data.subfolder}&type=${data.type}&no-cache=${Date.now()}`;
 		} else {
 			alert(resp.status + " - " + resp.statusText);
 		}
@@ -373,6 +539,24 @@ async function uploadFile(file, updateNode) {
 		alert(error);
 	}
 }
+
+async function uploadWork(file) {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	const response = await fetch('/imagerefiner/upload_archive', {
+		method: 'POST',
+		body: formData
+	});
+
+	if (response.ok) {
+		return await response.json();
+	} else {
+		console.error('Upload failed');
+		return null;
+	}
+}
+
 
 function prepareRGB(image, backupCanvas, backupCtx) {
 	// paste mask data into alpha channel
@@ -561,7 +745,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			image.onload = function() {
 				var canvas = document.createElement('canvas');
-				var ctx = canvas.getContext('2d');
+				var ctx = canvas.getContext('2d', {willReadFrequently: true });
 				var width = image.width;
 				var height = image.height;
 				canvas.width = image.width;
@@ -570,7 +754,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				ctx.globalCompositeOperation = 'destination-out';
 
 				// Find the bounding box of the non-transparent pixels in the mask
-				var maskCtx = layer.mask.getContext('2d');
+				var maskCtx = layer.mask.getContext('2d', {willReadFrequently: true });
 				var imageData = maskCtx.getImageData(0, 0, width, height);
 				var pixels = imageData.data;
 				var minX = width;
@@ -611,7 +795,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				let resizedCanvas = document.createElement('canvas');
 				resizedCanvas.width = width;
 				resizedCanvas.height = height;
-				let resizedCtx = resizedCanvas.getContext('2d');
+				let resizedCtx = resizedCanvas.getContext('2d', {willReadFrequently: true });
 
 				resizedCtx.clearRect(0, 0, croppedWidth, croppedHeight);
 				resizedCtx.drawImage(
@@ -876,39 +1060,39 @@ class ImageRefinerDialog extends ComfyDialog {
 		let maskCanvas = item.mask;
 		let outputCanvas = item.canvas;
 
-		let width = this.image.width;
-		let height = this.image.height;
+		let width = item.mask.width;
+		let height = item.mask.height;
 
 		var tempCanvas = document.createElement("canvas");
-		var tempCtx = tempCanvas.getContext("2d");
+		var tempCtx = tempCanvas.getContext('2d', {willReadFrequently: true });
 
 		tempCanvas.width = width;
 		tempCanvas.height = height;
 
-		if(item.prompt_data) {
-			tempCtx.drawImage(item.image, 0, 0, width, height);
-		}
-		else {
-			tempCtx.drawImage(item.mask, 0, 0, width, height);
-		}
+        if(item.prompt_data) {
+            tempCtx.drawImage(item.image, 0, 0, width, height);
+        }
+        else {
+            tempCtx.drawImage(item.mask, 0, 0, width, height);
+        }
 
-		var maskCtx = maskCanvas.getContext("2d");
-		var maskImageData = maskCtx.getImageData(0, 0, width, height);
-		var maskData = maskImageData.data;
+        var maskCtx = maskCanvas.getContext('2d', {willReadFrequently: true });
+        var maskImageData = maskCtx.getImageData(0, 0, width, height);
+        var maskData = maskImageData.data;
 
-		var imageData = tempCtx.getImageData(0, 0, width, height);
-		var pixelData = imageData.data;
+        var imageData = tempCtx.getImageData(0, 0, width, height);
+        var pixelData = imageData.data;
 
-		if(item.prompt_data) {
-			for (var i = 0; i < pixelData.length; i += 4) {
-				pixelData[i + 3] = 255-maskData[i + 3];
-			}
-		}
+        if(item.prompt_data) {
+            for (var i = 0; i < pixelData.length; i += 4) {
+                pixelData[i + 3] = 255-maskData[i + 3];
+            }
+        }
 
-		tempCtx.putImageData(imageData, 0, 0);
+        tempCtx.putImageData(imageData, 0, 0);
 
-		var outputCtx = outputCanvas.getContext("2d");
-		outputCtx.drawImage(tempCanvas, 0, 0, width, height, 0, 0, width, height);
+        var outputCtx = outputCanvas.getContext('2d', {willReadFrequently: true });
+        outputCtx.drawImage(tempCanvas, 0, 0, width, height, 0, 0, width, height);
 	}
 
 	async invalidateComponentSelectCombo() {
@@ -941,7 +1125,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 	}
 
-	async invalidatePromptControls() {
+	async invalidatePromptControls(prompt_data_opt) {
 		this.prompts = {};
 
 		while (this.prompt_controls.firstChild) {
@@ -1063,6 +1247,12 @@ class ImageRefinerDialog extends ComfyDialog {
 							};
 
 						this.prompts[name] = item;
+
+						if(prompt_data_opt && prompt_data_opt[name]) {
+						    checkpoint.value = prompt_data_opt[name].checkpoint;
+						    positive.value = prompt_data_opt[name].positive;
+						    negative.value = prompt_data_opt[name].negative;
+						}
 					}
 					break;
 
@@ -1079,6 +1269,10 @@ class ImageRefinerDialog extends ComfyDialog {
 									};
 
 						this.prompts[name] = item;
+
+                        if(prompt_data_opt && prompt_data_opt[name]) {
+						    checkpoint.value = prompt_data_opt[name].checkpoint;
+						}
 					}
 					break;
 
@@ -1090,6 +1284,10 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						let item = { MODEL: checkpoint };
 						this.prompts[name] = item;
+
+                        if(prompt_data_opt && prompt_data_opt[name]) {
+						    checkpoint.value = prompt_data_opt[name].checkpoint;
+						}
 					}
 					break;
 
@@ -1110,6 +1308,11 @@ class ImageRefinerDialog extends ComfyDialog {
 									};
 
 						this.prompts[name] = item;
+
+                        if(prompt_data_opt && prompt_data_opt[name]) {
+						    checkpoint.value = prompt_data_opt[name].checkpoint;
+						    text_prompt.value = prompt_data_opt[name].text_prompt;
+						}
 					}
 					break;
 					// pass-through
@@ -1124,6 +1327,10 @@ class ImageRefinerDialog extends ComfyDialog {
 							};
 
 						this.prompts[name] = item;
+
+                        if(prompt_data_opt && prompt_data_opt[name]) {
+						    control.value = prompt_data_opt[name].value;
+						}
 					}
 					break;
 
@@ -1147,6 +1354,13 @@ class ImageRefinerDialog extends ComfyDialog {
 						}
 
 						this.prompts[name] = item;
+
+                        if(prompt_data_opt && prompt_data_opt[name]) {
+                            if(item.INT)
+						        item.INT.value = prompt_data_opt[name].value;
+                            else if(item.FLOAT)
+						        item.FLOAT.value = prompt_data_opt[name].value;
+						}
 					}
 					break;
 
@@ -1162,6 +1376,10 @@ class ImageRefinerDialog extends ComfyDialog {
 							};
 
 						this.prompts[name] = item;
+
+                        if(prompt_data_opt && prompt_data_opt[name]) {
+                            item.COMBO.value = prompt_data_opt[name].value;
+                        }
 					}
 				}
 			}
@@ -1241,7 +1459,7 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	isCanvasEmpty(canvas) {
-		const context = canvas.getContext('2d');
+		const context = canvas.getContext('2d', {willReadFrequently: true });
 		const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 		const data = imageData.data;
 
@@ -1274,6 +1492,61 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		fileInput.click();
 	}
+
+	async load_imageitem_to_canvas(data, canvas) {
+		let path = `view?filename=${data.name}&subfolder=${data.subfolder}&type=${data.type}&no-cache=${Date.now()}`;
+		return await load_image_to_canvas(path, canvas);
+	}
+
+    async import_work() {
+        let self = this;
+
+		const fileInput = document.createElement("input");
+		Object.assign(fileInput, {
+			type: "file",
+			accept: ".imagerefiner",
+			style: "display: none",
+			onchange: async () => {
+				if (fileInput.files.length) {
+					if(confirm("Current results will be lost. Do you want to continue?")) {
+						let json_data = await uploadWork(fileInput.files[0]);
+						let prompt_data = json_data.prompt_data;
+						// phase1:  set load base image and initialize state
+						if(ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']])
+						    delete ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].cache;
+
+						ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src = itemToImagepath(prompt_data.base_image_path);
+						await self.show();
+						while(!self.image.complete) {
+							await (new Promise(resolve => setTimeout(resolve, 100)));
+						}
+
+						// phase2: mask, layer, prompt set
+						// load base mask
+						let base_mask_path = `view?filename=mask_base.png&subfolder=imagerefiner&type=temp&no-cache=${Date.now()}`;
+						await load_image_to_canvas(base_mask_path, self.maskCanvas);
+
+						// load layers
+						for(let i in json_data.layers_data) {
+							let layer = json_data.layers_data[i];
+							await self.addLayer_from_import(layer);
+						}
+
+						// prompt load
+						for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
+						  if (self.componentSelectCombo.options[i].value === prompt_data.component_name) {
+						    self.componentSelectCombo.value = prompt_data.component_name;
+						    await self.invalidatePromptControls(prompt_data);
+						    break;
+						  }
+						}
+					}
+				}
+			},
+		});
+
+		fileInput.click();
+    }
 
 	async add_draw_to_layer() {
 		let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image, !this.is_mask_mode);
@@ -1533,6 +1806,15 @@ class ImageRefinerDialog extends ComfyDialog {
 				self.fillButton.disabled = false;
 			});
 
+		let exportButton = this.createRightButton("Export Work", async () => {
+				let prompt_data = this.getPrompts();
+				await export_work(this.componentSelectCombo.value, prompt_data, this.maskCanvas, this.image, this.layers);
+			});
+
+		let importButton = this.createRightButton("Import Work", async () => {
+                self.import_work();
+			});
+
 		this.componentSelectCombo = this.createComponentSelectCombo();
 		let batchSelectCombo = this.createSelectCombo('#cand', 3, 1, 100);
 		this.batchSelectCombo = batchSelectCombo.combo;
@@ -1546,6 +1828,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		this.topPanel.appendChild(this.saveButton);
 		this.topPanel.appendChild(cancelButton);
+		this.topPanel.appendChild(importButton);
+		this.topPanel.appendChild(exportButton);
 		this.topPanel.appendChild(flattenButton);
 
 		this.bottomPanel.appendChild(this.fillButton);
@@ -1568,7 +1852,38 @@ class ImageRefinerDialog extends ComfyDialog {
 		maskCanvas.style.position = "absolute";
 	}
 
-	async addLayer(image_paths, mask, prompt_data) {
+	async addLayer_from_import(layer) {
+		let mask_canvas = document.createElement("canvas");
+		let mask_path = `view?filename=mask_${layer.id}.png&subfolder=imagerefiner&type=temp&no-cache=${Date.now()}`;
+		await load_image_to_canvas(mask_path, mask_canvas);
+
+		// load cands
+		var image_paths = [];
+		if(layer.cands) {
+			image_paths = layer.cands;
+		}
+		let added_layer = await this.addLayer(image_paths, mask_canvas, layer.prompt_data, layer.is_visible);
+
+		if(layer.cands) {
+			let selected_index = null;
+			layer.cands.forEach((cand, index) => {
+				if (cand.filename === layer.image.filename) {
+					selected_index = index;
+					return;
+				}
+			});
+
+			added_layer.image = added_layer.cands[selected_index];
+		}
+		else {
+		    // draw restore
+            await load_image_to_canvas(mask_path, mask_canvas);
+		}
+
+		this.invalidateLayerItem(added_layer);
+	}
+
+	async addLayer(image_paths, mask, prompt_data, is_visible) {
 		let self = this;
 		let image = new Image();
 
@@ -1596,7 +1911,17 @@ class ImageRefinerDialog extends ComfyDialog {
 		layerItem.classList.add("layer-item");
 
 		visibilityCheckbox.type = "checkbox";
-		visibilityCheckbox.checked = true;
+		if(is_visible != null)
+		    visibilityCheckbox.checked = is_visible;
+		else
+		    visibilityCheckbox.checked = true;
+
+        if (visibilityCheckbox.checked) {
+            layer.canvas.style.display = "block";
+        } else {
+            layer.canvas.style.display = "none";
+        }
+
 		visibilityCheckbox.addEventListener("change", (event) => {
 			const isChecked = event.target.checked;
 			if (isChecked) {
@@ -1605,6 +1930,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				layer.canvas.style.display = "none";
 			}
 		});
+
 		layerItem.appendChild(visibilityCheckbox);
 
 		const flattenButton = document.createElement("button");
@@ -1710,17 +2036,16 @@ class ImageRefinerDialog extends ComfyDialog {
 	async resolve_image_for_image(layer, image_paths) {
 		let self = this;
 		for(let i in image_paths) {
-			let image = new Image();
 			let image_path = image_paths[i];
+		    let url = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}&no-cache=${Date.now()}`
+
+            let image = await loadImage(url);
 
 			if(i == 0) {
-				image.onload = function() {
-					self.invalidateLayerItem(layer);
-				};
 				layer.image = image;
+                self.invalidateLayerItem(layer);
 			}
 
-			image.src = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}`;
 			layer.cands.push(image);
 		}
 	}
@@ -1776,12 +2101,12 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 	maskRestoreFromLayer(item) {
-		let maskCtx = this.maskCanvas.getContext('2d');
+		let maskCtx = this.maskCanvas.getContext('2d', {willReadFrequently: true });
 		maskCtx.clearRect(0, 0, this.maskCanvas.width, this.maskCanvas.height);
 
 		// Create a temporary canvas for modifying the alpha channel
 		let tempCanvas = document.createElement('canvas');
-		let tempCtx = tempCanvas.getContext('2d');
+		let tempCtx = tempCanvas.getContext('2d', {willReadFrequently: true });
 
 		// Set the dimensions of the temporary canvas
 		tempCanvas.width = item.mask.width;
@@ -1856,8 +2181,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.imgCanvas = imgCanvas;
 			this.maskCanvas = maskCanvas;
 			this.backupCanvas = backupCanvas;
-			this.maskCtx = maskCanvas.getContext('2d');
-			this.backupCtx = backupCanvas.getContext('2d');
+			this.maskCtx = maskCanvas.getContext('2d', {willReadFrequently: true });
+			this.backupCtx = backupCanvas.getContext('2d', {willReadFrequently: true });
 
 			this.setEventHandler(maskCanvas);
 
@@ -1884,8 +2209,6 @@ class ImageRefinerDialog extends ComfyDialog {
 			observer.observe(this.element, config);
 		}
 
-		this.setImages(this.imgCanvas, this.backupCanvas);
-
 		if(ComfyApp.clipspace_return_node) {
 			this.saveButton.innerText = "Save to node";
 		}
@@ -1901,6 +2224,8 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.element.style.top = "50%";
 		this.element.style.left = "42%";
 		this.element.style.zIndex = 8888; // NOTE: alert dialog must be high priority.
+
+		await this.setImages(this.imgCanvas, this.backupCanvas);
 	}
 
 	isOpened() {
@@ -1914,8 +2239,8 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.maskCanvas.width = orig_image.width;
 		this.maskCanvas.height = orig_image.height;
 
-		let imgCtx = this.imgCanvas.getContext('2d');
-		let maskCtx = this.maskCanvas.getContext('2d');
+		let imgCtx = this.imgCanvas.getContext('2d', {willReadFrequently: true });
+		let maskCtx = this.maskCanvas.getContext('2d', {willReadFrequently: true });
 
 		imgCtx.drawImage(orig_image, 0, 0, orig_image.width, orig_image.height);
 		maskCtx.clearRect(0, 0, orig_image.width, orig_image.height);
@@ -1925,11 +2250,11 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 	}
 
-	setImages(imgCanvas, backupCanvas) {
+	async setImages(imgCanvas, backupCanvas) {
 		let self = this;
 
-		const imgCtx = imgCanvas.getContext('2d');
-		const backupCtx = backupCanvas.getContext('2d');
+		const imgCtx = imgCanvas.getContext('2d', {willReadFrequently: true });
+		const backupCtx = backupCanvas.getContext('2d', {willReadFrequently: true });
 		const maskCtx = this.maskCtx;
 		const maskCanvas = this.maskCanvas;
 
@@ -1938,36 +2263,28 @@ class ImageRefinerDialog extends ComfyDialog {
 		maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
 
 		// image load
-		const orig_image = new Image();
 //		window.addEventListener("resize", () => this.onResize.call(this, orig_image) );
 		const filepath = ComfyApp.clipspace.images;
-
-		const touched_image = new Image();
-
-		touched_image.onload = function() {
-			backupCanvas.width = touched_image.width;
-			backupCanvas.height = touched_image.height;
-
-			prepareRGB(touched_image, backupCanvas, backupCtx);
-		};
 
 		const alpha_url = new URL(ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src)
 		alpha_url.searchParams.delete('channel');
 		alpha_url.searchParams.delete('preview');
 		alpha_url.searchParams.set('channel', 'a');
-		touched_image.src = alpha_url;
+		let touched_image = await loadImage(alpha_url);
+
+        backupCanvas.width = touched_image.width;
+        backupCanvas.height = touched_image.height;
+
+        prepareRGB(touched_image, backupCanvas, backupCtx);
 
 		// original image load
-		orig_image.onload = function() {
-			self.invalidateCanvas(orig_image);
-			self.initializeCanvasPanZoom();
-		};
-
 		const rgb_url = new URL(ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src);
 		rgb_url.searchParams.delete('channel');
 		rgb_url.searchParams.set('channel', 'rgb');
-		orig_image.src = rgb_url;
-		this.image = orig_image;
+		this.image = await loadImage(rgb_url);
+
+        this.invalidateCanvas(this.image);
+        this.initializeCanvasPanZoom();
 	}
 
 	initializeCanvasPanZoom() {
