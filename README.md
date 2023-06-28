@@ -1,3 +1,5 @@
+[![Youtube Badge](https://img.shields.io/badge/Youtube-FF0000?style=for-the-badge&logo=Youtube&logoColor=white&link=https://www.youtube.com/watch?v=7t-h4M4lsMU&list=PL_Ej2RDzjQLE2Ma9dX0G4OYLrrBve53UV)](https://www.youtube.com/watch?v=7t-h4M4lsMU&list=PL_Ej2RDzjQLE2Ma9dX0G4OYLrrBve53UV)
+
 # ComfyUI-Workflow-Component
 This is a side project to experiment with using workflows as components.
 This extension, as an extension of the Proof of Concept, lacks many features, is unstable, and has many parts that do not function properly.
