@@ -89,7 +89,12 @@ async def imagerefiner_save(request):
     for result_pil in images:
         base_pil = Image.alpha_composite(base_pil, result_pil)
 
-    base_pil.save(get_path_from_fileitem(save_info['savepath']))
+    image_path = get_path_from_fileitem(save_info['savepath'])
+
+    if not os.path.exists(os.path.dirname(image_path)):
+        os.makedirs(os.path.dirname(image_path))
+
+    base_pil.save(image_path)
 
     ir.unload_all()
 

@@ -204,7 +204,10 @@ async function gen_flatten(base_image, layers) {
 	var id = 0;
 	for(let x in layers) {
 		id++;
-		image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
+        if(layers[x].image) {
+		    image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
+        }
+
 		let dataURL = layers[x].mask.toDataURL();
 		let blob = dataURLToBlob(dataURL);
 		formData.append(id+"", blob);
