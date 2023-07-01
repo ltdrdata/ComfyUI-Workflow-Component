@@ -198,6 +198,11 @@ def build_output_types(i, node, node_config_map, output_mapping, return_names, r
 
                 for output in node['inputs']:
                     output_label = output.get('label', f"{output_type}_{i}")
+
+                    cand_type = output.get('type', output_type)
+                    if cand_type != '*':
+                        output_type = cand_type
+
                     break
 
                 if output_label is None:
@@ -244,8 +249,9 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                 if input_link in node_config_map:
                     input_type, node_config, node_type, input_slot, widget_values = node_config_map[input_link]
 
-                    if input_type == '*':
-                        input_type = node['outputs'][0]['type']
+                    cand_type = node['outputs'][0].get('type', input_type)
+                    if cand_type != '*':
+                        input_type = cand_type
 
                     if 'label' in node['outputs'][0]:
                         input_label = node['outputs'][0]['label']
