@@ -27,6 +27,8 @@ async def original_post_prompt(request):
 
         self.number += 1
 
+    settings = json_data.get('settings', {})
+
     if "prompt" in json_data:
         prompt = json_data["prompt"]
         valid = execution_experimental.validate_prompt(prompt)
@@ -39,7 +41,7 @@ async def original_post_prompt(request):
         if valid[0]:
             prompt_id = str(uuid.uuid4())
             outputs_to_execute = valid[2]
-            self.prompt_queue.put((number, prompt_id, prompt, extra_data, outputs_to_execute))
+            self.prompt_queue.put((number, prompt_id, prompt, extra_data, outputs_to_execute, settings))
             return web.json_response({"prompt_id": prompt_id})
         else:
             print("invalid prompt:", valid[1])
