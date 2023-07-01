@@ -1,6 +1,6 @@
 {
-  "last_node_id": 28,
-  "last_link_id": 42,
+  "last_node_id": 29,
+  "last_link_id": 44,
   "nodes": [
     {
       "id": 4,
@@ -143,7 +143,7 @@
       "outputs": [
         {
           "name": "cfg",
-          "type": "FLOAT",
+          "type": null,
           "links": [
             32
           ],
@@ -173,7 +173,7 @@
       "outputs": [
         {
           "name": "seed",
-          "type": "INT",
+          "type": null,
           "links": [
             33
           ],
@@ -203,7 +203,7 @@
       "outputs": [
         {
           "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_2m,dpmpp_2m_sde,ddim,uni_pc,uni_pc_bh2",
+          "type": null,
           "links": [
             34
           ],
@@ -233,7 +233,7 @@
       "outputs": [
         {
           "name": "scheduler",
-          "type": "normal,karras,exponential,simple,ddim_uniform",
+          "type": null,
           "links": [
             35
           ],
@@ -263,7 +263,7 @@
       "outputs": [
         {
           "name": "denoise",
-          "type": "FLOAT",
+          "type": null,
           "links": [
             36
           ],
@@ -275,33 +275,6 @@
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
-    },
-    {
-      "id": 28,
-      "type": "ComponentOutput",
-      "pos": [
-        1640,
-        70
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "link": 41,
-          "type": "*",
-          "name": "basic_pipe",
-          "label": "basic_pipe"
-        }
-      ],
-      "title": "1.Component Output",
-      "properties": {},
-      "color": "#223",
-      "bgcolor": "#335"
     },
     {
       "id": 2,
@@ -373,38 +346,6 @@
       "properties": {
         "Node name for S&R": "FromBasicPipe"
       }
-    },
-    {
-      "id": 6,
-      "type": "ComponentInput",
-      "pos": [
-        10,
-        70
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "basic_pipe",
-          "links": [
-            40,
-            41
-          ],
-          "slot_index": 0,
-          "type": "BASIC_PIPE",
-          "color": "",
-          "label": "basic_pipe"
-        }
-      ],
-      "title": "1.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
     },
     {
       "id": 1,
@@ -590,7 +531,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
@@ -604,6 +545,65 @@
         }
       ],
       "title": "4.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 28,
+      "type": "ComponentOutput",
+      "pos": [
+        1640,
+        70
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "link": 44,
+          "type": "BASIC_PIPE",
+          "name": "BASIC_PIPE",
+          "label": null
+        }
+      ],
+      "title": "1.Component Output",
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 6,
+      "type": "ComponentInput",
+      "pos": [
+        10,
+        70
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "basic_pipe",
+          "links": [
+            40,
+            44
+          ],
+          "slot_index": 0,
+          "type": "BASIC_PIPE",
+          "color": "",
+          "label": "basic_pipe"
+        }
+      ],
+      "title": "1.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -723,20 +723,20 @@
       "BASIC_PIPE"
     ],
     [
-      41,
-      6,
-      0,
-      28,
-      0,
-      "*"
-    ],
-    [
       42,
       10,
       0,
       1,
       4,
       "INT"
+    ],
+    [
+      44,
+      6,
+      0,
+      28,
+      0,
+      "BASIC_PIPE"
     ]
   ],
   "groups": [],
@@ -853,7 +853,7 @@
     },
     "28": {
       "inputs": {
-        "basic_pipe": [
+        "BASIC_PIPE": [
           "6",
           0
         ]
