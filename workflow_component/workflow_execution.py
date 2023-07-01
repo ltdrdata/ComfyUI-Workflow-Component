@@ -86,8 +86,16 @@ def get_virtual_prompt_id(node_id):
 
 
 def is_changed(component_name, internal_id_name_map, output_mapping, **kwargs):
-    node_id = kwargs['unique_id']
-    current_component_node = kwargs['extra_pnginfo']['workflow']['nodes'][int(node_id)]
+    node_id = int(kwargs['unique_id'])
+    nodes = kwargs['extra_pnginfo']['workflow']['nodes']
+    current_component_node = [node for node in nodes if node['id'] == node_id]
+
+    if len(current_component_node) == 0:
+        print(f"MISSING NODE: {node_id}")
+        return False
+    else:
+        current_component_node = current_component_node[0]
+
     pe = get_executor(component_name, internal_id_name_map, node_id)
 
     for key in output_mapping:
