@@ -11,7 +11,7 @@ import torch
 import nodes
 
 import comfy.model_management
-from execution import map_node_over_list, format_value, full_type_name
+from execution import format_value, full_type_name
 from queue import Queue
 
 
@@ -39,6 +39,47 @@ class DummyNode:
             return (output,)
         else:
             pass
+
+
+def map_node_over_list(obj, input_data_all, func, allow_interrupt=False):
+    # check if node wants the lists
+    intput_is_list = False
+    if hasattr(obj, "INPUT_IS_LIST"):
+        intput_is_list = obj.INPUT_IS_LIST
+
+    if input_data_all is not None:
+        max_len_input = max([len(x) for x in input_data_all.values()])
+    else:
+        max_len_input = 0
+
+    # get a slice of inputs, repeat last input when list isn't long enough
+    def slice_dict(d, i):
+        d_new = dict()
+
+        for k, v in d.items():
+            if not v:
+                return None
+            else:
+                d_new[k] = v[i if len(v) > i else -1]
+        return d_new
+
+    results = []
+    if intput_is_list:
+        if allow_interrupt:
+            nodes.before_node_execution()
+        results.append(getattr(obj, func)(**input_data_all))
+    else:
+        for i in range(max_len_input):
+            if allow_interrupt:
+                nodes.before_node_execution()
+
+            params = slice_dict(input_data_all, i)
+
+            if params is None:
+                return None
+
+            results.append(getattr(obj, func)(**params))
+    return results
 
 
 def get_output_data(obj, input_data_all):
