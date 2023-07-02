@@ -99,6 +99,7 @@ There is a high possibility that the existing components created may not be comp
     - 'None' input is regarded as stop execute current execution path
   - [x] ExecutionSwitch node
   - [x] Unconnected output checker to avoid inefficient execution
+  - [ ] ExecutionOneOf race condition issue
   - [ ] A feature that disable a specific optional input slot
     - [ ] Handling the workflow execution of a node composed solely of optional inputs
   - [ ] Component nesting

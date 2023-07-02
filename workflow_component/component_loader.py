@@ -401,10 +401,14 @@ def load_all(directory):
             component_name = os.path.basename(filename)[:-15]
 
             with open(file_path, "r") as file:
-                data = json.load(file)
-                _, component_full_name = load_component(component_name, False, data, category=category)
-                # print(f"LOAD: {component_full_name}")
-                workflow_components[component_full_name] = data
+                try:
+                    data = json.load(file)
+                    _, component_full_name = load_component(component_name, False, data, category=category)
+                    # print(f"LOAD: {component_full_name}")
+                    workflow_components[component_full_name] = data
+                except Exception as ex:
+                    print(f"[ERROR] Workflow-Component: Failed to loading component '{component_name}'\n{ex}")
+
 
     for root, dirs, files in os.walk(directory):
         relative_path = os.path.relpath(root, directory)
