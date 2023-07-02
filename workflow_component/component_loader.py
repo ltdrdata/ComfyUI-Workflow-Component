@@ -304,6 +304,15 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
 
                         if input_label is None and isinstance(input_value[0], list):
                             input_label = input_slot
+                    elif input_type == "STRING":
+                        input_value = (input_type, {"multiline": True})
+
+                    elif input_type == "FLOAT":
+                        input_value = (input_type, {"default": 0.5, "min": 0.0, "max": 10.0, "step": 0.01})
+
+                    elif input_type == "INT":
+                        input_value = (input_type, {"default": 0, "min": 0, "max": 99999, "step": 1})
+
                     else:
                         input_value = (input_type,)
 

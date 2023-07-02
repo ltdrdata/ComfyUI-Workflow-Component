@@ -1,6 +1,6 @@
 {
-  "last_node_id": 23,
-  "last_link_id": 34,
+  "last_node_id": 24,
+  "last_link_id": 45,
   "nodes": [
     {
       "id": 11,
@@ -21,7 +21,7 @@
           "name": "image",
           "type": "IMAGE",
           "links": [
-            18
+            44
           ],
           "slot_index": 0
         }
@@ -50,8 +50,8 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "links": [
-            17,
-            20
+            20,
+            42
           ],
           "slot_index": 0,
           "color": ""
@@ -137,7 +137,7 @@
         {
           "name": "IMAGE",
           "type": "IMAGE",
-          "link": 19,
+          "link": 45,
           "label": null
         }
       ],
@@ -190,7 +190,7 @@
           "name": "SEGS",
           "type": "SEGS",
           "links": [
-            16
+            43
           ],
           "shape": 3,
           "slot_index": 0
@@ -254,7 +254,7 @@
           "name": "force_inpaint",
           "type": "disabled,enabled",
           "links": [
-            28
+            35
           ],
           "slot_index": 0,
           "label": "force_inpaint"
@@ -284,7 +284,7 @@
           "name": "steps",
           "type": "INT",
           "links": [
-            29
+            39
           ],
           "slot_index": 0,
           "label": "steps"
@@ -314,7 +314,7 @@
           "name": "denoise",
           "type": "FLOAT",
           "links": [
-            30
+            40
           ],
           "slot_index": 0,
           "label": "denoise"
@@ -344,7 +344,7 @@
           "name": "guide_size",
           "type": "FLOAT",
           "links": [
-            31
+            41
           ],
           "slot_index": 0,
           "label": "guide_size"
@@ -374,7 +374,7 @@
           "name": "noise_mask",
           "type": "enabled,disabled",
           "links": [
-            32
+            37
           ],
           "slot_index": 0,
           "label": "noise_mask"
@@ -404,7 +404,7 @@
           "name": "cfg",
           "type": "FLOAT",
           "links": [
-            33
+            38
           ],
           "slot_index": 0,
           "label": "cfg"
@@ -414,179 +414,6 @@
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
-    },
-    {
-      "id": 20,
-      "type": "DetailerForEachPipe",
-      "pos": [
-        1200,
-        330
-      ],
-      "size": {
-        "0": 315,
-        "1": 362
-      },
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 18
-        },
-        {
-          "name": "segs",
-          "type": "SEGS",
-          "link": 16
-        },
-        {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
-          "link": 17
-        },
-        {
-          "name": "guide_size",
-          "type": "FLOAT",
-          "link": 31,
-          "widget": {
-            "name": "guide_size",
-            "config": [
-              "FLOAT",
-              {
-                "default": 256,
-                "min": 64,
-                "max": 8192,
-                "step": 8
-              }
-            ]
-          }
-        },
-        {
-          "name": "denoise",
-          "type": "FLOAT",
-          "link": 30,
-          "widget": {
-            "name": "denoise",
-            "config": [
-              "FLOAT",
-              {
-                "default": 0.5,
-                "min": 0.0001,
-                "max": 1,
-                "step": 0.01
-              }
-            ]
-          }
-        },
-        {
-          "name": "steps",
-          "type": "INT",
-          "link": 29,
-          "widget": {
-            "name": "steps",
-            "config": [
-              "INT",
-              {
-                "default": 20,
-                "min": 1,
-                "max": 10000
-              }
-            ]
-          }
-        },
-        {
-          "name": "cfg",
-          "type": "FLOAT",
-          "link": 33,
-          "widget": {
-            "name": "cfg",
-            "config": [
-              "FLOAT",
-              {
-                "default": 8,
-                "min": 0,
-                "max": 100
-              }
-            ]
-          }
-        },
-        {
-          "name": "noise_mask",
-          "type": "enabled,disabled",
-          "link": 32,
-          "widget": {
-            "name": "noise_mask",
-            "config": [
-              [
-                "enabled",
-                "disabled"
-              ]
-            ]
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 34,
-          "widget": {
-            "name": "seed",
-            "config": [
-              "INT",
-              {
-                "default": 0,
-                "min": 0,
-                "max": 18446744073709552000
-              }
-            ]
-          },
-          "slot_index": 8
-        },
-        {
-          "name": "force_inpaint",
-          "type": "disabled,enabled",
-          "link": 28,
-          "widget": {
-            "name": "force_inpaint",
-            "config": [
-              [
-                "disabled",
-                "enabled"
-              ]
-            ]
-          },
-          "slot_index": 9
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            19
-          ],
-          "shape": 3,
-          "slot_index": 0,
-          "color": "#64B5F6"
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "DetailerForEachPipe"
-      },
-      "widgets_values": [
-        256,
-        "bbox",
-        0,
-        "randomize",
-        20,
-        8,
-        "euler",
-        "normal",
-        0.5,
-        5,
-        "enabled",
-        "disabled"
-      ]
     },
     {
       "id": 21,
@@ -607,7 +434,7 @@
           "name": "seed",
           "type": "INT",
           "links": [
-            34
+            36
           ],
           "slot_index": 0,
           "label": "seed"
@@ -617,6 +444,177 @@
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
+    },
+    {
+      "id": 24,
+      "type": "DetailerForEachPipe",
+      "pos": [
+        1140,
+        230
+      ],
+      "size": [
+        315,
+        386
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 44
+        },
+        {
+          "name": "segs",
+          "type": "SEGS",
+          "link": 43
+        },
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 42
+        },
+        {
+          "name": "guide_size",
+          "type": "FLOAT",
+          "link": 41,
+          "widget": {
+            "name": "guide_size",
+            "config": [
+              "FLOAT",
+              {
+                "default": 256,
+                "min": 64,
+                "max": 8192,
+                "step": 8
+              }
+            ]
+          }
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": 40,
+          "widget": {
+            "name": "denoise",
+            "config": [
+              "FLOAT",
+              {
+                "default": 0.5,
+                "min": 0.0001,
+                "max": 1,
+                "step": 0.01
+              }
+            ]
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 39,
+          "widget": {
+            "name": "steps",
+            "config": [
+              "INT",
+              {
+                "default": 20,
+                "min": 1,
+                "max": 10000
+              }
+            ]
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": 38,
+          "widget": {
+            "name": "cfg",
+            "config": [
+              "FLOAT",
+              {
+                "default": 8,
+                "min": 0,
+                "max": 100
+              }
+            ]
+          }
+        },
+        {
+          "name": "noise_mask",
+          "type": "enabled,disabled",
+          "link": 37,
+          "widget": {
+            "name": "noise_mask",
+            "config": [
+              [
+                "enabled",
+                "disabled"
+              ]
+            ]
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 36,
+          "widget": {
+            "name": "seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
+        },
+        {
+          "name": "force_inpaint",
+          "type": "disabled,enabled",
+          "link": 35,
+          "widget": {
+            "name": "force_inpaint",
+            "config": [
+              [
+                "disabled",
+                "enabled"
+              ]
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            45
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DetailerForEachPipe"
+      },
+      "widgets_values": [
+        256,
+        "bbox",
+        768,
+        0,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "normal",
+        0.5,
+        5,
+        "enabled",
+        "disabled"
+      ]
     }
   ],
   "links": [
@@ -627,38 +625,6 @@
       17,
       0,
       "MASK"
-    ],
-    [
-      16,
-      17,
-      0,
-      20,
-      1,
-      "SEGS"
-    ],
-    [
-      17,
-      3,
-      0,
-      20,
-      2,
-      "BASIC_PIPE"
-    ],
-    [
-      18,
-      11,
-      0,
-      20,
-      0,
-      "IMAGE"
-    ],
-    [
-      19,
-      20,
-      0,
-      9,
-      0,
-      "*"
     ],
     [
       20,
@@ -677,60 +643,92 @@
       "FLOAT"
     ],
     [
-      28,
+      35,
       23,
       0,
-      20,
+      24,
       9,
       "disabled,enabled"
     ],
     [
-      29,
-      14,
+      36,
+      21,
       0,
-      20,
-      5,
+      24,
+      8,
       "INT"
     ],
     [
-      30,
-      13,
-      0,
-      20,
-      4,
-      "FLOAT"
-    ],
-    [
-      31,
-      12,
-      0,
-      20,
-      3,
-      "FLOAT"
-    ],
-    [
-      32,
+      37,
       16,
       0,
-      20,
+      24,
       7,
       "enabled,disabled"
     ],
     [
-      33,
+      38,
       15,
       0,
-      20,
+      24,
       6,
       "FLOAT"
     ],
     [
-      34,
-      21,
+      39,
+      14,
       0,
-      20,
-      8,
+      24,
+      5,
       "INT"
+    ],
+    [
+      40,
+      13,
+      0,
+      24,
+      4,
+      "FLOAT"
+    ],
+    [
+      41,
+      12,
+      0,
+      24,
+      3,
+      "FLOAT"
+    ],
+    [
+      42,
+      3,
+      0,
+      24,
+      2,
+      "BASIC_PIPE"
+    ],
+    [
+      43,
+      17,
+      0,
+      24,
+      1,
+      "SEGS"
+    ],
+    [
+      44,
+      11,
+      0,
+      24,
+      0,
+      "IMAGE"
+    ],
+    [
+      45,
+      24,
+      0,
+      9,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [],
@@ -744,7 +742,7 @@
     "9": {
       "inputs": {
         "IMAGE": [
-          "20",
+          "24",
           0
         ]
       }
@@ -794,13 +792,23 @@
     "18": {
       "inputs": {}
     },
-    "20": {
+    "21": {
+      "inputs": {}
+    },
+    "22": {
+      "inputs": {}
+    },
+    "23": {
+      "inputs": {}
+    },
+    "24": {
       "inputs": {
         "guide_size": [
           "12",
           0
         ],
         "guide_size_for": "bbox",
+        "max_size": 768,
         "seed": [
           "21",
           0
@@ -842,15 +850,6 @@
         ]
       },
       "class_type": "DetailerForEachPipe"
-    },
-    "21": {
-      "inputs": {}
-    },
-    "22": {
-      "inputs": {}
-    },
-    "23": {
-      "inputs": {}
     }
   }
 }

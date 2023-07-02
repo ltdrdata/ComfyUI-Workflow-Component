@@ -1,148 +1,12 @@
 {
-  "last_node_id": 11,
-  "last_link_id": 15,
+  "last_node_id": 18,
+  "last_link_id": 44,
   "nodes": [
     {
-      "id": 4,
-      "type": "CLIPTextEncode",
+      "id": 7,
+      "type": "ComponentOutput",
       "pos": [
-        1310,
-        620
-      ],
-      "size": {
-        "0": 210,
-        "1": 54
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 3
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 8,
-          "widget": {
-            "name": "text",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            4
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        ""
-      ]
-    },
-    {
-      "id": 3,
-      "type": "CLIPTextEncode",
-      "pos": [
-        1310,
-        510
-      ],
-      "size": {
-        "0": 210,
-        "1": 54
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 12
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 7,
-          "widget": {
-            "name": "text",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            2
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        ""
-      ]
-    },
-    {
-      "id": 9,
-      "type": "ComponentInput",
-      "pos": [
-        330,
-        640
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": [
-            8
-          ],
-          "slot_index": 0,
-          "label": "negative"
-        }
-      ],
-      "title": "4.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 6,
-      "type": "ComponentInput",
-      "pos": [
-        330,
+        2310,
         300
       ],
       "size": {
@@ -150,84 +14,74 @@
         "1": 26
       },
       "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
-          "links": [
-            5,
-            9
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "1.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 5,
-      "type": "EditBasicPipe",
-      "pos": [
-        1590,
-        300
-      ],
-      "size": {
-        "0": 267,
-        "1": 126
-      },
-      "flags": {},
-      "order": 8,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
-          "name": "basic_pipe",
+          "name": "BASIC_PIPE",
           "type": "BASIC_PIPE",
-          "link": 9
+          "link": 6,
+          "label": null
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 13,
+      "type": "ExecutionOneOf",
+      "pos": [
+        1570,
+        830
+      ],
+      "size": {
+        "0": 210,
+        "1": 106
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 19
         },
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 13
+          "name": "input2",
+          "type": "*",
+          "link": 27
         },
         {
-          "name": "clip",
-          "type": "CLIP",
+          "name": "input3",
+          "type": "*",
           "link": null
         },
         {
-          "name": "vae",
-          "type": "VAE",
+          "name": "input4",
+          "type": "*",
           "link": null
         },
         {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 2
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 4
+          "name": "input5",
+          "type": "*",
+          "link": null
         }
       ],
       "outputs": [
         {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
+          "name": "*",
+          "type": "*",
           "links": [
-            6
+            20
           ],
           "shape": 3,
-          "slot_index": 0,
-          "color": ""
+          "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "EditBasicPipe"
+        "Node name for S&R": "ExecutionOneOf"
       }
     },
     {
@@ -242,7 +96,7 @@
         "1": 106
       },
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -281,15 +135,20 @@
         {
           "name": "positive",
           "type": "CONDITIONING",
-          "links": null,
+          "links": [
+            26
+          ],
           "shape": 3,
           "slot_index": 3
         },
         {
           "name": "negative",
           "type": "CONDITIONING",
-          "links": null,
-          "shape": 3
+          "links": [
+            27
+          ],
+          "shape": 3,
+          "slot_index": 4
         }
       ],
       "properties": {
@@ -297,57 +156,179 @@
       }
     },
     {
-      "id": 7,
-      "type": "ComponentOutput",
-      "pos": [
-        1920,
-        300
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "BASIC_PIPE",
-          "type": "BASIC_PIPE",
-          "link": 6,
-          "label": null
-        }
-      ],
-      "properties": {},
-      "color": "#223",
-      "bgcolor": "#335"
-    },
-    {
-      "id": 8,
+      "id": 6,
       "type": "ComponentInput",
       "pos": [
-        330,
-        530
+        329,
+        189
       ],
       "size": {
         "0": 178,
         "1": 26
       },
       "flags": {},
-      "order": 2,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
-          "name": "text",
-          "type": "STRING",
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
           "links": [
-            7
+            5,
+            9
           ],
-          "slot_index": 0,
-          "label": "positive"
+          "slot_index": 0
         }
       ],
-      "title": "3.Component Input",
+      "title": "1.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 15,
+      "type": "ExecutionOneOf",
+      "pos": [
+        1570,
+        580
+      ],
+      "size": {
+        "0": 210,
+        "1": 106
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 25
+        },
+        {
+          "name": "input2",
+          "type": "*",
+          "link": 26
+        },
+        {
+          "name": "input3",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input4",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input5",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            31
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionOneOf"
+      }
+    },
+    {
+      "id": 5,
+      "type": "EditBasicPipe",
+      "pos": [
+        1960,
+        190
+      ],
+      "size": {
+        "0": 267,
+        "1": 126
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 9
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 31
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "links": [
+            6
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": ""
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EditBasicPipe"
+      }
+    },
+    {
+      "id": 11,
+      "type": "ComponentInput",
+      "pos": [
+        329.20001220703125,
+        308.8000183105469
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "lora_name",
+          "type": null,
+          "links": [
+            32
+          ],
+          "slot_index": 0,
+          "label": "lora_name"
+        }
+      ],
+      "title": "2.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -356,15 +337,15 @@
       "id": 10,
       "type": "LoraLoader",
       "pos": [
-        900,
-        370
+        1000,
+        270
       ],
-      "size": [
-        315,
-        126
-      ],
+      "size": {
+        "0": 239.20004272460938,
+        "1": 123.80001831054688
+      },
       "flags": {},
-      "order": 6,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -380,7 +361,7 @@
         {
           "name": "lora_name",
           "type": "LoraLoader\nlora_name",
-          "link": 15,
+          "link": 32,
           "widget": {
             "name": "lora_name",
             "config": [
@@ -390,6 +371,42 @@
               ]
             ]
           }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": 33,
+          "widget": {
+            "name": "strength_model",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": -10,
+                "max": 10,
+                "step": 0.01
+              }
+            ]
+          },
+          "slot_index": 3
+        },
+        {
+          "name": "strength_clip",
+          "type": "FLOAT",
+          "link": 34,
+          "widget": {
+            "name": "strength_clip",
+            "config": [
+              "FLOAT",
+              {
+                "default": 1,
+                "min": -10,
+                "max": 10,
+                "step": 0.01
+              }
+            ]
+          },
+          "slot_index": 4
         }
       ],
       "outputs": [
@@ -422,11 +439,95 @@
       ]
     },
     {
-      "id": 11,
+      "id": 16,
       "type": "ComponentInput",
       "pos": [
         330,
-        420
+        450
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "links": [
+            33,
+            34
+          ],
+          "label": "lora_weight",
+          "slot_index": 0
+        }
+      ],
+      "title": "3.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1310,
+        580
+      ],
+      "size": {
+        "0": 210,
+        "1": 54
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 12
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 38,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            25
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 8,
+      "type": "ComponentInput",
+      "pos": [
+        330,
+        600
       ],
       "size": {
         "0": 178,
@@ -437,30 +538,198 @@
       "mode": 0,
       "outputs": [
         {
-          "name": "lora_name",
-          "type": "LoraLoader\nlora_name",
+          "name": "text",
+          "type": "STRING",
           "links": [
-            15
+            36,
+            37
           ],
           "slot_index": 0,
-          "label": "lora_name"
+          "label": "positive"
         }
       ],
-      "title": "2.Component Input",
+      "title": "5.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
+    },
+    {
+      "id": 14,
+      "type": "ExecutionControlString",
+      "pos": [
+        700,
+        600
+      ],
+      "size": {
+        "0": 315,
+        "1": 102
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "B_STR",
+          "type": "*",
+          "link": 36,
+          "slot_index": 0
+        },
+        {
+          "name": "pass_value",
+          "type": "*",
+          "link": 37
+        }
+      ],
+      "outputs": [
+        {
+          "name": "pass_value",
+          "type": "*",
+          "links": [
+            38
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionControlString"
+      },
+      "widgets_values": [
+        "",
+        "A != B"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1310,
+        830
+      ],
+      "size": {
+        "0": 210,
+        "1": 54
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 44,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            19
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 9,
+      "type": "ComponentInput",
+      "pos": [
+        330,
+        850
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            42,
+            43
+          ],
+          "slot_index": 0,
+          "label": "negative"
+        }
+      ],
+      "title": "6.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 12,
+      "type": "ExecutionControlString",
+      "pos": [
+        700,
+        850
+      ],
+      "size": {
+        "0": 315,
+        "1": 102
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "B_STR",
+          "type": "*",
+          "link": 42
+        },
+        {
+          "name": "pass_value",
+          "type": "*",
+          "link": 43
+        }
+      ],
+      "outputs": [
+        {
+          "name": "pass_value",
+          "type": "*",
+          "links": [
+            44
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionControlString"
+      },
+      "widgets_values": [
+        "",
+        "A != B"
+      ]
     }
   ],
   "links": [
-    [
-      2,
-      3,
-      0,
-      5,
-      4,
-      "CONDITIONING"
-    ],
     [
       3,
       1,
@@ -468,14 +737,6 @@
       4,
       0,
       "CLIP"
-    ],
-    [
-      4,
-      4,
-      0,
-      5,
-      5,
-      "CONDITIONING"
     ],
     [
       5,
@@ -492,22 +753,6 @@
       7,
       0,
       "*"
-    ],
-    [
-      7,
-      8,
-      0,
-      3,
-      1,
-      "STRING"
-    ],
-    [
-      8,
-      9,
-      0,
-      4,
-      1,
-      "STRING"
     ],
     [
       9,
@@ -550,12 +795,124 @@
       "MODEL"
     ],
     [
+      19,
+      4,
+      0,
+      13,
+      0,
+      "*"
+    ],
+    [
+      20,
+      13,
+      0,
+      5,
+      5,
+      "CONDITIONING"
+    ],
+    [
+      25,
+      3,
+      0,
       15,
+      0,
+      "*"
+    ],
+    [
+      26,
+      1,
+      3,
+      15,
+      1,
+      "*"
+    ],
+    [
+      27,
+      1,
+      4,
+      13,
+      1,
+      "*"
+    ],
+    [
+      31,
+      15,
+      0,
+      5,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      32,
       11,
       0,
       10,
       2,
       "LoraLoader\nlora_name"
+    ],
+    [
+      33,
+      16,
+      0,
+      10,
+      3,
+      "FLOAT"
+    ],
+    [
+      34,
+      16,
+      0,
+      10,
+      4,
+      "FLOAT"
+    ],
+    [
+      36,
+      8,
+      0,
+      14,
+      0,
+      "*"
+    ],
+    [
+      37,
+      8,
+      0,
+      14,
+      1,
+      "*"
+    ],
+    [
+      38,
+      14,
+      0,
+      3,
+      1,
+      "STRING"
+    ],
+    [
+      42,
+      9,
+      0,
+      12,
+      0,
+      "*"
+    ],
+    [
+      43,
+      9,
+      0,
+      12,
+      1,
+      "*"
+    ],
+    [
+      44,
+      12,
+      0,
+      4,
+      1,
+      "STRING"
     ]
   ],
   "groups": [],
@@ -575,7 +932,7 @@
     "3": {
       "inputs": {
         "text": [
-          "8",
+          "14",
           0
         ],
         "clip": [
@@ -588,7 +945,7 @@
     "4": {
       "inputs": {
         "text": [
-          "9",
+          "12",
           0
         ],
         "clip": [
@@ -609,11 +966,11 @@
           0
         ],
         "positive": [
-          "3",
+          "15",
           0
         ],
         "negative": [
-          "4",
+          "13",
           0
         ]
       },
@@ -642,8 +999,14 @@
           "11",
           0
         ],
-        "strength_model": 1,
-        "strength_clip": 1,
+        "strength_model": [
+          "16",
+          0
+        ],
+        "strength_clip": [
+          "16",
+          0
+        ],
         "model": [
           "1",
           0
@@ -656,6 +1019,65 @@
       "class_type": "LoraLoader"
     },
     "11": {
+      "inputs": {}
+    },
+    "12": {
+      "inputs": {
+        "A": "",
+        "condition_kind": "A != B",
+        "B_STR": [
+          "9",
+          0
+        ],
+        "pass_value": [
+          "9",
+          0
+        ]
+      },
+      "class_type": "ExecutionControlString"
+    },
+    "13": {
+      "inputs": {
+        "input1": [
+          "4",
+          0
+        ],
+        "input2": [
+          "1",
+          4
+        ]
+      },
+      "class_type": "ExecutionOneOf"
+    },
+    "14": {
+      "inputs": {
+        "A": "",
+        "condition_kind": "A != B",
+        "B_STR": [
+          "8",
+          0
+        ],
+        "pass_value": [
+          "8",
+          0
+        ]
+      },
+      "class_type": "ExecutionControlString"
+    },
+    "15": {
+      "inputs": {
+        "input1": [
+          "3",
+          0
+        ],
+        "input2": [
+          "1",
+          3
+        ]
+      },
+      "class_type": "ExecutionOneOf"
+    },
+    "16": {
       "inputs": {}
     }
   }

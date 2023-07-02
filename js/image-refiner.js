@@ -499,6 +499,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		super();
 		this.element = $el("div.comfy-modal", { parent: document.body }, []);
 		this.layer_id = 1;
+		this.is_mask_mode = false;
 	}
 
 	createButton(name, callback) {
@@ -1384,7 +1385,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		// Right div
 		this.rightDiv = document.createElement("div");
 		this.rightDiv.id = "my-right-div";
-		this.rightDiv.style.width = "220px";
+		this.rightDiv.style.width = "223px";
 //		this.rightDiv.style.background = "blue";
 		this.rightDiv.style.position = "absolute";
 		this.rightDiv.style.left = "calc(100% - 250px)";
@@ -2088,12 +2089,14 @@ class ImageRefinerDialog extends ComfyDialog {
 			self.brush_size = Math.min(self.brush_size+2, 100);
 		} else if (event.key === '[') {
 			self.brush_size = Math.max(self.brush_size-2, 1);
-		} else if(event.key === 'Enter') {
-			if(self.is_mask_mode)
-				self.generative_fill.call(self);
-			else
-				self.add_draw_to_layer.call(self);
 		}
+		// this leads mistake so much
+//		else if(event.key === 'Enter') {
+//			if(self.is_mask_mode)
+//				self.generative_fill.call(self);
+//			else
+//				self.add_draw_to_layer.call(self);
+//		}
 
 		self.updateBrushPreview(self);
 	}

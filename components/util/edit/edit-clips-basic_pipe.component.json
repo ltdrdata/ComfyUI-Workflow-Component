@@ -1,18 +1,218 @@
 {
-  "last_node_id": 9,
-  "last_link_id": 9,
+  "last_node_id": 14,
+  "last_link_id": 29,
   "nodes": [
+    {
+      "id": 7,
+      "type": "ComponentOutput",
+      "pos": [
+        2100,
+        300
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "link": 6,
+          "label": null
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 9,
+      "type": "ComponentInput",
+      "pos": [
+        340,
+        960
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            13,
+            14
+          ],
+          "slot_index": 0,
+          "label": "negative"
+        }
+      ],
+      "title": "3.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 12,
+      "type": "ExecutionControlString",
+      "pos": [
+        900,
+        960
+      ],
+      "size": {
+        "0": 210,
+        "1": 100
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "B_STR",
+          "type": "*",
+          "link": 13
+        },
+        {
+          "name": "pass_value",
+          "type": "*",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "pass_value",
+          "type": "*",
+          "links": [
+            28
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionControlString"
+      },
+      "widgets_values": [
+        "",
+        "A != B"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "ExecutionControlString",
+      "pos": [
+        880,
+        590
+      ],
+      "size": [
+        210,
+        100
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "B_STR",
+          "type": "*",
+          "link": 12
+        },
+        {
+          "name": "pass_value",
+          "type": "*",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "pass_value",
+          "type": "*",
+          "links": [
+            15
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionControlString"
+      },
+      "widgets_values": [
+        "",
+        "A != B"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1230,
+        490
+      ],
+      "size": {
+        "0": 210,
+        "1": 54
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 15,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            26
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
     {
       "id": 1,
       "type": "FromBasicPipe",
       "pos": [
-        590,
+        640,
         370
       ],
-      "size": {
-        "0": 241.79998779296875,
-        "1": 106
-      },
+      "size": [
+        210,
+        110
+      ],
       "flags": {},
       "order": 3,
       "mode": 0,
@@ -20,7 +220,7 @@
         {
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
-          "link": 5,
+          "link": 10,
           "slot_index": 0
         }
       ],
@@ -36,7 +236,7 @@
           "type": "CLIP",
           "links": [
             1,
-            3
+            29
           ],
           "shape": 3,
           "slot_index": 1
@@ -50,15 +250,20 @@
         {
           "name": "positive",
           "type": "CONDITIONING",
-          "links": null,
+          "links": [
+            25
+          ],
           "shape": 3,
           "slot_index": 3
         },
         {
           "name": "negative",
           "type": "CONDITIONING",
-          "links": null,
-          "shape": 3
+          "links": [
+            24
+          ],
+          "shape": 3,
+          "slot_index": 4
         }
       ],
       "properties": {
@@ -66,82 +271,141 @@
       }
     },
     {
-      "id": 4,
-      "type": "CLIPTextEncode",
+      "id": 13,
+      "type": "ExecutionOneOf",
       "pos": [
-        970,
-        610
+        1490,
+        490
       ],
       "size": {
         "0": 210,
-        "1": 54
+        "1": 106
       },
       "flags": {},
-      "order": 5,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 3
+          "name": "input1",
+          "type": "*",
+          "link": 26
         },
         {
-          "name": "text",
-          "type": "STRING",
-          "link": 8,
-          "widget": {
-            "name": "text",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
+          "name": "input2",
+          "type": "*",
+          "link": 25
+        },
+        {
+          "name": "input3",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input4",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input5",
+          "type": "*",
+          "link": null
         }
       ],
       "outputs": [
         {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
+          "name": "*",
+          "type": "*",
           "links": [
-            4
+            19
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        ""
-      ]
+        "Node name for S&R": "ExecutionOneOf"
+      }
     },
     {
-      "id": 3,
+      "id": 14,
+      "type": "ExecutionOneOf",
+      "pos": [
+        1490,
+        810
+      ],
+      "size": {
+        "0": 210,
+        "1": 106
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input1",
+          "type": "*",
+          "link": 27
+        },
+        {
+          "name": "input2",
+          "type": "*",
+          "link": 24
+        },
+        {
+          "name": "input3",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input4",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "input5",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "*",
+          "links": [
+            22
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ExecutionOneOf"
+      }
+    },
+    {
+      "id": 4,
       "type": "CLIPTextEncode",
       "pos": [
-        970,
-        500
+        1230,
+        800
       ],
       "size": {
         "0": 210,
         "1": 54
       },
       "flags": {},
-      "order": 4,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 1
+          "link": 29
         },
         {
           "name": "text",
           "type": "STRING",
-          "link": 7,
+          "link": 28,
           "widget": {
             "name": "text",
             "config": [
@@ -158,7 +422,7 @@
           "name": "CONDITIONING",
           "type": "CONDITIONING",
           "links": [
-            2
+            27
           ],
           "shape": 3,
           "slot_index": 0
@@ -176,37 +440,7 @@
       "type": "ComponentInput",
       "pos": [
         330,
-        520
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": [
-            7
-          ],
-          "slot_index": 0,
-          "label": "positive"
-        }
-      ],
-      "title": "2.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 9,
-      "type": "ComponentInput",
-      "pos": [
-        330,
-        630
+        590
       ],
       "size": {
         "0": 178,
@@ -220,13 +454,14 @@
           "name": "text",
           "type": "STRING",
           "links": [
-            8
+            11,
+            12
           ],
           "slot_index": 0,
-          "label": "negative"
+          "label": "positive"
         }
       ],
-      "title": "3.Component Input",
+      "title": "2.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -243,15 +478,15 @@
         "1": 26
       },
       "flags": {},
-      "order": 2,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "links": [
-            5,
-            9
+            9,
+            10
           ],
           "slot_index": 0
         }
@@ -265,7 +500,7 @@
       "id": 5,
       "type": "EditBasicPipe",
       "pos": [
-        1310,
+        1780,
         300
       ],
       "size": {
@@ -273,7 +508,7 @@
         "1": 126
       },
       "flags": {},
-      "order": 6,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -299,12 +534,12 @@
         {
           "name": "positive",
           "type": "CONDITIONING",
-          "link": 2
+          "link": 19
         },
         {
           "name": "negative",
           "type": "CONDITIONING",
-          "link": 4
+          "link": 22
         }
       ],
       "outputs": [
@@ -322,32 +557,6 @@
       "properties": {
         "Node name for S&R": "EditBasicPipe"
       }
-    },
-    {
-      "id": 7,
-      "type": "ComponentOutput",
-      "pos": [
-        1640,
-        300
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "BASIC_PIPE",
-          "type": "BASIC_PIPE",
-          "link": 6,
-          "label": null
-        }
-      ],
-      "properties": {},
-      "color": "#223",
-      "bgcolor": "#335"
     }
   ],
   "links": [
@@ -360,38 +569,6 @@
       "CLIP"
     ],
     [
-      2,
-      3,
-      0,
-      5,
-      4,
-      "CONDITIONING"
-    ],
-    [
-      3,
-      1,
-      1,
-      4,
-      0,
-      "CLIP"
-    ],
-    [
-      4,
-      4,
-      0,
-      5,
-      5,
-      "CONDITIONING"
-    ],
-    [
-      5,
-      6,
-      0,
-      1,
-      0,
-      "BASIC_PIPE"
-    ],
-    [
       6,
       5,
       0,
@@ -400,28 +577,124 @@
       "*"
     ],
     [
-      7,
-      8,
-      0,
-      3,
-      1,
-      "STRING"
-    ],
-    [
-      8,
-      9,
-      0,
-      4,
-      1,
-      "STRING"
-    ],
-    [
       9,
       6,
       0,
       5,
       0,
       "BASIC_PIPE"
+    ],
+    [
+      10,
+      6,
+      0,
+      1,
+      0,
+      "BASIC_PIPE"
+    ],
+    [
+      11,
+      8,
+      0,
+      11,
+      1,
+      "*"
+    ],
+    [
+      12,
+      8,
+      0,
+      11,
+      0,
+      "*"
+    ],
+    [
+      13,
+      9,
+      0,
+      12,
+      0,
+      "*"
+    ],
+    [
+      14,
+      9,
+      0,
+      12,
+      1,
+      "*"
+    ],
+    [
+      15,
+      11,
+      0,
+      3,
+      1,
+      "STRING"
+    ],
+    [
+      19,
+      13,
+      0,
+      5,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      22,
+      14,
+      0,
+      5,
+      5,
+      "CONDITIONING"
+    ],
+    [
+      24,
+      1,
+      4,
+      14,
+      1,
+      "*"
+    ],
+    [
+      25,
+      1,
+      3,
+      13,
+      1,
+      "*"
+    ],
+    [
+      26,
+      3,
+      0,
+      13,
+      0,
+      "*"
+    ],
+    [
+      27,
+      4,
+      0,
+      14,
+      0,
+      "*"
+    ],
+    [
+      28,
+      12,
+      0,
+      4,
+      1,
+      "STRING"
+    ],
+    [
+      29,
+      1,
+      1,
+      4,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],
@@ -441,7 +714,7 @@
     "3": {
       "inputs": {
         "text": [
-          "8",
+          "11",
           0
         ],
         "clip": [
@@ -454,7 +727,7 @@
     "4": {
       "inputs": {
         "text": [
-          "9",
+          "12",
           0
         ],
         "clip": [
@@ -471,11 +744,11 @@
           0
         ],
         "positive": [
-          "3",
+          "13",
           0
         ],
         "negative": [
-          "4",
+          "14",
           0
         ]
       },
@@ -497,6 +770,62 @@
     },
     "9": {
       "inputs": {}
+    },
+    "11": {
+      "inputs": {
+        "A": "",
+        "condition_kind": "A != B",
+        "B_STR": [
+          "8",
+          0
+        ],
+        "pass_value": [
+          "8",
+          0
+        ]
+      },
+      "class_type": "ExecutionControlString"
+    },
+    "12": {
+      "inputs": {
+        "A": "",
+        "condition_kind": "A != B",
+        "B_STR": [
+          "9",
+          0
+        ],
+        "pass_value": [
+          "9",
+          0
+        ]
+      },
+      "class_type": "ExecutionControlString"
+    },
+    "13": {
+      "inputs": {
+        "input1": [
+          "3",
+          0
+        ],
+        "input2": [
+          "1",
+          3
+        ]
+      },
+      "class_type": "ExecutionOneOf"
+    },
+    "14": {
+      "inputs": {
+        "input1": [
+          "4",
+          0
+        ],
+        "input2": [
+          "1",
+          4
+        ]
+      },
+      "class_type": "ExecutionOneOf"
     }
   }
 }
