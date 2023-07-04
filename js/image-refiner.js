@@ -499,7 +499,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		super();
 		this.element = $el("div.comfy-modal", { parent: document.body }, []);
 		this.layer_id = 1;
-		this.is_mask_mode = false;
+		this.is_mask_mode = true;
 	}
 
 	createButton(name, callback) {
@@ -1454,7 +1454,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		});
 
 		self.selectedColor = null;
-		self.is_mask_mode = false;
+		self.is_mask_mode = true;
 
 		// pen mode change
 		var toggleControl = createToggleControl();
@@ -1499,7 +1499,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		clearButton.style.marginRight = "20px";
 
 		this.fillButton = this.createRightButton("Regenerate", () => {
-				if(!self.is_mask_mode)
+				if(self.is_mask_mode)
 					self.generative_fill.call(self);
 				else
 					self.add_draw_to_layer.call(self);
