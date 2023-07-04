@@ -1499,7 +1499,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		clearButton.style.marginRight = "20px";
 
 		this.fillButton = this.createRightButton("Regenerate", () => {
-				if(self.is_mask_mode)
+				if(!self.is_mask_mode)
 					self.generative_fill.call(self);
 				else
 					self.add_draw_to_layer.call(self);
