@@ -2411,13 +2411,14 @@ class ImageRefinerDialog extends ComfyDialog {
 		} else if (event.key === '[') {
 			self.brush_size = Math.max(self.brush_size-2, 1);
 		}
-		// this leads mistake so much
-//		else if(event.key === 'Enter') {
-//			if(self.is_mask_mode)
-//				self.generative_fill.call(self);
-//			else
-//				self.add_draw_to_layer.call(self);
-//		}
+		else if(event.key === 'Escape') {
+            if(confirm("All current work will be lost. Are you sure you want to close it?")) {
+                self.close();
+            }
+            else {
+		        self.element.style.display = "block";
+            }
+		}
 
 		self.updateBrushPreview(self);
 	}
