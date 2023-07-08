@@ -48,8 +48,8 @@ async def imagerefiner_generate(request):
     # prepare input image
     images = []
     for x in prompt_data['image_paths']:
-        if x['id'] != 0:
-            if x['is_mask_mode']:
+        if 'is_mask_mode' not in x or x['is_mask_mode']:
+            if x['id'] != 0:
                 layer_mask = post.get(str(x['id']))
                 layer_mask_pil = Image.open(layer_mask.file).convert('RGBA').getchannel('A')
                 layer_mask_pil_inverted = ImageOps.invert(layer_mask_pil)
@@ -57,11 +57,11 @@ async def imagerefiner_generate(request):
                 image_pil.putalpha(layer_mask_pil_inverted)
                 images.append(image_pil)
             else:
-                layer_draw = post.get(str(x['id']))
-                layer_draw_pil = Image.open(layer_draw.file).convert('RGBA')
-                images.append(layer_draw_pil)
+                base_pil = get_image_from_fileitem(x['image']).convert('RGBA')
         else:
-            base_pil = get_image_from_fileitem(x['image']).convert('RGBA')
+            layer_draw = post.get(str(x['id']))
+            layer_draw_pil = Image.open(layer_draw.file).convert('RGBA')
+            images.append(layer_draw_pil)
 
     for result_pil in images:
         base_pil = Image.alpha_composite(base_pil, result_pil)
@@ -135,6 +135,7 @@ async def imagerefiner_get_archive(request):
     # normalize image paths
     prompt_data['base_image_path'] = get_normalized_image_path(prompt_data['base_image_path'])
 
+    draws = []
     for layer in layers_data:
         if 'image' in layer:
             layer['image'] = get_normalized_image_path(layer['image'])
@@ -149,6 +150,9 @@ async def imagerefiner_get_archive(request):
                 if 'image' in value:
                     value['image'] = get_normalized_image_path(value['image'])
 
+                if 'mask' in value:
+                    draws.append(f"draw_{value['id']}")
+
     # Create a zip file in memory
     zip_blob = io.BytesIO()
     with zipfile.ZipFile(zip_blob, 'w') as zf:
@@ -162,6 +166,13 @@ async def imagerefiner_get_archive(request):
         png_buffer = io.BytesIO()
         mask_pil.save(png_buffer, 'PNG')
         zf.writestr(mask_filename, png_buffer.getvalue())
+
+        for value in draws:
+            mask_pil = Image.open(post.get(value).file).convert('RGBA')
+            mask_filename = f"{value}.png"
+            png_buffer = io.BytesIO()
+            mask_pil.save(png_buffer, 'PNG')
+            zf.writestr(mask_filename, png_buffer.getvalue())
 
         # Archive layer masks
         for value in layers_data:

@@ -275,46 +275,26 @@ async function gen_flatten(base_image, layers) {
 	return "/view?" + new URLSearchParams(savepath).toString();
 }
 
-function prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, is_archive_mode) {
+var unique_id = 0;
+function prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers) {
 	const formData = new FormData();
 
 	const dataURL = mask_canvas.toDataURL();
 	const blob = dataURLToBlob(dataURL);
 
-	prompt_data.image_paths = [{id:0, image:image_to_filepath(base_image)}];
-	var id = 0;
+    if(images_in_layers)
+        prompt_data.image_paths = images_in_layers;
+    else
+	    prompt_data.image_paths = [{id:0, image:image_to_filepath(base_image)}];
 
 	if(layers) {
 		for(let x in layers) {
 			var is_hidden = false;
 			if(!layers[x].visibilityCheckbox.checked)
-				if(!is_archive_mode)
-					continue;
-				else
-					is_hidden = true;
+                continue;
 
-			id++;
-
-			var base_item;
-
-			if(is_archive_mode) {
-				let cands = [];
-				for(let i in layers[x].cands) {
-					let img = layers[x].cands[i];
-					cands.push(image_to_filepath(img));
-				}
-
-				base_item = {
-					id:id,
-					mask:layers[x].mask,
-					is_visible:layers[x].visibilityCheckbox.checked,
-					prompt_data:layers[x].prompt_data,
-					cands: cands
-				};
-			}
-			else {
-				base_item = {id:id, mask:layers[x].mask};
-			}
+			unique_id++;
+            let base_item = {id:unique_id, mask:layers[x].mask};
 
 			if(layers[x].prompt_data) {
 				let image_path = image_to_filepath(layers[x].image);
@@ -329,19 +309,23 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 			// mask will be passed by this
 			let dataURL = layers[x].mask.toDataURL();
 			let blob = dataURLToBlob(dataURL);
-			formData.append(id+"", blob);
+			formData.append(unique_id+"", blob);
 		}
 	}
 	else {
 		// regenerate mode
 		for(let x in prompt_data.image_paths) {
-			if(x == 0)
+            unique_id++;
+
+			if((x+"") == '0') {
 				continue;
+            }
 
 			let item = prompt_data.image_paths[x];
 			let dataURL = item.mask.toDataURL();
 			let blob = dataURLToBlob(dataURL);
-			formData.append(id+"", blob);
+			item.id = unique_id;
+			formData.append(unique_id+"", blob);
 		}
 	}
 
@@ -371,6 +355,15 @@ function prepare_export_data_layer(formData, layer) {
         result.cands = [];
         for(let i in layer.cands) {
             result.cands.push(image_to_filepath(layer.cands[i]));
+        }
+
+        for(let i in layer.prompt_data.image_paths) {
+            let item = layer.prompt_data.image_paths[i];
+            if(item.is_mask_mode == false) {
+                let dataURL = item.mask.toDataURL();
+                let blob = dataURLToBlob(dataURL);
+                formData.append("draw_"+item.id, blob);
+            }
         }
 
         result.prompt_data = layer.prompt_data;
@@ -409,8 +402,8 @@ function prepare_export_data(component_name, prompt_data, mask_canvas, base_imag
 	return formData;
 }
 
-async function generate(component_name, prompt_data, mask_canvas, base_image, layers) {
-	let formData = prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, false);
+async function generate(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers) {
+	let formData = prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers);
 
 	let response = await fetch('/imagerefiner/generate', {
 		method: 'POST',
@@ -1864,6 +1857,17 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 		let added_layer = await this.addLayer(image_paths, mask_canvas, layer.prompt_data, layer.is_visible);
 
+        if(added_layer.prompt_data)
+            for(let i in added_layer.prompt_data.image_paths) {
+                let item = added_layer.prompt_data.image_paths[i];
+                if(item.is_mask_mode == false) {
+                    let layer_prompt_mask_canvas = document.createElement("canvas");
+                    let layer_prompt_mask_path = `view?filename=draw_${item.id}.png&subfolder=imagerefiner&type=temp&no-cache=${Date.now()}`;
+                    await load_image_to_canvas(layer_prompt_mask_path, layer_prompt_mask_canvas);
+                    item.mask = layer_prompt_mask_canvas;
+                }
+            }
+
 		if(layer.cands) {
 			let selected_index = null;
 			layer.cands.forEach((cand, index) => {
@@ -2081,7 +2085,7 @@ class ImageRefinerDialog extends ComfyDialog {
 				}
 
 				let prompt_data = this.getPrompts();
-				let generated_image = await generate(this.componentSelectCombo.value, new_prompt, mask, this.image, null);
+				let generated_image = await generate(this.componentSelectCombo.value, new_prompt, mask, this.image, null, layer.prompt_data.image_paths);
 				cands.push(generated_image);
 			}
 
