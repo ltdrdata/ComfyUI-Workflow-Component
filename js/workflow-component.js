@@ -672,6 +672,88 @@ app.registerExtension({
 				return node._title;
 			}
 		});
+
+		if(node.comfyClass == "ExecutionControlString") {
+            node.inputs[0].type = "STRING";
+
+		    node.onConnectionsChange = function (type, index, connected, link_info) {
+		        if(node.outputs[0].type != "*" || !link_info)
+                    return;
+
+                if(link_info.type == '*') {
+                    for(let i in app.graph._nodes) {
+                        if(app.graph._nodes[i].id == link_info.origin_id) {
+                            link_info.type = app.graph._nodes[i].outputs[link_info.origin_slot].type;
+                            break;
+                        }
+                    }
+                }
+
+                node.outputs[0].type = link_info.type;
+                node.inputs[1].type = link_info.type;
+		    }
+		}
+
+        if(node.comfyClass == "ExecutionBlocker") {
+		    node.onConnectionsChange = function (type, index, connected, link_info) {
+		        if(node.outputs[0].type != "*" || !link_info)
+                    return;
+
+                if(link_info.type == '*') {
+                    for(let i in app.graph._nodes) {
+                        if(app.graph._nodes[i].id == link_info.origin_id) {
+                            link_info.type = app.graph._nodes[i].outputs[link_info.origin_slot].type;
+                            break;
+                        }
+                    }
+                }
+
+                node.outputs[0].type = link_info.type;
+                node.inputs[0].type = link_info.type;
+		    }
+		}
+
+        if(node.comfyClass == "ExecutionSwitch") {
+		    node.onConnectionsChange = function (type, index, connected, link_info) {
+		        if(node.outputs[0].type != "*" || !link_info)
+                    return;
+
+                if(link_info.type == '*') {
+                    for(let i in app.graph._nodes) {
+                        if(app.graph._nodes[i].id == link_info.origin_id) {
+                            link_info.type = app.graph._nodes[i].outputs[link_info.origin_slot].type;
+                            break;
+                        }
+                    }
+                }
+
+                for(let i=0; i<5; i++) {
+                    node.outputs[i].type = link_info.type;
+                    node.inputs[i].type = link_info.type;
+                }
+		    }
+		}
+
+        if(node.comfyClass == "ExecutionOneOf") {
+		    node.onConnectionsChange = function (type, index, connected, link_info) {
+		        if(node.outputs[0].type != "*" || !link_info)
+                    return;
+
+                if(link_info.type == '*') {
+                    for(let i in app.graph._nodes) {
+                        if(app.graph._nodes[i].id == link_info.origin_id) {
+                            link_info.type = app.graph._nodes[i].outputs[link_info.origin_slot].type;
+                            break;
+                        }
+                    }
+                }
+
+                node.outputs[0].type = link_info.type;
+                for(let i=0; i<5; i++) {
+                    node.inputs[i].type = link_info.type;
+                }
+		    }
+		}
 	}
 });
 

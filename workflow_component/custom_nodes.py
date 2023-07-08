@@ -2,12 +2,13 @@ class ExecutionBlocker:
     @classmethod
     def INPUT_TYPES(s):
         return {"required": {
-                        "input": ("*", ),
+                        "pass_value": ("*", ),
                         "signal": ("*", ),
                      },
                 }
 
     RETURN_TYPES = ("*", )
+    RETURN_NAMES = ("pass_value", )
     FUNCTION = "doit"
 
     def doit(s, input, signal):
@@ -30,6 +31,7 @@ class ExecutionOneOf:
                }
 
     RETURN_TYPES = ("*", )
+    RETURN_NAMES = ("output", )
     FUNCTION = "doit"
 
     def doit(s, **kwargs):
@@ -63,6 +65,7 @@ class ExecutionSwitch:
                 }
 
     RETURN_TYPES = ("*", "*", "*", "*", "*", )
+    RETURN_NAMES = ("output1", "output2", "output3", "output4", "output5", )
     FUNCTION = "doit"
 
     def doit(s, select, input1, input2_opt=None, input3_opt=None, input4_opt=None, input5_opt=None):

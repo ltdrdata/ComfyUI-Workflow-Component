@@ -36,6 +36,56 @@ def convert_links_to_dict(links):
 
     return node_links_dict
 
+def get_effective_dest(nodes, links, node_id, slot):
+    link_id = None
+
+    try:
+        node = nodes[node_id]
+        node_type = node['type']
+
+        if node_type == 'ExecutionControlString':
+            if slot != 1:
+                return None, None
+
+            outputs = node['outputs'][0]
+            if outputs['links'] is not None and len(outputs['links']) > 0:
+                link_id = outputs['links'][0]
+            else:
+                return None, None
+
+        elif node_type == 'ExecutionBlocker':
+            if slot != 0:
+                return None, None
+
+            outputs = node['outputs'][0]
+            if outputs['links'] is not None and len(outputs['links']) > 0:
+                link_id = outputs['links'][0]
+            else:
+                return None, None
+
+        elif node_type in ['ExecutionSwitch', 'ExecutionOneOf']:
+            for x in node['outputs']:
+                if x['links'] is not None and len(x['links']) > 0:
+                    link_id = x['links'][0]
+                    break
+        else:
+            print(f"[ERROR] Unexpected node type: {node_type}[${node_id}]")
+
+        if link_id is not None:
+            dest_node = links[link_id][3]
+            dest_slot = links[link_id][4]
+        else:
+            return None, None
+
+        if nodes[dest_node]['type'] in ['ExecutionControlString', 'ExecutionBlocker', 'ExecutionSwitch', 'ExecutionOneOf']:
+            return get_effective_dest(nodes, links, dest_node, dest_slot)
+
+        return dest_node, dest_slot
+    except Exception as e:
+        print(f"[WARN] Workflow-Component: {e}")
+        traceback.print_exc()
+        return None, None
+
 
 def get_linked_slots_config(json_data):
     linked_slots_config = {}
@@ -58,6 +108,12 @@ def get_linked_slots_config(json_data):
                 for link_id in output_links:
                     dest_node = links[link_id][3]
                     dest_slot = links[link_id][4]
+
+                    if nodes[dest_node]['type'] in ['ExecutionControlString', 'ExecutionBlocker', 'ExecutionSwitch', 'ExecutionOneOf']:
+                        cand_dest_node, cand_dest_slot = get_effective_dest(nodes, links, dest_node, dest_slot)
+                        if cand_dest_node is not None and cand_dest_slot is not None:
+                            dest_node = cand_dest_node
+                            dest_slot = cand_dest_slot
 
                     if dest_node in nodes and "inputs" in nodes[dest_node]:
                         inputs = nodes[dest_node]["inputs"]
