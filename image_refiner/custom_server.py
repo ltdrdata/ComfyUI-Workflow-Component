@@ -150,7 +150,7 @@ async def imagerefiner_get_archive(request):
                 if 'image' in value:
                     value['image'] = get_normalized_image_path(value['image'])
 
-                if 'mask' in value:
+                if 'is_mask_mode' in value and not value['is_mask_mode']:
                     draws.append(f"draw_{value['id']}")
 
     # Create a zip file in memory
