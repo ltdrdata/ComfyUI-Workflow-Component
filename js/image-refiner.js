@@ -143,6 +143,27 @@ style.innerHTML = `
 	.toggle-switch:checked + .toggle-label .mask-text {
 		opacity: 1;
 	}
+    .progress-button {
+        position: relative;
+        width: 200px;
+        height: 30px;
+        background-color: #f0f0f0;
+        border: none;
+        overflow: hidden;
+    }
+    .progress-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background-color: #4caf50;
+        transition: width 0.5s ease;
+    }
+    .progress-button.progress::before {
+        width: 100%;
+    }
 `;
 
 document.head.appendChild(style);
@@ -158,7 +179,7 @@ function addMenuHandler(nodeType, cb) {
 	};
 }
 
-function getOriginalSizeMaskCanvas(mask_canvas, orig_image, dont_touch) {
+function getOriginalSizeMaskCanvas(mask_canvas, orig_image, dont_touch, whole_inpaint) {
 	let new_canvas = document.createElement("canvas");
 	new_canvas.width = orig_image.width;
 	new_canvas.height = orig_image.height;
@@ -173,10 +194,18 @@ function getOriginalSizeMaskCanvas(mask_canvas, orig_image, dont_touch) {
 	// refine mask image
 	if(!dont_touch) {
 		for (let i = 0; i < data.data.length; i += 4) {
-			if(data.data[i+3] == 255)
-				data.data[i+3] = 0;
-			else
-				data.data[i+3] = 255;
+            if(whole_inpaint) {
+                data.data[i] = 0;
+                data.data[i+1] = 0;
+                data.data[i+2] = 0;
+                data.data[i+3] = 0;
+            }
+            else {
+                if(data.data[i+3] == 255)
+                    data.data[i+3] = 0;
+                else
+                    data.data[i+3] = 255;
+            }
 		}
 	}
 
@@ -699,6 +728,29 @@ class ImageRefinerDialog extends ComfyDialog {
 		button.style.marginLeft = "4px";
 		return button;
 	}
+
+
+    createProgressButton(name, callback) {
+        var button = this.createRightButton(name, callback);
+
+        var progress = 0;
+//        button.style.background = 'black';
+        button.style.transition = "background 0.5s";
+
+        button.setProgress = function(newProgress) {
+            progress = newProgress;
+            let color = `linear-gradient(90deg, #00b300 ${progress}%, red ${progress}%)`;
+            button.style.background = color;
+        };
+
+        button.stopProgress = () => {
+            button.style.removeProperty('background');
+            button.style.removeProperty('color');
+        }
+
+        return button;
+    }
+
 
 	open_cands_selector(layer) {
 		let self = this;
@@ -1550,14 +1602,18 @@ class ImageRefinerDialog extends ComfyDialog {
 
 	async generative_fill() {
 		if(!this.is_generating) {
+		    var whole_inpaint = false;
 			if(this.isCanvasEmpty(this.maskCanvas)) {
-				alert("Cannot regenerate image. Mask is empty!!!");
-				return;
+			    if(confirm("The current mask is empty. Would you like to inpaint the entire area?")) {
+			        whole_inpaint = true;
+			    }
+			    else
+				    return;
 			}
 
 			this.is_generating = true;
 
-			this.fillButton.innerText = "Stop";
+			this.fillButton.textContent = "Stop";
 			this.fillButton.style.backgroundColor = "red";
 			this.fillButton.style.Color = "white";
 
@@ -1566,13 +1622,13 @@ class ImageRefinerDialog extends ComfyDialog {
 			try {
 				if(this.seeds.length == 0 || this.batchSelectCombo.value == 1) {
 					let prompt_data = this.getPrompts();
-					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image, !this.is_mask_mode);
+					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image, !this.is_mask_mode, whole_inpaint);
 					let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
 					await this.addLayer([generated_image], mask, prompt_data);
 					this.maskCtx.clearRect(0,0,this.maskCanvas.width,this.maskCanvas.height);
 				}
 				else {
-					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image, !this.is_mask_mode);
+					let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image, !this.is_mask_mode, whole_inpaint);
 					let cands = [];
 
 					// increase seed
@@ -1588,6 +1644,8 @@ class ImageRefinerDialog extends ComfyDialog {
 						}
 
 						prompt_data = this.getPrompts();
+
+						this.fillButton.setProgress(100*i/this.batchSelectCombo.value);
 						let generated_image = await generate(this.componentSelectCombo.value, prompt_data, mask, this.image, this.layers);
 						cands.push(generated_image);
 					}
@@ -1601,9 +1659,8 @@ class ImageRefinerDialog extends ComfyDialog {
 				console.log(exception);
 			}
 
-			this.fillButton.innerText = "Regenerate";
-			this.fillButton.style.backgroundColor = null;
-			this.fillButton.style.Color = null;
+			this.fillButton.textContent = "Regenerate";
+			this.fillButton.stopProgress();
 
 			this.is_generating = false;
 			this.saveButton.disabled = false;
@@ -1734,12 +1791,13 @@ class ImageRefinerDialog extends ComfyDialog {
 			if (isChecked) {
 				penText.style.opacity = '1';
 				maskText.style.opacity = '0';
-				self.fillButton.innerText = "Add to layer";
+				self.this.fillButton.textContent = "Add to layer";
 				self.is_mask_mode = false;
 			} else {
 				penText.style.opacity = '0';
 				maskText.style.opacity = '1';
-				self.fillButton.innerText = "Regenerate";
+				this.fillButton.textContent = "Regenerate";
+				this.fillButton.stopProgress();
 				self.is_mask_mode = true;
 			}
 		});
@@ -1764,7 +1822,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		clearButton.style.marginRight = "20px";
 
-		this.fillButton = this.createRightButton("Regenerate", () => {
+		this.fillButton = this.createProgressButton("Regenerate", () => {
 				if(self.is_mask_mode)
 					self.generative_fill.call(self);
 				else
@@ -1783,20 +1841,20 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		let cancelButton = this.createRightButton("Cancel", () => {
 			document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
-			document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
 			self.close();
+            self.is_visible = false;
 		});
 
 		this.saveButton = this.createRightButton("Save", async () => {
 				self.fillButton.disabled = true;
 				this.disabled = true;
 				document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
-				document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
 				await save_to_clipspace(this.image, this.layers);
 				ComfyApp.onClipspaceEditorSave();
 				self.close();
 				this.disabled = false;
 				self.fillButton.disabled = false;
+				self.is_visible = false;
 			});
 
 		let exportButton = this.createRightButton("Export Work", async () => {
@@ -2009,9 +2067,55 @@ class ImageRefinerDialog extends ComfyDialog {
 		const callButton = document.createElement("button");
 		callButton.innerText = "Call";
 
-		layerItem.addEventListener("click", () => {
-//			this.selectLayer(layer.id);
-		});
+        layerItem.deselect = () => {
+                layerItem.style.backgroundColor = '';
+                label.style.color = 'var(--descrip-text)';
+                self.selectedLayerItem = null;
+            };
+
+        layerItem.select = async () => {
+		        if(self.selectedLayerItem)
+		            self.selectedLayerItem.deselect();
+                else {
+                    self.non_select_prompt = this.getPrompts();
+                    self.non_select_prompt.component_name = self.componentSelectCombo.value;
+                }
+
+                self.selectedLayerItem = layerItem;
+                layerItem.style.backgroundColor = "#3F3F3F";
+                label.style.color = 'white';
+
+                if(layer.prompt_data) {
+                    for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
+                      if (self.componentSelectCombo.options[i].value === layer.prompt_data.component_name) {
+                        self.componentSelectCombo.value = layer.prompt_data.component_name;
+                        await self.invalidatePromptControls(layer.prompt_data);
+                        break;
+                      }
+                    }
+                }
+            };
+
+        layerItem.layer = layer;
+
+		label.onclick = () => {
+                if(self.selectedLayerItem != layerItem) {
+                    layerItem.select();
+		        }
+		        else {
+                    layerItem.deselect();
+
+                    if(self.non_select_prompt) {
+                        for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
+                            if (self.componentSelectCombo.options[i].value === self.non_select_prompt.component_name) {
+                                self.componentSelectCombo.value = self.non_select_prompt.component_name;
+                                self.invalidatePromptControls(self.non_select_prompt);
+                                break;
+                            }
+                        }
+                    }
+		        }
+		    };
 
 		await this.resolve_image_for_image(layer, image_paths);
 
@@ -2059,7 +2163,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.is_generating = true;
 			this.saveButton.disabled = true;
 
-			this.fillButton.innerText = "Cancel";
+			this.fillButton.textContent = "Stop";
 			this.fillButton.style.backgroundColor = "red";
 			this.fillButton.style.Color = "white";
 
@@ -2085,6 +2189,8 @@ class ImageRefinerDialog extends ComfyDialog {
 				}
 
 				let prompt_data = this.getPrompts();
+
+                this.fillButton.setProgress(100*i/regen_count);
 				let generated_image = await generate(this.componentSelectCombo.value, new_prompt, mask, this.image, null, layer.prompt_data.image_paths);
 				cands.push(generated_image);
 			}
@@ -2095,9 +2201,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			if(regen_count > 1)
 				this.open_cands_selector(layer);
 
-			this.fillButton.innerText = "Regenerate";
-			this.fillButton.style.backgroundColor = null;
-			this.fillButton.style.Color = null;
+			this.fillButton.textContent = "Regenerate";
+			this.fillButton.stopProgress();
 
 			this.is_generating = false;
 			this.saveButton.disabled = false;
@@ -2198,10 +2303,9 @@ class ImageRefinerDialog extends ComfyDialog {
 			mutations.forEach(function(mutation) {
 					if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
 						if(self.last_display_style && self.last_display_style != 'none' && self.element.style.display == 'none') {
-							document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
-							document.removeEventListener("keydown", ImageRefinerDialog.handleKeyDown);
-							self.brush.style.display = "none";
-							ComfyApp.onClipspaceEditorClosed();
+                            document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
+                            self.brush.style.display = "none";
+                            ComfyApp.onClipspaceEditorClosed();
 						}
 
 						self.last_display_style = self.element.style.display;
@@ -2230,6 +2334,8 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.element.style.zIndex = 8888; // NOTE: alert dialog must be high priority.
 
 		await this.setImages(this.imgCanvas, this.backupCanvas);
+
+	    this.is_visible = true;
 	}
 
 	isOpened() {
@@ -2378,9 +2484,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			this.element.addEventListener('touchmove', (event) => this.pointMoveEvent(self,event));
 
 			this.element.addEventListener('dragstart', (event) => {
-				console.log(event);
 				if(event.ctrlKey) {
-					console.log('oops');
 					event.preventDefault();
 				}
 			});
@@ -2391,11 +2495,11 @@ class ImageRefinerDialog extends ComfyDialog {
 			maskCanvas.addEventListener('pointerover', (event) => { this.brush.style.display = "block"; });
 			maskCanvas.addEventListener('pointerleave', (event) => { this.brush.style.display = "none"; });
 
+            document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
+            document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
+
 			this.handler_registered = true;
 		}
-
-		document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
-		document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
 	}
 
 	brush_size = 10;
@@ -2406,6 +2510,10 @@ class ImageRefinerDialog extends ComfyDialog {
 
 	static handleKeyDown(event) {
 		const self = ImageRefinerDialog.instance;
+
+	    if(!self.is_visible)
+	        return;
+
 		if (event.key === ']') {
 			self.brush_size = Math.min(self.brush_size+2, 100);
 		} else if (event.key === '[') {
@@ -2497,9 +2605,25 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 	}
 
+    edit_layer(layer, is_drawing, x, y, brush_sze) {
+        // todo
+    }
+
+    edit_layer_cont(layer, is_drawing, directionX, directionY, distance, brush_sze) {
+        // todo
+    }
+
 	draw_move(self, event) {
+	    var layer_draw_mode = false;
+
 		if(event.ctrlKey) {
 			return;
+		}
+
+		if(event.altKey) {
+		    if(self.selectedLayerItem) {
+		        layer_draw_mode = true;
+		    }
 		}
 
 		if (window.TouchEvent && event instanceof TouchEvent || event.buttons == 1) {
@@ -2544,36 +2668,48 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			if(diff > 20 && !this.drawing_mode)
 				requestAnimationFrame(() => {
-					self.maskCtx.beginPath();
-					self.maskCtx.fillStyle = color;
-					self.maskCtx.fillStyle = self.selectedColor;
-					self.maskCtx.globalCompositeOperation = "source-over";
-					self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
-					self.maskCtx.fill();
-					self.lastx = x;
-					self.lasty = y;
+				    if(layer_draw_mode) {
+				        self.edit_layer(self.selectedLayerItem.layer, true, x, y, brush_size);
+				    }
+				    else {
+                        self.maskCtx.beginPath();
+                        self.maskCtx.fillStyle = color;
+                        self.maskCtx.fillStyle = self.selectedColor;
+                        self.maskCtx.globalCompositeOperation = "source-over";
+                        self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
+                        self.maskCtx.fill();
+					}
+
+                    self.lastx = x;
+                    self.lasty = y;
 				});
 			else
 				requestAnimationFrame(() => {
-					self.maskCtx.beginPath();
-					self.maskCtx.fillStyle = color;
-					self.maskCtx.globalCompositeOperation = "source-over";
+                    var dx = x - self.lastx;
+                    var dy = y - self.lasty;
 
-					var dx = x - self.lastx;
-					var dy = y - self.lasty;
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+                    var directionX = dx / distance;
+                    var directionY = dy / distance;
 
-					var distance = Math.sqrt(dx * dx + dy * dy);
-					var directionX = dx / distance;
-					var directionY = dy / distance;
+				    if(layer_draw_mode) {
+				        self.edit_layer_cont(self.selectedLayerItem.layer, true, directionX, directionY, distance, brush_size);
+				    }
+				    else {
+                        self.maskCtx.beginPath();
+                        self.maskCtx.fillStyle = color;
+                        self.maskCtx.globalCompositeOperation = "source-over";
 
-					for (var i = 0; i < distance; i+=5) {
-						var px = self.lastx + (directionX * i);
-						var py = self.lasty + (directionY * i);
-						self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
-						self.maskCtx.fill();
-					}
-					self.lastx = x;
-					self.lasty = y;
+                        for (var i = 0; i < distance; i+=5) {
+                            var px = self.lastx + (directionX * i);
+                            var py = self.lasty + (directionY * i);
+                            self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
+                            self.maskCtx.fill();
+                        }
+                    }
+
+                    self.lastx = x;
+                    self.lasty = y;
 				});
 
 			self.lasttime = performance.now();
@@ -2597,31 +2733,42 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			if(diff > 20 && !drawing_mode) // cannot tracking drawing_mode for touch event
 				requestAnimationFrame(() => {
-					self.maskCtx.beginPath();
-					self.maskCtx.globalCompositeOperation = "destination-out";
-					self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
-					self.maskCtx.fill();
-					self.lastx = x;
-					self.lasty = y;
+				    if(layer_draw_mode) {
+				        self.edit_layer(self.selectedLayerItem.layer, false, x, y, brush_size);
+				    }
+				    else {
+                        self.maskCtx.beginPath();
+                        self.maskCtx.globalCompositeOperation = "destination-out";
+                        self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
+                        self.maskCtx.fill();
+                        self.lastx = x;
+                        self.lasty = y;
+					}
 				});
 			else
 				requestAnimationFrame(() => {
-					self.maskCtx.beginPath();
-					self.maskCtx.globalCompositeOperation = "destination-out";
-					
-					var dx = x - self.lastx;
-					var dy = y - self.lasty;
+                    var dx = x - self.lastx;
+                    var dy = y - self.lasty;
 
-					var distance = Math.sqrt(dx * dx + dy * dy);
-					var directionX = dx / distance;
-					var directionY = dy / distance;
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+                    var directionX = dx / distance;
+                    var directionY = dy / distance;
 
-					for (var i = 0; i < distance; i+=5) {
-						var px = self.lastx + (directionX * i);
-						var py = self.lasty + (directionY * i);
-						self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
-						self.maskCtx.fill();
-					}
+				    if(layer_draw_mode) {
+				        self.edit_layer_cont(self.selectedLayerItem.layer, false, directionX, directionY, distance, brush_size);
+				    }
+				    else {
+                        self.maskCtx.beginPath();
+                        self.maskCtx.globalCompositeOperation = "destination-out";
+
+                        for (var i = 0; i < distance; i+=5) {
+                            var px = self.lastx + (directionX * i);
+                            var py = self.lasty + (directionY * i);
+                            self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
+                            self.maskCtx.fill();
+                        }
+                    }
+
 					self.lastx = x;
 					self.lasty = y;
 				});

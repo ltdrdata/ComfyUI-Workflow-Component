@@ -5,6 +5,9 @@ This is a side project to experiment with using workflows as components.
 This extension, as an extension of the Proof of Concept, lacks many features, is unstable, and has many parts that do not function properly.
 There is a high possibility that the existing components created may not be compatible during the update process.
 
+## Notice
+* Some of the components provided by default are implemented using other custom nodes. To use those components, the custom nodes used within the component need to be available. If you are not using those specific components, you can safely ignore the warning as it will not affect other components.
+
 ## How To Build Component
 ![component-build](misc/component-build.png)
 
@@ -27,6 +30,7 @@ There is a high possibility that the existing components created may not be comp
 ![component-use](misc/component-use.png)
 
 * When you load a .component.json file or load a workflow created with .component.json, the component is automatically loaded.
+* This [tutorial video](https://www.youtube.com/watch?v=JE5B1jsBOvk) provides a detailed walkthrough of the process of creating a component.
 
 
 ## How To Edit Component
@@ -75,6 +79,7 @@ There is a high possibility that the existing components created may not be comp
 * [Basic Usage](https://www.youtube.com/watch?v=waUv0R5wnac)
 * [Handfix Workflow](https://www.youtube.com/watch?v=qbsU9zA8YQI)
 * [Painting](https://youtu.be/ivi34PESgjU)
+* [Import/Export](https://www.youtube.com/watch?v=MgNuMPGULls)
 
 # Requirements
 * -
