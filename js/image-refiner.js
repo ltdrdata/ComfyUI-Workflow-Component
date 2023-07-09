@@ -1796,8 +1796,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			} else {
 				penText.style.opacity = '0';
 				maskText.style.opacity = '1';
-				this.fillButton.textContent = "Regenerate";
-				this.fillButton.stopProgress();
+				self.fillButton.textContent = "Regenerate";
+				self.fillButton.stopProgress();
 				self.is_mask_mode = true;
 			}
 		});
