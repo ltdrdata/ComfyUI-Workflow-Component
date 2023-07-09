@@ -1791,7 +1791,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			if (isChecked) {
 				penText.style.opacity = '1';
 				maskText.style.opacity = '0';
-				self.this.fillButton.textContent = "Add to layer";
+				self.fillButton.textContent = "Add to layer";
 				self.is_mask_mode = false;
 			} else {
 				penText.style.opacity = '0';
