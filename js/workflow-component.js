@@ -101,24 +101,24 @@ function workflow_security_filter(workflow) {
 		}
 
 		if (node.inputs) {
-		node.inputs.forEach((input) => {
-			if (input.widget && input.widget.config) {
-			const configArray = input.widget.config[0];
-			if (Array.isArray(configArray) && configArray.every((filename) => excludeExtensions.has(getFileExtension(filename)))) {
-				input.widget.config[0] = [];
-			}
-			}
-		});
+            node.inputs.forEach((input) => {
+                if (input.widget && input.widget.config) {
+                    const configArray = input.widget.config[0];
+                    if (Array.isArray(configArray) && configArray.every((filename) => excludeExtensions.has(getFileExtension(filename)))) {
+                        input.widget.config[0] = [];
+                    }
+                }
+            });
 		}
 		if (node.outputs) {
-		node.outputs.forEach((output) => {
-			if (output.widget && output.widget.config) {
-			const configArray = output.widget.config[0];
-			if (Array.isArray(configArray) && configArray.every((filename) => excludeExtensions.has(getFileExtension(filename)))) {
-				output.widget.config[0] = [];
-			}
-			}
-		});
+            node.outputs.forEach((output) => {
+                if (output.widget && output.widget.config) {
+                    const configArray = output.widget.config[0];
+                    if (Array.isArray(configArray) && configArray.every((filename) => excludeExtensions.has(getFileExtension(filename)))) {
+                        output.widget.config[0] = [];
+                    }
+                }
+            });
 		}
 	});
 
@@ -567,12 +567,18 @@ app.registerExtension({
 							if (!link) continue;
 
 							const node = app.graph.getNodeById(link.target_id);
-							outputType =
-								node.inputs &&
-								node.inputs[link?.target_slot] &&
-								node.inputs[link.target_slot].type
-									? node.inputs[link.target_slot].type
-									: null;
+
+							if(link_info.type && link_info.type != '*') {
+							    outputType = link_info.type;
+                            }
+							else {
+                                outputType =
+                                    node.inputs &&
+                                    node.inputs[link?.target_slot] &&
+                                    node.inputs[link.target_slot].type
+                                        ? node.inputs[link.target_slot].type
+                                        : null;
+                            }
 
 							outputName =
 								node.inputs &&

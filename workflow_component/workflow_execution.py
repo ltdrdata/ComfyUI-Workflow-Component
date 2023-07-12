@@ -186,7 +186,7 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
     # this must be calculated on-demand due to custom node loading order
     for node in workflow['nodes']:
         class_type = node['type']
-        if class_type in ["ComponentInput", "ComponentInputOptional", "ComponentOutput", "Reroute"]:
+        if class_type in ["ComponentInput", "ComponentInputOptional", "ComponentOutput", "Reroute", "Note"]:
             pass
         elif class_type:
             class_def = nodes.NODE_CLASS_MAPPINGS[class_type]

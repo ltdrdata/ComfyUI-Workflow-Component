@@ -67,7 +67,7 @@ async def prompt_hook(request):
                 unresolved_nodes.update(component_loader.unresolved_map[node['type']])
 
         # excludes
-        unresolved_nodes -= set(['Reroute'])
+        unresolved_nodes -= set(['Reroute', 'Note'])
 
         if len(unresolved_nodes) > 0:
             msg = f"<B>Non-installed custom nodes are being used within the component.</B><BR><BR>{unresolved_nodes}"

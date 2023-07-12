@@ -1689,7 +1689,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		this.topPanel.style.height = "40px";
 
 		const titleLabel = document.createElement("label");
-		titleLabel.textContent = 'Image Refiner';
+		titleLabel.textContent = 'ComfyUI Image Refiner';
 		titleLabel.style.cssFloat = "left";
 		titleLabel.style.color = 'white';
 		titleLabel.style.fontWeight = 'bold';

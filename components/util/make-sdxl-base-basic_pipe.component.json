@@ -1,0 +1,1201 @@
+{
+  "last_node_id": 17,
+  "last_link_id": 48,
+  "nodes": [
+    {
+      "id": 15,
+      "type": "ToBasicPipe",
+      "pos": [
+        1410,
+        310
+      ],
+      "size": {
+        "0": 241.79998779296875,
+        "1": 106
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 26
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 25
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 27
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 23
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "links": [
+            28
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "color": ""
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ToBasicPipe"
+      }
+    },
+    {
+      "id": 16,
+      "type": "ComponentOutput",
+      "pos": [
+        1750,
+        310
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "BASIC_PIPE",
+          "type": "BASIC_PIPE",
+          "link": 28,
+          "label": null
+        }
+      ],
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 17,
+      "type": "Note",
+      "pos": [
+        100,
+        40
+      ],
+      "size": {
+        "0": 278.9732360839844,
+        "1": 146.91632080078125
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "title": "input-spec",
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "linguistic_positive:(default,)\nsupporting_terms:(default,)\nnegative:(default,)"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncodeSDXL",
+      "pos": [
+        800,
+        710
+      ],
+      "size": {
+        "0": 400,
+        "1": 270
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 44
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 20,
+          "widget": {
+            "name": "width",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 19,
+          "widget": {
+            "name": "height",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "crop_w",
+          "type": "INT",
+          "link": 17,
+          "widget": {
+            "name": "crop_w",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "crop_h",
+          "type": "INT",
+          "link": 18,
+          "widget": {
+            "name": "crop_h",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "target_width",
+          "type": "INT",
+          "link": 21,
+          "widget": {
+            "name": "target_width",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "target_height",
+          "type": "INT",
+          "link": 22,
+          "widget": {
+            "name": "target_height",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "text_g",
+          "type": "STRING",
+          "link": 36,
+          "widget": {
+            "name": "text_g",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "default": "CLIP_G"
+              }
+            ]
+          },
+          "slot_index": 7
+        },
+        {
+          "name": "text_l",
+          "type": "STRING",
+          "link": 37,
+          "widget": {
+            "name": "text_l",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "default": "CLIP_L"
+              }
+            ]
+          },
+          "slot_index": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            24
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncodeSDXL"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        0,
+        0,
+        1024,
+        1024,
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 6,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        1000
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text_g",
+          "type": "STRING",
+          "links": [
+            36,
+            37
+          ],
+          "slot_index": 0,
+          "label": "negative"
+        }
+      ],
+      "title": "11.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 5,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        310
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "ckpt_name",
+          "type": "CheckpointLoaderSimple\nckpt_name",
+          "links": [
+            38
+          ],
+          "slot_index": 0,
+          "label": "ckpt_name"
+        }
+      ],
+      "title": "01.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 12,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        620
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "crop_h",
+          "type": "INT",
+          "links": [
+            18,
+            39
+          ],
+          "slot_index": 0,
+          "label": "crop_h"
+        }
+      ],
+      "title": "05.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 13,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        690
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "target_width",
+          "type": "INT",
+          "links": [
+            21,
+            41
+          ],
+          "slot_index": 0,
+          "label": "target_width"
+        }
+      ],
+      "title": "06.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 14,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        760
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "target_height",
+          "type": "INT",
+          "links": [
+            22,
+            42
+          ],
+          "slot_index": 0,
+          "label": "target_height"
+        }
+      ],
+      "title": "07.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 11,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        550
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "crop_w",
+          "type": "INT",
+          "links": [
+            17,
+            43
+          ],
+          "slot_index": 0,
+          "label": "crop_w"
+        }
+      ],
+      "title": "04.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 2,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        490,
+        310
+      ],
+      "size": {
+        "0": 210,
+        "1": 74
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "ckpt_name",
+          "type": "CheckpointLoaderSimple\nckpt_name",
+          "link": 38,
+          "widget": {
+            "name": "ckpt_name",
+            "config": [
+              [
+                "V07_v07.safetensors",
+                "majicmixRealistic_v6.safetensors",
+                "sd_xl_base_0.9_bf16.safetensors",
+                "sd_xl_refiner_0.9.safetensors"
+              ]
+            ]
+          },
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            26
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1,
+            25,
+            44
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            27
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "V07_v07.safetensors"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        400
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            20,
+            45
+          ],
+          "slot_index": 0,
+          "label": "width"
+        }
+      ],
+      "title": "02.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 10,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        480
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            19,
+            46
+          ],
+          "slot_index": 0,
+          "label": "height"
+        }
+      ],
+      "title": "03.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 3,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        840
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text_g",
+          "type": "STRING",
+          "links": [
+            47
+          ],
+          "slot_index": 0,
+          "label": "linguistic_positive"
+        }
+      ],
+      "title": "08.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 1,
+      "type": "CLIPTextEncodeSDXL",
+      "pos": [
+        800,
+        370
+      ],
+      "size": {
+        "0": 400,
+        "1": 270
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 45,
+          "widget": {
+            "name": "width",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 46,
+          "widget": {
+            "name": "height",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "crop_w",
+          "type": "INT",
+          "link": 43,
+          "widget": {
+            "name": "crop_w",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "crop_h",
+          "type": "INT",
+          "link": 39,
+          "widget": {
+            "name": "crop_h",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "target_width",
+          "type": "INT",
+          "link": 41,
+          "widget": {
+            "name": "target_width",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "target_height",
+          "type": "INT",
+          "link": 42,
+          "widget": {
+            "name": "target_height",
+            "config": [
+              "INT",
+              {
+                "default": 1024,
+                "min": 0,
+                "max": 8192
+              }
+            ]
+          }
+        },
+        {
+          "name": "text_g",
+          "type": "STRING",
+          "link": 47,
+          "widget": {
+            "name": "text_g",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "default": "CLIP_G"
+              }
+            ]
+          },
+          "slot_index": 7
+        },
+        {
+          "name": "text_l",
+          "type": "STRING",
+          "link": 48,
+          "widget": {
+            "name": "text_l",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "default": "CLIP_L"
+              }
+            ]
+          },
+          "slot_index": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            23
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncodeSDXL"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        0,
+        0,
+        1024,
+        1024,
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 4,
+      "type": "ComponentInput",
+      "pos": [
+        100,
+        920
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "text_l",
+          "type": "STRING",
+          "links": [
+            48
+          ],
+          "slot_index": 0,
+          "label": "supporting_terms"
+        }
+      ],
+      "title": "09.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      1,
+      1,
+      0,
+      "CLIP"
+    ],
+    [
+      17,
+      11,
+      0,
+      7,
+      3,
+      "INT"
+    ],
+    [
+      18,
+      12,
+      0,
+      7,
+      4,
+      "INT"
+    ],
+    [
+      19,
+      10,
+      0,
+      7,
+      2,
+      "INT"
+    ],
+    [
+      20,
+      9,
+      0,
+      7,
+      1,
+      "INT"
+    ],
+    [
+      21,
+      13,
+      0,
+      7,
+      5,
+      "INT"
+    ],
+    [
+      22,
+      14,
+      0,
+      7,
+      6,
+      "INT"
+    ],
+    [
+      23,
+      1,
+      0,
+      15,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      24,
+      7,
+      0,
+      15,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      25,
+      2,
+      1,
+      15,
+      1,
+      "CLIP"
+    ],
+    [
+      26,
+      2,
+      0,
+      15,
+      0,
+      "MODEL"
+    ],
+    [
+      27,
+      2,
+      2,
+      15,
+      2,
+      "VAE"
+    ],
+    [
+      28,
+      15,
+      0,
+      16,
+      0,
+      "*"
+    ],
+    [
+      36,
+      6,
+      0,
+      7,
+      7,
+      "STRING"
+    ],
+    [
+      37,
+      6,
+      0,
+      7,
+      8,
+      "STRING"
+    ],
+    [
+      38,
+      5,
+      0,
+      2,
+      0,
+      "CheckpointLoaderSimple\nckpt_name"
+    ],
+    [
+      39,
+      12,
+      0,
+      1,
+      4,
+      "INT"
+    ],
+    [
+      41,
+      13,
+      0,
+      1,
+      5,
+      "INT"
+    ],
+    [
+      42,
+      14,
+      0,
+      1,
+      6,
+      "INT"
+    ],
+    [
+      43,
+      11,
+      0,
+      1,
+      3,
+      "INT"
+    ],
+    [
+      44,
+      2,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      45,
+      9,
+      0,
+      1,
+      1,
+      "INT"
+    ],
+    [
+      46,
+      10,
+      0,
+      1,
+      2,
+      "INT"
+    ],
+    [
+      47,
+      3,
+      0,
+      1,
+      7,
+      "STRING"
+    ],
+    [
+      48,
+      4,
+      0,
+      1,
+      8,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "output": {
+    "1": {
+      "inputs": {
+        "width": [
+          "9",
+          0
+        ],
+        "height": [
+          "10",
+          0
+        ],
+        "crop_w": [
+          "11",
+          0
+        ],
+        "crop_h": [
+          "12",
+          0
+        ],
+        "target_width": [
+          "13",
+          0
+        ],
+        "target_height": [
+          "14",
+          0
+        ],
+        "text_g": [
+          "3",
+          0
+        ],
+        "text_l": [
+          "4",
+          0
+        ],
+        "clip": [
+          "2",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncodeSDXL"
+    },
+    "2": {
+      "inputs": {
+        "ckpt_name": [
+          "5",
+          0
+        ]
+      },
+      "class_type": "CheckpointLoaderSimple"
+    },
+    "3": {
+      "inputs": {}
+    },
+    "4": {
+      "inputs": {}
+    },
+    "5": {
+      "inputs": {}
+    },
+    "6": {
+      "inputs": {}
+    },
+    "7": {
+      "inputs": {
+        "width": [
+          "9",
+          0
+        ],
+        "height": [
+          "10",
+          0
+        ],
+        "crop_w": [
+          "11",
+          0
+        ],
+        "crop_h": [
+          "12",
+          0
+        ],
+        "target_width": [
+          "13",
+          0
+        ],
+        "target_height": [
+          "14",
+          0
+        ],
+        "text_g": [
+          "6",
+          0
+        ],
+        "text_l": [
+          "6",
+          0
+        ],
+        "clip": [
+          "2",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncodeSDXL"
+    },
+    "9": {
+      "inputs": {}
+    },
+    "10": {
+      "inputs": {}
+    },
+    "11": {
+      "inputs": {}
+    },
+    "12": {
+      "inputs": {}
+    },
+    "13": {
+      "inputs": {}
+    },
+    "14": {
+      "inputs": {}
+    },
+    "15": {
+      "inputs": {
+        "model": [
+          "2",
+          0
+        ],
+        "clip": [
+          "2",
+          1
+        ],
+        "vae": [
+          "2",
+          2
+        ],
+        "positive": [
+          "1",
+          0
+        ],
+        "negative": [
+          "7",
+          0
+        ]
+      },
+      "class_type": "ToBasicPipe"
+    },
+    "16": {
+      "inputs": {
+        "BASIC_PIPE": [
+          "15",
+          0
+        ]
+      }
+    }
+  }
+}

@@ -6,6 +6,8 @@ import workflow_component.workflow_execution as workflow_execution
 import nodes as comfy_nodes
 import hashlib
 
+import re
+
 NODE_CLASS_MAPPINGS = {}
 unresolved_map = {}
 workflow_components = {}
@@ -35,6 +37,7 @@ def convert_links_to_dict(links):
         node_links_dict[node_id] = link
 
     return node_links_dict
+
 
 def get_effective_dest(nodes, links, node_id, slot):
     link_id = None
@@ -87,12 +90,36 @@ def get_effective_dest(nodes, links, node_id, slot):
         return None, None
 
 
+def get_spec_map(nodes):
+    spec_map = {}
+    for node in nodes.values():
+        if node['type'] == 'Note' and 'title' in node and node['title'] == "input-spec":
+            specs = node['widgets_values'][0].split('\n')
+            for spec in specs:
+                key_values = spec.split(":", 1)
+                key = key_values[0]
+                values = key_values[1].split("/")
+
+                value_dict = {}
+                for kind_value in values:
+                    pattern = r"\((.*?),(.*?)\)"
+                    matches = re.findall(pattern, kind_value)
+                    value_dict = {key.strip(): value.strip() for key, value in matches}
+
+                spec_map[key] = value_dict
+
+    return spec_map
+
+
 def get_linked_slots_config(json_data):
     linked_slots_config = {}
 
     # Extract nodes and links from JSON data
     nodes = convert_nodes_to_dict(json_data["nodes"])
     links = convert_links_to_dict(json_data["links"])
+
+    # read spec
+    spec_map = get_spec_map(nodes)
 
     # Iterate over nodes
     for node in nodes.values():
@@ -145,7 +172,7 @@ def get_linked_slots_config(json_data):
 
                     linked_slots_config[link_id] = (output_slot['type'], None, None, None, None)
 
-    return linked_slots_config
+    return linked_slots_config, spec_map
 
 
 def create_dynamic_class(component_name, workflow, category=None):
@@ -163,7 +190,7 @@ def create_dynamic_class(component_name, workflow, category=None):
         internal_id_name_map[str(node['id'])] = node['title'] if 'title' in node else node['type']
 
     # get widget config infos for auto recognition of input setting
-    node_config_map = get_linked_slots_config(workflow)
+    node_config_map, spec_map = get_linked_slots_config(workflow)
 
     sorted_input_nodes = sorted(input_nodes, key=lambda x: (x.get('title', ''), x.get('title') is None))
 
@@ -171,7 +198,7 @@ def create_dynamic_class(component_name, workflow, category=None):
         try:
             input_types = {}
             for i, node in enumerate(sorted_input_nodes):
-                build_input_types(i, input_mapping, input_types, node, node_config_map)
+                build_input_types(i, input_mapping, input_types, node, node_config_map, spec_map)
             return input_types
         except Exception as e:
             print(f"[Workflow-Component] '{component_name}' is broken. Maybe there are missing nodes. (INFO: {e})")
@@ -184,7 +211,7 @@ def create_dynamic_class(component_name, workflow, category=None):
         try:
             input_optional_types = {}
             for i, node in enumerate(sorted_input_optional_nodes):
-                build_input_types(i, input_mapping, input_optional_types, node, node_config_map)
+                build_input_types(i, input_mapping, input_optional_types, node, node_config_map, spec_map)
             return input_optional_types
         except Exception as e:
             print(f"[Workflow-Component] BROKEN component - {e}")
@@ -283,7 +310,7 @@ def flatten_INPUT_TYPES(data):
     return items
 
 
-def build_input_types(i, input_mapping, input_types, node, node_config_map):
+def build_input_types(i, input_mapping, input_types, node, node_config_map, spec_map):
     component_inputs = node['outputs']
     if len(component_inputs) > 0:
         input_links = component_inputs[0]['links']
@@ -325,7 +352,7 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                         if input_type in ['FLOAT', 'INT', 'STRING'] and node_config is not None:
                             for _, key in enumerate(node_input_types['required'].keys()):
                                 slot = node_input_types['required'][key]
-                                if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list):
+                                if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list) or slot[0] == "STRING":
                                     widget_idx += 1
 
                                 if last_is_int and widget_values[widget_idx] in ['randomize', 'fixed', 'increment', 'decrement']:
@@ -340,7 +367,7 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                             if not widget_values_found and 'optional' in node_input_types:
                                 for _, key in enumerate(node_input_types['optional'].keys()):
                                     slot = node_input_types['optional'][key]
-                                    if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list):
+                                    if len(slot) >= 2 and 'default' in slot[1] or isinstance(slot[0], list) or slot[0] == "STRING":
                                         widget_idx += 1
 
                                     if last_is_int and widget_values[widget_idx] in ['randomize', 'fixed', 'increment', 'decrement']:
@@ -353,7 +380,24 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map):
                                         break
 
                         if widget_values_found:
-                            node_config[1]['default'] = widget_values[widget_idx]
+                            default_value = widget_values[widget_idx]
+                            placeholder = input_label
+
+                            if input_label in spec_map:
+                                if 'default' in spec_map[input_label]:
+                                    default_value = spec_map[input_label]['default']
+                                    if input_type == "INT":
+                                        default_value = int(default_value)
+                                    elif input_type == "FLOAT":
+                                        default_value = float(default_value)
+
+                                if "placeholder" in spec_map[input_label]:
+                                    placeholder = spec_map[input_label]['placeholder']
+
+                            if input_type == "STRING":
+                                node_config[1]['placeholder'] = placeholder
+                                
+                            node_config[1]['default'] = default_value
                             input_value = tuple(node_config)
                         else:
                             input_value = flatten_INPUT_TYPES(node_input_types)[input_slot]

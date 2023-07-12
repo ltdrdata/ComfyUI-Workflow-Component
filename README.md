@@ -18,6 +18,11 @@ There is a high possibility that the existing components created may not be comp
 ![component-menu](misc/menu.png)
 
 * Once all the component workflows have been created, you can save them through the "Export As Component" option in the menu. The file extension will be .component.json.
+* After adding a Note and changing the title to "input-spec", you can set default values for specific input slots by following the format:
+
+  **`input slot name`**:(default,**`value`**), (placeholder, **`text`**).
+
+* For STRING inputs, you can use  to include a placeholder.
 
 * **Note: Please make sure to avoid using the same name for input and output interface nodes in the component.**
 
