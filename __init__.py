@@ -51,6 +51,7 @@ NODE_CLASS_MAPPINGS = {
     "LoopCounterCondition": LoopCounterCondition,
     "InputZip": InputZip,
     "InputUnzip": InputUnzip,
+    "OptionalTest": OptionalTest,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {

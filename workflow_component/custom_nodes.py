@@ -204,7 +204,7 @@ class InputZip:
                     },
                 }
 
-    RETURN_TYPES = ("*", )
+    RETURN_TYPES = ("ZIP", )
     FUNCTION = "doit"
 
     def doit(s, input1, input2):
@@ -215,7 +215,7 @@ class InputUnzip:
     @classmethod
     def INPUT_TYPES(s):
         return {"required": {
-                        "zipped_input": ("*", ),
+                        "zipped_input": ("ZIP", ),
                     },
                 }
 
@@ -225,3 +225,22 @@ class InputUnzip:
     def doit(s, zipped_input):
         input1, input2 = zipped_input
         return (input1, input2, )
+
+class OptionalTest:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {},
+            "optional": {
+                        "option1": ("*", ),
+                        "option2": ("*", ),
+                    },
+                }
+
+    CATEGORY = "_for_testing"
+
+    RETURN_TYPES = ("STRING", )
+    FUNCTION = "doit"
+
+    def doit(s, option1=None, option2=None):
+        return ("ABC", )
