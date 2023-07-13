@@ -87,6 +87,9 @@ def get_output_data(obj, input_data_all):
     uis = []
     return_values = map_node_over_list(obj, input_data_all, obj.FUNCTION, allow_interrupt=True)
 
+    if return_values is None:
+        return None, None
+
     for r in return_values:
         if isinstance(r, dict):
             if 'ui' in r:
@@ -436,7 +439,7 @@ def worklist_will_execute(prompt, outputs, worklist):
     return will_execute
 
 
-def worklist_output_delete_if_changed(prompt, old_prompt, outputs, next_nodes, muted_nodes, extra_data):
+def worklist_output_delete_if_changed(prompt, old_prompt, outputs, next_nodes, muted_nodes, extra_data, object_storage):
     worklist = []
     deleted = set()
 
@@ -461,6 +464,11 @@ def worklist_output_delete_if_changed(prompt, old_prompt, outputs, next_nodes, m
         is_changed = ''
         to_delete = False
 
+        obj = object_storage.get((unique_id, class_type), None)
+        if obj is None:
+            obj = class_def()
+            object_storage[(unique_id, class_type)] = obj
+
         if hasattr(class_def, 'IS_CHANGED'):
             if unique_id in old_prompt and 'is_changed' in old_prompt[unique_id]:
                 is_changed_old = old_prompt[unique_id]['is_changed']
@@ -468,7 +476,7 @@ def worklist_output_delete_if_changed(prompt, old_prompt, outputs, next_nodes, m
                 input_data_all = get_input_data(inputs, class_def, unique_id, outputs, prompt=prompt, extra_data=extra_data)
                 if input_data_all is not None:
                     try:
-                        is_changed = map_node_over_list(class_def, input_data_all, "IS_CHANGED")
+                        is_changed = map_node_over_list(obj, input_data_all, "IS_CHANGED")
                         value['is_changed'] = is_changed
                     except:
                         to_delete = True
@@ -615,7 +623,7 @@ class ExpPromptExecutor:
                 del d
 
             next_nodes = get_next_nodes_map(prompt)
-            worklist_output_delete_if_changed(prompt, self.old_prompt, self.outputs, next_nodes, muted_nodes, extra_data)
+            worklist_output_delete_if_changed(prompt, self.old_prompt, self.outputs, next_nodes, muted_nodes, extra_data, self.object_storage)
 
             current_outputs = set(self.outputs.keys())
             for x in list(self.outputs_ui.keys()):
