@@ -317,7 +317,7 @@ async function queuePrompt_with_components(number, { output, workflow }) {
 		workflow.components[key] = loaded_components[key];
 	});
 
-	await original_queuePrompt.call(api, number, { output, workflow });
+	return await original_queuePrompt.call(api, number, { output, workflow });
 }
 
 api.queuePrompt = queuePrompt_with_components;
