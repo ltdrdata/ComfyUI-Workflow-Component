@@ -8,7 +8,7 @@ sys.path.append(extension_path)
 
 import workflow_component.component_loader as component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.39.1) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.39.2) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
