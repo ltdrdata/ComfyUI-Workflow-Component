@@ -455,6 +455,7 @@ def worklist_output_delete_if_changed(prompt, old_prompt, outputs, next_nodes, m
     for unique_id, value in prompt.items():
         inputs = value['inputs']
         if 'class_type' not in value:
+            class_type = 'DummyNode'  # HOTFIX: todo
             class_def = DummyNode
         else:
             class_type = value['class_type']
