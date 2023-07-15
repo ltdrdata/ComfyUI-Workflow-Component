@@ -8,6 +8,11 @@ There is a high possibility that the existing components created may not be comp
 ## Notice
 * Some of the components provided by default are implemented using other custom nodes. To use those components, the custom nodes used within the component need to be available. If you are not using those specific components, you can safely ignore the warning as it will not affect other components.
 
+## Installation
+1. cd custom_nodes
+2. git clone https://github.com/ltdrdata/ComfyUI-Workflow-Component.git
+3. Restart ComfyUI
+
 ## How To Build Component
 ![component-build](misc/component-build.png)
 
