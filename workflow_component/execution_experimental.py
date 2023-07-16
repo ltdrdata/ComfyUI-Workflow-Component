@@ -58,7 +58,7 @@ def map_node_over_list(obj, input_data_all, func, allow_interrupt=False):
 
         for k, v in d.items():
             if not v:
-                return None
+                continue
             else:
                 d_new[k] = v[i if len(v) > i else -1]
         return d_new
@@ -207,7 +207,7 @@ def is_incomplete_input_slots(class_def, inputs, outputs):
 
             if isinstance(input_data, list):
                 input_unique_id = input_data[0]
-                if input_unique_id in outputs and outputs[input_unique_id][input_data[1]] != [None]:
+                if input_unique_id in outputs and len(outputs[input_unique_id]) > 0 and outputs[input_unique_id][input_data[1]] != [None]:
                     return False
 
         return True
@@ -588,7 +588,7 @@ class ExpPromptExecutor:
                 to_delete += [o]
             else:
                 p = prompt[o[0]]
-                if o[1] != p['class_type']:
+                if ('class_type' in p and o[1] != p['class_type']) or ('class_type' not in p and o[1] != 'DummyNode'):
                     to_delete += [o]
         for o in to_delete:
             d = self.object_storage.pop(o)
