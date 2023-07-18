@@ -11,6 +11,8 @@ class ExecutionBlocker:
     RETURN_NAMES = ("pass_value", )
     FUNCTION = "doit"
 
+    CATEGORY = "execution"
+
     def doit(s, input, signal):
         return input
 
@@ -33,6 +35,8 @@ class ExecutionOneOf:
     RETURN_TYPES = ("*", )
     RETURN_NAMES = ("output", )
     FUNCTION = "doit"
+
+    CATEGORY = "execution"
 
     def doit(s, **kwargs):
         if 'input1' in kwargs and kwargs['input1'] is not None:
@@ -68,6 +72,8 @@ class ExecutionSwitch:
     RETURN_NAMES = ("output1", "output2", "output3", "output4", "output5", )
     FUNCTION = "doit"
 
+    CATEGORY = "execution"
+
     def doit(s, select, input1, input2_opt=None, input3_opt=None, input4_opt=None, input5_opt=None):
         if select == 1:
             return input1, None, None, None, None
@@ -98,6 +104,8 @@ class ExecutionControlString:
     RETURN_NAMES = ("pass_value", )
     FUNCTION = "doit"
 
+    CATEGORY = "execution"
+
     def doit(s, A, B_STR, condition_kind, pass_value):
         if (condition_kind == "A = B" and A == B_STR) or \
                 (condition_kind == "A != B" and A != B_STR) or \
@@ -119,6 +127,8 @@ class ComboToString:
     RETURN_TYPES = ("*", )
     FUNCTION = "doit"
 
+    CATEGORY = "execution"
+
     def doit(s, spec):
         return None
 
@@ -135,6 +145,8 @@ class LoopControl:
 
     RETURN_TYPES = ("*", )
     FUNCTION = "doit"
+
+    CATEGORY = "execution"
 
     def doit(s, **kwargs):
         if 'loopback_input' not in kwargs or kwargs['loopback_input'] is None:
@@ -178,6 +190,8 @@ class LoopCounterCondition:
     RETURN_TYPES = ("LOOP_CONDITION", )
     FUNCTION = "doit"
 
+    CATEGORY = "execution"
+
     def doit(s, count, trigger):
         return (CounterCondition(count), )
 
@@ -189,6 +203,8 @@ class TensorToCPU:
 
     RETURN_TYPES = ("*", )
     FUNCTION = "doit"
+
+    CATEGORY = "execution"
 
     def doit(self, tensor):
         return (tensor.cpu(), )
@@ -203,6 +219,8 @@ class InputZip:
                         "input2": ("*", ),
                     },
                 }
+
+    CATEGORY = "execution"
 
     RETURN_TYPES = ("ZIP", )
     FUNCTION = "doit"
@@ -222,6 +240,8 @@ class InputUnzip:
     RETURN_TYPES = ("*", "*", )
     FUNCTION = "doit"
 
+    CATEGORY = "execution"
+
     def doit(s, zipped_input):
         input1, input2 = zipped_input
         return (input1, input2, )
@@ -237,10 +257,10 @@ class OptionalTest:
                     },
                 }
 
-    CATEGORY = "_for_testing"
-
     RETURN_TYPES = ("STRING", )
     FUNCTION = "doit"
+
+    CATEGORY = "_for_testing"
 
     def doit(s, option1=None, option2=None):
         return ("ABC", )
