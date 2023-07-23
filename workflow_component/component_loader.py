@@ -500,7 +500,7 @@ def load_all(directory):
 
             component_name = os.path.basename(filename)[:-15]
 
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 try:
                     data = json.load(file)
                     _, component_full_name = load_component(component_name, False, data, category=category)
