@@ -153,7 +153,7 @@ async function loadComponentWorkflows() {
 		localStorage.setItem('loaded_components', '{}');
 	}
 
-	const res = await fetch(`component/get_workflows`, { cache: "no-store" });
+	const res = await api.fetchApi(`component/get_workflows`, { cache: "no-store" });
 	const components = await res.json();
 	let loaded_components = JSON.parse(localStorage.getItem('loaded_components'));
 	Object.assign(loaded_components, components);
@@ -175,7 +175,7 @@ async function loadComponent(component_or_filename, workflow_obj, add_node) {
 	body.append("component_or_filename", component_or_filename);
 	body.append("content", workflow_str);
 
-	const resp = await fetch(`/component/load`, {
+	const resp = await api.fetchApi(`/component/load`, {
 						method: 'POST',
 						body: body,
 					});
@@ -185,7 +185,7 @@ async function loadComponent(component_or_filename, workflow_obj, add_node) {
 	const component_name = data['node_name'];
 	if(!data['already_loaded']) {
 		const uri = encodeURIComponent(component_name);
-		const node_info = await fetch(`object_info/${uri}`, { cache: "no-store" });
+		const node_info = await api.fetchApi(`object_info/${uri}`, { cache: "no-store" });
 		const def = await node_info.json();
 
 		await app.registerNodesFromDefs.call(app, def);
