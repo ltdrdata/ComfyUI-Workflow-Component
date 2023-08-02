@@ -1,7 +1,7 @@
-import { app } from "/scripts/app.js";
-import { $el } from "/scripts/ui.js";
-import { api } from "/scripts/api.js";
-import { getPngMetadata, importA1111, getLatentMetadata } from "/scripts/pnginfo.js";
+import { app } from "../../scripts/app.js";
+import { $el } from "../../scripts/ui.js";
+import { api } from "../../scripts/api.js";
+import { getPngMetadata, importA1111, getLatentMetadata } from "../../scripts/pnginfo.js";
 
 function removeHashFromNodeName(name) {
 	const regex = /##.*\[([^\]]+)\]$/;

@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import traceback
 
@@ -344,6 +345,10 @@ def build_input_types(i, input_mapping, input_types, node, node_config_map, spec
                         input_label = None
 
                     if node_type is not None and input_slot is not None:
+                        if node_type not in comfy_nodes.NODE_CLASS_MAPPINGS:
+                            errmsg = f'### [ERROR] "{node_type}" node is not installed. Please install that node through ComfyUI-Mananger. ###'
+                            raise Exception(errmsg)
+
                         node_input_types = comfy_nodes.NODE_CLASS_MAPPINGS[node_type].INPUT_TYPES()
 
                         widget_idx = -1

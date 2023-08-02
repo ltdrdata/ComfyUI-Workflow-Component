@@ -1,7 +1,7 @@
-import { app, ComfyApp } from "/scripts/app.js";
-import { api } from "/scripts/api.js";
-import { ComfyDialog, $el } from "/scripts/ui.js";
-import { ClipspaceDialog } from "/extensions/core/clipspace.js";
+import { app, ComfyApp } from "../../scripts/app.js";
+import { api } from "../../scripts/api.js";
+import { ComfyDialog, $el } from "../../scripts/ui.js";
+import { ClipspaceDialog } from "../core/clipspace.js";
 
 function itemToImagepath(data) {
 	let name = data.filename;
