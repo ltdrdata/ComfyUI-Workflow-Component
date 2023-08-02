@@ -332,9 +332,11 @@ async function registerNodes() {
 		let workflow = JSON.parse(localStorage.getItem("workflow"));
 
 		let used_node_types = new Set();
-		for(let i in workflow.nodes) {
-			if(workflow.nodes[i].type.startsWith('## '))
-				used_node_types.add(workflow.nodes[i].type.slice(3));
+		if(workflow) {
+            for(let i in workflow.nodes) {
+                if(workflow.nodes[i].type.startsWith('## '))
+                    used_node_types.add(workflow.nodes[i].type.slice(3));
+            }
 		}
 
 		localStorage.setItem('loaded_components', "{}"); // clear
