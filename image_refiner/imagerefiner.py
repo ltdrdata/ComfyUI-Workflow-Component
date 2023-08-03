@@ -120,6 +120,9 @@ def prepare_input(class_def, merged_pil, mask_pil, prompt_data):
         elif ty == "STRING":
             input_data_all[k] = [v['value']]
 
+        elif ty == "BOOLEAN":
+            input_data_all[k] = [v['value']]
+
         elif ty == "COMBO":
             input_data_all[k] = [v['value']]
 

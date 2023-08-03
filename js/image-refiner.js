@@ -46,21 +46,21 @@ function createToggleControl() {
 	var toggle = document.createElement('input');
 	toggle.type = 'checkbox';
 	toggle.className = 'toggle-switch';
-	toggle.id = 'toggle-switch';
+	toggle.id = 'toggle-switch-pen-mask';
 
 	var label = document.createElement('label');
 	label.className = 'toggle-label';
-	label.setAttribute('for', 'toggle-switch');
+	label.setAttribute('for', `toggle-switch-pen-mask`);
 
 	var toggleHandle = document.createElement('span');
 	toggleHandle.className = 'toggle-handle';
 
 	var penText = document.createElement('span');
-	penText.className = 'toggle-text pen-text';
+	penText.className = 'toggle-text on-text';
 	penText.innerText = 'Pen';
 
 	var maskText = document.createElement('span');
-	maskText.className = 'toggle-text mask-text';
+	maskText.className = 'toggle-text off-text';
 	maskText.innerText = 'Mask';
 
 	label.appendChild(penText);
@@ -120,12 +120,12 @@ style.innerHTML = `
 		position: relative;
 		z-index: 3;
 	}
-	.pen-text {
+	.on-text {
 		margin-right: 2px;
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
-	.mask-text {
+	.off-text {
 		margin-left: 2px;
 		opacity: 1;
 		color: #2196F3;
@@ -137,12 +137,59 @@ style.innerHTML = `
 	.toggle-switch:checked + .toggle-label .toggle-handle {
 		transform: translateX(33px);
 	}
-	.toggle-switch:checked + .toggle-label .pen-text {
+	.toggle-switch:checked + .toggle-label .on-text {
 		opacity: 0;
 	}
-	.toggle-switch:checked + .toggle-label .mask-text {
+	.toggle-switch:checked + .toggle-label .off-text {
 		opacity: 1;
 	}
+
+
+	.toggle-prompt-control {
+		display: inline-block;
+		position: relative;
+		width: 200px;
+		height: 28px;
+		margin-top: 3px;
+	}
+	.toggle-prompt {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.toggle-handle-prompt {
+		position: absolute;
+		width: 100px;
+		height: 25px;
+		background-color: black;
+		border-radius: 40px;
+		box-sizing: border-box;
+		transition: transform 0.2s ease;
+		z-index: 2;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: bold;
+		font-size: 11px;
+		color: white;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.toggle-prompt:checked + .toggle-label {
+		background-color: #2196F3;
+	}
+	.toggle-prompt:checked + .toggle-label .toggle-handle-prompt {
+		transform: translateX(85px);
+	}
+	.toggle-prompt:checked + .toggle-label .on-text {
+		opacity: 0;
+	}
+	.toggle-prompt:checked + .toggle-label .off-text {
+		opacity: 1;
+	}
+
     .progress-button {
         position: relative;
         width: 200px;
@@ -644,6 +691,7 @@ function is_available_component(class_def, name, component) {
 		case "VAE":
 		case "MODEL":
 		case "CONDITIONING":
+		case "BOOLEAN":
 		case "INT":
 		case "FLOAT":
 		case "STRING":
@@ -1010,6 +1058,60 @@ class ImageRefinerDialog extends ComfyDialog {
 		return {label:label, combo:combo};
 	}
 
+	createTogglePrompt(name, item) {
+		var control = document.createElement('div');
+		control.className = `toggle-prompt-control`;
+
+		var toggle = document.createElement('input');
+		toggle.type = 'checkbox';
+		toggle.className = 'toggle-prompt';
+		toggle.id = `toggle-prompt-${name}`;
+
+		var label = document.createElement('label');
+		label.className = 'toggle-label';
+		label.setAttribute('for', `toggle-prompt-${name}`);
+
+		var toggleHandle = document.createElement('span');
+		toggleHandle.className = 'toggle-handle-prompt';
+
+		if (name.length > 13) {
+			toggleHandle.innerText = name.substring(0, 12) + '..';
+		} else {
+			toggleHandle.innerText = name;
+		}
+
+		var onText = document.createElement('span');
+		onText.className = 'toggle-text on-text';
+		onText.innerText = item.label_on?item.label_on:"true";
+
+		var offText = document.createElement('span');
+		offText.className = 'toggle-text off-text';
+		offText.innerText = item.label_off?item.label_off:"false";
+
+		label.appendChild(onText);
+		label.appendChild(offText);
+		label.appendChild(toggleHandle);
+		control.appendChild(toggle);
+		control.appendChild(label);
+
+		control.addEventListener('change', function(event) {
+			var isChecked = event.target.checked;
+			var onText = control.querySelector('.on-text');
+			var offText = control.querySelector('.off-text');
+			if (isChecked) {
+				onText.style.opacity = '1';
+				offText.style.opacity = '0';
+
+			} else {
+				onText.style.opacity = '0';
+				offText.style.opacity = '1';
+			}
+		});
+
+		return control;
+	}
+
+
 	async createCheckpointPrompt(placeholder, is_first) {
 		let combo = document.createElement("select");
 
@@ -1148,7 +1250,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			let postponed = [];
 			for(let name in components) {
-				if(is_available_component(this.defs[name], name, components[name]))
+				if(this.defs[name] && is_available_component(this.defs[name], name, components[name]))
 					if(name.includes(".ir "))
 						listItems.push({ value: name, text: name });
 					else
@@ -1409,6 +1511,20 @@ class ImageRefinerDialog extends ComfyDialog {
 					}
 					break;
 
+				case "BOOLEAN":
+					let control = this.createTogglePrompt(inputs[x].name, inputs[x].detail);
+					this.prompt_controls.appendChild(control);
+					this.prompt_controls.appendChild($el("br", {}, []));
+
+					let item = { BOOLEAN: control };
+
+					this.prompts[name] = item;
+
+                    if(prompt_data_opt && prompt_data_opt[name]) {
+                        item.BOOLEAN.value = prompt_data_opt[name].value;
+                    }
+					break;
+
 				default:
 					{
 						let control = this.createComboPrompt(inputs[x].name, inputs[x].detail);
@@ -1483,6 +1599,10 @@ class ImageRefinerDialog extends ComfyDialog {
 				case "FLOAT":
 					new_item = { type:key, value: item[key].value, min: item[key].min, max: item[key].max };
 					break;
+
+				case "BOOLEAN":
+				    new_item = { type:key, value: item[key].children[0].checked };
+                    break;
 
 				case "STRING":
 				case "COMBO":
@@ -1786,8 +1906,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		toggleControl.addEventListener('change', function(event) {
 			var isChecked = event.target.checked;
-			var penText = document.querySelector('.pen-text');
-			var maskText = document.querySelector('.mask-text');
+			var penText = toggleControl.querySelector('.on-text');
+			var maskText = toggleControl.querySelector('.off-text');
 			if (isChecked) {
 				penText.style.opacity = '1';
 				maskText.style.opacity = '0';
