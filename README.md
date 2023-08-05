@@ -83,7 +83,6 @@ There is a high possibility that the existing components created may not be comp
   * Right button-Drag: erase mask
   * Ctrl-Wheel: Zoom adjustment
   * Ctrl-Drag: Pan
-  * Enter: Regenerate
   * Esc: Close
 
 # Tutorial video

@@ -8,7 +8,7 @@ sys.path.append(extension_path)
 
 import workflow_component.component_loader as component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.41) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V0.41.1) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -27,6 +27,11 @@ def setup_js():
 
     js_src_path = os.path.join(this_extension_path, "js", "image-refiner.js")
     js_dest_path_full = os.path.join(js_dest_path, "image-refiner.js")
+    if not (os.path.exists(js_dest_path_full) and os.path.islink(js_dest_path_full)):
+        shutil.copy(js_src_path, js_dest_path)
+
+    js_src_path = os.path.join(this_extension_path, "js", "help.png")
+    js_dest_path_full = os.path.join(js_dest_path, "help.png")
     if not (os.path.exists(js_dest_path_full) and os.path.islink(js_dest_path_full)):
         shutil.copy(js_src_path, js_dest_path)
 
