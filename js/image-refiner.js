@@ -211,6 +211,32 @@ style.innerHTML = `
     .progress-button.progress::before {
         width: 100%;
     }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        background-color: black;
+        color: #fff;
+        text-align: left;
+        border-radius: 5px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        top: 35px;
+        left: 5px;
+        width: 550px;
+        opacity: 0;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
 `;
 
 document.head.appendChild(style);
@@ -1815,6 +1841,25 @@ class ImageRefinerDialog extends ComfyDialog {
 		titleLabel.style.fontWeight = 'bold';
 		titleLabel.style.fontSize = "20px";
 		this.topPanel.appendChild(titleLabel);
+
+        const link = document.createElement("a");
+        link.className = "tooltip";
+        link.href = "#";
+        link.style.marginLeft = "10px";
+
+        const icon = document.createElement("img");
+        icon.src = "extensions/workflow-component/help.png";
+        icon.alt = "Help Icon";
+        icon.style.width = "30px";
+        icon.style.height = "30px";
+
+        const tooltip = document.createElement("span");
+        tooltip.className = "tooltiptext";
+        tooltip.innerHTML = "<ul><li>Wheel: brush size adjustment</li><li>Left button-Drag: draw mask</li><li>Right button-Drag: erase mask</li><li>Ctrl-Wheel: Zoom adjustment</li><li>Ctrl-Drag: Pan</li><li>Esc: Close</li><li>Regenerating without a mask will perform a complete inpainting</li><li>R: Regenerate layer with random seed(discard previous images)</li><li>S: Selecting a different candidate image within the layer.</li><li>M: Getting the mask of the layer.</li><li>X: Delete layer</li></ul>";
+
+        link.appendChild(icon);
+        link.appendChild(tooltip);
+        this.topPanel.appendChild(link);
 
 		// Left div
 		this.leftDiv = document.createElement("div");
