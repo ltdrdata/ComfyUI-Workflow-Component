@@ -672,7 +672,7 @@ app.registerExtension({
 				node._title = value;
 			},
 			get: function() {
-				if(node.type.startsWith('## ') && (node.type == node._title || node.type.substring(0,node.type.length-9) == node._title)) {
+				if(node.type && node.type.startsWith('## ') && (node.type == node._title || node.type.substring(0,node.type.length-9) == node._title)) {
 					if(!is_component_conflicted(node.type))
 						return removeHashFromNodeName(node.type);
 				}
