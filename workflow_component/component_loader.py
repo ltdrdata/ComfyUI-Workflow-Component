@@ -45,9 +45,15 @@ def create_dynamic_class(component_raw_name, workflow, category=None):
                 except:
                     pass
             try:
-                extra_args = json.loads(data["inputs"]["extra_args"])
+                if data["inputs"]["extra_args"].startswith("COMBO:"):
+                    combo_info = data["inputs"]["extra_args"].split(':')
+                    if len(combo_info) == 3:
+                        extra_args = combo_info[1], combo_info[2]
+                else:
+                    extra_args = json.loads(data["inputs"]["extra_args"])
             except:
                 extra_args = {}
+
             component_inputs.append({
                 "node_id": node_id,
                 "name": data["inputs"]["name"],
@@ -72,6 +78,27 @@ def create_dynamic_class(component_raw_name, workflow, category=None):
         if component_outputs[i]["index"] == component_outputs[i - 1]["index"]:
             raise Exception("Component output index is not unique: {}".format(component_outputs[i]["index"]))
 
+    def gen_input(node):
+        if isinstance(node['extra_args'], tuple):
+            combo_info = node['extra_args']
+            if combo_info[0] in comfy_nodes.NODE_CLASS_MAPPINGS:
+                cls = comfy_nodes.NODE_CLASS_MAPPINGS[combo_info[0]]
+                cls_inputs = cls.INPUT_TYPES()
+                node_input = cls_inputs['required'].get(combo_info[1], None)
+
+                if node_input is None and 'optional' in cls_inputs:
+                    node_input = cls_inputs['optional'].get(combo_info[1], None)
+
+                if node_input is not None:
+                    return node_input
+                else:
+                    return (f"Missing: '{combo_info[0]}'", {})
+            else:
+                return (f"Missing: '{combo_info[0]}'", {})
+        else:
+            return node["data_type"], default_extra_data(node["data_type"], node["extra_args"])
+
+
     class ComponentNode:
         def __init__(self):
             pass
@@ -79,8 +106,8 @@ def create_dynamic_class(component_raw_name, workflow, category=None):
         @classmethod
         def INPUT_TYPES(cls):
             return {
-                "required": {node["name"]: (node["data_type"], default_extra_data(node["data_type"], node["extra_args"])) for node in component_inputs if not node["optional"]},
-                "optional": {node["name"]: (node["data_type"], default_extra_data(node["data_type"], node["extra_args"])) for node in component_inputs if node["optional"]},
+                "required": {node["name"]: gen_input(node) for node in component_inputs if not node["optional"]},
+                "optional": {node["name"]: gen_input(node) for node in component_inputs if node["optional"]},
             }
 
         RETURN_TYPES = tuple([node["data_type"] for node in component_outputs])
