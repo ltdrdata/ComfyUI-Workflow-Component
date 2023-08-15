@@ -499,7 +499,7 @@ app.registerExtension({
                 let slot_type = origin_slot.type;
 
                 this.inputs[0].type = slot_type;
-                this.inputs[0].name = slot_type;
+                this.inputs[0].label = slot_type;
 
                 this.outputs[0].type = slot_type;
 

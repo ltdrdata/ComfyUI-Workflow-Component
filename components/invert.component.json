@@ -1,0 +1,179 @@
+{
+  "last_node_id": 4,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "ComponentInput",
+      "pos": [
+        620.473484070833,
+        268.1947602004059
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "default_value",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComponentInput"
+      },
+      "widgets_values": [
+        "image",
+        "IMAGE",
+        "",
+        0,
+        false
+      ]
+    },
+    {
+      "id": 1,
+      "type": "ImageInvert",
+      "pos": [
+        1194,
+        269
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 1,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageInvert"
+      }
+    },
+    {
+      "id": 4,
+      "type": "ComponentOutput",
+      "pos": [
+        1520,
+        270
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "IMAGE",
+          "link": 3,
+          "label": "IMAGE"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "*",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComponentOutput"
+      },
+      "widgets_values": [
+        "IMAGE",
+        "IMAGE",
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ],
+    [
+      3,
+      1,
+      0,
+      4,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "output": {
+    "1": {
+      "inputs": {
+        "image": [
+          "2",
+          0
+        ]
+      },
+      "class_type": "ImageInvert"
+    },
+    "2": {
+      "inputs": {
+        "name": "image",
+        "data_type": "IMAGE",
+        "extra_args": "",
+        "explicit_input_order": 0,
+        "is_optional": false
+      },
+      "class_type": "ComponentInput"
+    },
+    "4": {
+      "inputs": {
+        "name": "IMAGE",
+        "data_type": "IMAGE",
+        "index": "",
+        "value": [
+          "1",
+          0
+        ]
+      },
+      "class_type": "ComponentOutput"
+    }
+  }
+}

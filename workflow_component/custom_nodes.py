@@ -281,7 +281,7 @@ class ComponentInput:
 
     CATEGORY = "ComponentBuilder"
 
-    def component_input(self, name, data_type, extra_args, explicit_input_order, optional, default_value=None):
+    def component_input(self, name, data_type, extra_args, explicit_input_order, is_optional, default_value=None):
         return (default_value,)
 
 
