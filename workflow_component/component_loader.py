@@ -50,7 +50,11 @@ def create_dynamic_class(component_raw_name, workflow, category=None):
                     if len(combo_info) == 3:
                         extra_args = combo_info[1], combo_info[2]
                 else:
-                    extra_args = json.loads(data["inputs"]["extra_args"])
+                    extra_args = json.loads("{" + data["inputs"]["extra_args"] + "}")
+
+                if data_type == "STRING":
+                    if 'placeholder' not in extra_args:
+                        extra_args['placeholder'] = data['inputs']['name']
             except:
                 extra_args = {}
 

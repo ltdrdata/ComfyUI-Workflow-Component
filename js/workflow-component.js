@@ -482,7 +482,7 @@ app.registerExtension({
                         this.widgets[2].value = `COMBO:${target_node.type}:${slot.name}`
                     }
                     else {
-                        this.widgets[2].value = JSON.stringify(slot.widget.config[1]);
+                        this.widgets[2].value = JSON.stringify(slot.widget.config[1]).slice(1,-1);
                     }
                 }
             }
