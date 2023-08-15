@@ -1,20 +1,8 @@
-class ExecutionBlocker:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {
-                        "pass_value": ("*", ),
-                        "signal": ("*", ),
-                     },
-                }
+class AnyType(str):
+    def __ne__(self, __value: object) -> bool:
+        return False
 
-    RETURN_TYPES = ("*", )
-    RETURN_NAMES = ("pass_value", )
-    FUNCTION = "doit"
-
-    CATEGORY = "execution"
-
-    def doit(s, input, signal):
-        return input
+any = AnyType("*")
 
 
 class ExecutionOneOf:
@@ -264,3 +252,80 @@ class OptionalTest:
 
     def doit(s, option1=None, option2=None):
         return ("ABC", )
+
+
+# New implementation based on lazy execution
+
+class ComponentInput:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "name": ("STRING", {"multiline": False}),
+                "data_type": ("STRING", {"multiline": False, "default": "IMAGE"}),
+                "extra_args": ("STRING", {"multiline": True}),
+                "explicit_input_order": ("INT", {"default": 0, "min": 0, "max": 1000, "step": 1}),
+                "is_optional": ("BOOLEAN", {"default": False, "label_on": "optional", "label_off": "required"}),
+            },
+            "optional": {
+                "default_value": (AnyType("*"),),
+            },
+        }
+
+    RETURN_TYPES = ("*",)
+    RETURN_NAMES = ("input",)
+    FUNCTION = "component_input"
+
+    CATEGORY = "ComponentBuilder"
+
+    def component_input(self, name, data_type, extra_args, explicit_input_order, optional, default_value=None):
+        return (default_value,)
+
+
+class ComponentOutput:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "name": ("STRING", {"multiline": False}),
+                "data_type": ("STRING", {"multiline": False, "default": "IMAGE"}),
+                "index": ("INT", {"default": 0, "min": 0, "max": 1000, "step": 1}),
+                "value": (AnyType("*"),),
+            },
+        }
+
+    RETURN_TYPES = (AnyType("*"),)
+    FUNCTION = "component_output"
+
+    CATEGORY = "ComponentBuilder"
+
+    def component_output(self, index, data_type, name, value):
+        return (value,)
+
+
+class ComponentMetadata:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "name": ("STRING", {"multiline": False}),
+                "always_output": ([False, True],),
+            },
+        }
+
+    RETURN_TYPES = ()
+    FUNCTION = "nop"
+
+    CATEGORY = "ComponentBuilder"
+
+    def nop(self, name):
+        return {}

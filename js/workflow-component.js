@@ -448,224 +448,67 @@ app.registerExtension({
 		menu.append(saveFullButton);
 		menu.append(saveComponentButton);
 	},
-	registerCustomNodes() {
-		class ComponentOutputNode {
-			constructor() {
-				this.addInput("rename after connect", "*");
 
-				this.onConnectionsChange = function (type, index, connected, link_info) {
-					if(this.__inputType && this.__inputType != '*')
-						return;
+	async beforeRegisterNodeDef(nodeType, nodeData, app) {
+        if (nodeData.name === 'ComponentInput') {
+            const onConnectionsChange = nodeType.prototype.onConnectionsChange
+            nodeType.prototype.onConnectionsChange = function (type, index, connected, link_info) {
+                if(!link_info || !connected || !app.graph._nodes_by_id[link_info.target_id].inputs)
+                    return;
 
-					if(!connected) {
-						this.backup_type = this.inputs[0].type;
-						this.backup_name = this.inputs[0].name;
-						this.backup_label = this.inputs[0].label;
+                let target_node = app.graph._nodes_by_id[link_info.target_id];
+                let slot = target_node.inputs[link_info.target_slot];
 
-						this.inputs[0].type = "*";
-						this.__inputType = "*";
-						this.inputs[0].name = "rename after connect";
-						delete this.inputs[0].label;
+                let slot_type = slot.type;
+                if(slot_type.includes(','))
+                    slot_type = "COMBO,";
 
-						return;
-					}
+                if(this.outputs[0].type == "COMBO," && slot_type != "COMBO,") {
+                    target_node.disconnectInput(link_info.target_slot);
+                    return;
+                }
 
-					if (type === LiteGraph.INPUT) {
-						let inputType = null;
-						let inputName = null;
-						const input = this.inputs ? this.inputs[0].link || null : null;
-						let node = null;
-						let originSlot = null;
+                this.outputs[0].type = slot_type;
+                this.outputs[0].name = slot_type;
 
-						// Get input type
-						if (input !== null) {
-							const link = app.graph.links[input];
-							const origin = link.origin_id;
-							originSlot = link.origin_slot;
+                this.inputs[0].type = slot_type;
 
-							node = app.graph.getNodeById(origin);
-							if (node) {
-								inputType = node.outputs[originSlot].type;
-								inputName = node.outputs[originSlot].label?node.outputs[originSlot].label:null;
-							}
-						} else {
-							// No inputs connected
-						}
+                this.widgets[0].value = slot.name;
+                this.widgets[1].value = slot_type;
 
-						const displayType = inputType || "*";
-						const color = LGraphCanvas.link_type_colors[displayType];
+                if(slot?.widget?.config) {
+                    if(slot?.widget?.config.length == 1) {
+                        // combo
+                        this.widgets[2].value = `COMBO:${target_node.type}:${slot.name}`
+                    }
+                    else {
+                        this.widgets[2].value = JSON.stringify(slot.widget.config[1]);
+                    }
+                }
+            }
+        }
+        else if (nodeData.name === 'ComponentOutput') {
+            const onConnectionsChange = nodeType.prototype.onConnectionsChange
+            nodeType.prototype.onConnectionsChange = function (type, index, connected, link_info) {
+                if(!link_info || !connected || !app.graph._nodes_by_id[link_info.origin_id].outputs)
+                    return;
 
-						// Update output properties
-						this.inputs[0].type = inputType;
-						this.__inputType = displayType;
+                let origin_node = app.graph._nodes_by_id[link_info.origin_id];
+                let origin_slot = origin_node.outputs[link_info.origin_slot];
 
-						// skip if name is assigned, already
-						if(this.inputs[0].name == "rename after connect") {
-							this.inputs[0].name = inputName || inputType || "rename after connect";
-							this.inputs[0].label = inputName;
-						}
+                let slot_type = origin_slot.type;
 
-						const link = app.graph.links[this.inputs[0]];
+                this.inputs[0].type = slot_type;
+                this.inputs[0].name = slot_type;
 
-						if (node !== null) {
-							node.outputs[originSlot].color = color;
-						}
-					};
+                this.outputs[0].type = slot_type;
 
-					this.serialize_widgets = true;
-					this.isVirtualNode = false;
-				}
-			}
-		};
-
-		class ComponentInputNode {
-			constructor() {
-				this.addOutput("rename after connect", "*");
-
-				this.onConnectionsChange = function (type, index, connected, link_info) {
-					if(this.__outputType && this.__outputType != '*')
-						return;
-
-					const outputs = this.outputs ? this.outputs[0].links || [] : [];
-					if(!connected && outputs.length == 0) {
-						this.outputs[0].type = "*";
-						this.__outputType = "*";
-						this.outputs[0].name = "rename after connect";
-						delete this.outputs[0].label;
-
-						return;
-					}
-
-					if (connected && type === LiteGraph.OUTPUT) {
-					// Get unique output types from connected links
-					const types = new Set(
-						this.outputs[0].links
-							.map((l) => app.graph.links[l].type)
-							.filter((t) => t !== "*")
-						);
-
-					// If there are multiple output types, disconnect previous links except the last one
-					if (types.size > 1) {
-						for (let i = 0; i < this.outputs[0].links.length - 1; i++) {
-								const linkId = this.outputs[0].links[i];
-								const link = app.graph.links[linkId];
-								const node = app.graph.getNodeById(link.target_id);
-								node.disconnectInput(link.target_slot);
-							}
-						}
-					}
-
-					let outputType = null;
-					let outputName = null;
-
-					// Iterate through output links to determine the output type
-					if (outputs.length) {
-						for (const linkId of outputs) {
-							if(outputType && outputType != '*')
-								continue;
-
-							const link = app.graph.links[linkId];
-
-							if (!link) continue;
-
-							const node = app.graph.getNodeById(link.target_id);
-
-							if(link_info.type && link_info.type != '*') {
-							    outputType = link_info.type;
-                            }
-							else {
-                                outputType =
-                                    node.inputs &&
-                                    node.inputs[link?.target_slot] &&
-                                    node.inputs[link.target_slot].type
-                                        ? node.inputs[link.target_slot].type
-                                        : null;
-                            }
-
-							outputName =
-								node.inputs &&
-								node.inputs[link?.target_slot] &&
-								node.inputs[link.target_slot].name
-									? node.inputs[link.target_slot].name
-									: null;
-
-							if(outputType == "*" && node.backup_type) {
-								outputType = node.backup_type;
-								node.inputs[0].name = node.backup_name;
-								node.inputs[0].label = node.backup_label;
-								outputName = node.backup_label || node.backup_name;
-
-								delete this.backup_type;
-								delete this.backup_name;
-								delete this.backup_label;
-							}
-						}
-
-						// NOTE: When loading a workflow, the target node may not have any inputs yet due to the issue of order.
-						const displayType = outputType || "*";
-						const color = LGraphCanvas.link_type_colors[displayType];
-
-						// Update output properties
-						this.outputs[0].type = outputType;
-						this.__outputType = displayType;
-
-						// skip if name is assigned, already
-						if(this.outputs[0].name == "rename after connect") {
-							this.outputs[0].name = outputName || "*";
-							this.outputs[0].label = outputName;
-						}
-
-						const link = app.graph.links[this.outputs[0]];
-
-						if (link) {
-							link.color = color;
-						}
-
-					} else {
-						// No outputs
-					}
-				};
-
-				this.serialize_widgets = true;
-				this.isVirtualNode = false;
-			}
-
-			onConnectOutput(slot, type, input, target_node, target_slot) {
-				if(this.outputs[0].type == "*" && (!input.type || input.type == "*")) {
-					return false;
-				}
-
-				return true;
-			}
-		}
-
-		class ComponentInputOptionalNode extends ComponentInputNode {
-		}
-
-		LiteGraph.registerNodeType(
-			"ComponentInput",
-			Object.assign(ComponentInputNode, {
-				title: "Component Input",
-			})
-		);
-
-		LiteGraph.registerNodeType(
-			"ComponentInputOptional",
-			Object.assign(ComponentInputOptionalNode, {
-				title: "Component Input (OPT)",
-			})
-		);
-
-		LiteGraph.registerNodeType(
-			"ComponentOutput",
-			Object.assign(ComponentOutputNode, {
-				title: "Component Output",
-			})
-		);
-
-		ComponentOutputNode.category = "ComponentBuilder";
-		ComponentInputNode.category = "ComponentBuilder";
+                this.widgets[0].value = origin_slot.name;
+                this.widgets[1].value = slot_type;
+            }
+        }
 	},
+
 	nodeCreated(node, app) {
 		Object.defineProperty(node, "title", {
 			set: function(value) {

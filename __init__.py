@@ -47,7 +47,8 @@ from workflow_component.custom_nodes import *
 
 NODE_CLASS_MAPPINGS = {
     "ExecutionSwitch": ExecutionSwitch,
-    "ExecutionBlocker": ExecutionBlocker,
+    "ComponentInput": ComponentInput,
+    "ComponentOutput": ComponentOutput,
     "ExecutionControlString": ExecutionControlString,
     "ExecutionOneOf": ExecutionOneOf,
     "ComboToString": ComboToString,
