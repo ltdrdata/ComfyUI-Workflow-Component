@@ -6,7 +6,7 @@ This extension, as an extension of the Proof of Concept, lacks many features, is
 There is a high possibility that the existing components created may not be compatible during the update process.
 
 ## Notice
-* V0.41.4 requires latest version of Impact Pack (V3.20) and latest version of ComfyUI (Jul 18th).
+* V0.41.4 requires latest version of Impact Pack (V3.20) and latest version of ComfyUI (Aug 18th).
 * Some of the components provided by default are implemented using other custom nodes. To use those components, the custom nodes used within the component need to be available. If you are not using those specific components, you can safely ignore the warning as it will not affect other components.
 
 ## Installation
