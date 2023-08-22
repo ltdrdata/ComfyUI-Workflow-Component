@@ -57,6 +57,9 @@ async def prompt_hook(request):
     extra_pnginfo = extra_data.get('extra_pnginfo', {})
     workflow = extra_pnginfo.get('workflow', {})
     nodes = workflow.get('nodes', [])
+
+    workflow_execution.extra_pnginfo = extra_pnginfo
+
     if any(node['type'] in ["ComponentInput", "ComponentOutput", "ComponentOptional"] for node in nodes):
         msg = "<B>The Workflow Component being composed is not executable.</B><BR><BR>If ComponentInput, ComponentInputOptional, or ComponentOutput nodes are used, it is considered that the Component being composed is in progress."
         return web.json_response({"error": {"message": msg}, "node_errors": {}}, status=400)

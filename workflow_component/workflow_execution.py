@@ -63,6 +63,8 @@ def garbage_collect(keys):
 
 
 def get_executor(component_name, internal_id_name_map, node_id):
+    global executor_dict
+    node_id = str(node_id)
     if node_id in executor_dict:
         if executor_dict[node_id][0] != component_name:
             del executor_dict[node_id]
@@ -85,14 +87,22 @@ def get_virtual_prompt_id(node_id):
     return f"wc-{node_id}-{virtual_prompt_id}"
 
 
+extra_pnginfo = {}
+change_map = {}
+
 def is_changed(component_name, internal_id_name_map, output_mapping, **kwargs):
     node_id = int(kwargs['unique_id'])
-    nodes = kwargs['extra_pnginfo']['workflow']['nodes']
+
+    if node_id not in change_map:
+        change_map[node_id] = 0
+
+    nodes = extra_pnginfo['workflow']['nodes']   # ComfyUI doesn't provide extra_pnginfo on validate
     current_component_node = [node for node in nodes if node['id'] == node_id]
 
     if len(current_component_node) == 0:
         print(f"MISSING NODE: {node_id}")
-        return False
+        change_map[node_id] += 1
+        return change_map[node_id]
     else:
         current_component_node = current_component_node[0]
 
@@ -107,9 +117,10 @@ def is_changed(component_name, internal_id_name_map, output_mapping, **kwargs):
                 c_links = c_outputs[order]['links']
                 if c_links is not None and len(c_links) > 0:
                     if order not in pe.calculated_outputs:
-                        return True
+                        change_map[node_id] += 1
+                        return change_map[node_id]
 
-    return False
+    return change_map[node_id]
 
 
 def execute(component_name, prompt, workflow, internal_id_name_map, optional_inputs, input_mapping, output_mapping,
