@@ -1,6 +1,6 @@
 {
-  "last_node_id": 25,
-  "last_link_id": 36,
+  "last_node_id": 27,
+  "last_link_id": 41,
   "nodes": [
     {
       "id": 8,
@@ -21,9 +21,10 @@
           "name": "SAM_MODEL",
           "type": "SAM_MODEL",
           "links": [
-            6
+            39
           ],
-          "shape": 3
+          "shape": 3,
+          "label": "SAM_MODEL"
         }
       ],
       "properties": {
@@ -53,7 +54,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "link": 35,
-          "label": null
+          "label": "IMAGE"
         }
       ],
       "title": "2.Component Output",
@@ -81,7 +82,8 @@
           "type": "IMAGE",
           "links": [
             28
-          ]
+          ],
+          "label": "image"
         }
       ],
       "title": "2.Component Input",
@@ -109,7 +111,8 @@
           "type": "INT",
           "links": [
             32
-          ]
+          ],
+          "label": "steps"
         }
       ],
       "title": "4.Component Input",
@@ -137,7 +140,8 @@
           "type": "FLOAT",
           "links": [
             31
-          ]
+          ],
+          "label": "denoise"
         }
       ],
       "title": "6.Component Input",
@@ -165,7 +169,8 @@
           "type": "FLOAT",
           "links": [
             33
-          ]
+          ],
+          "label": "cfg"
         }
       ],
       "title": "5.Component Input",
@@ -193,7 +198,8 @@
           "type": "FLOAT",
           "links": [
             30
-          ]
+          ],
+          "label": "guide_size"
         }
       ],
       "title": "3.Component Input",
@@ -220,80 +226,15 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "links": [
-            4
-          ]
+            37
+          ],
+          "label": "basic_pipe"
         }
       ],
       "title": "1.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
-    },
-    {
-      "id": 6,
-      "type": "BasicPipeToDetailerPipe",
-      "pos": [
-        750,
-        810
-      ],
-      "size": {
-        "0": 342.5999755859375,
-        "1": 116
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
-          "link": 4,
-          "slot_index": 0
-        },
-        {
-          "name": "bbox_detector",
-          "type": "BBOX_DETECTOR",
-          "link": 26,
-          "slot_index": 1
-        },
-        {
-          "name": "sam_model_opt",
-          "type": "SAM_MODEL",
-          "link": 6,
-          "slot_index": 2
-        },
-        {
-          "name": "wildcard",
-          "type": "STRING",
-          "link": 25,
-          "widget": {
-            "name": "wildcard",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "detailer_pipe",
-          "type": "DETAILER_PIPE",
-          "links": [
-            29
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicPipeToDetailerPipe"
-      },
-      "widgets_values": [
-        ""
-      ]
     },
     {
       "id": 19,
@@ -314,7 +255,7 @@
           "name": "wildcard",
           "type": "STRING",
           "links": [
-            25
+            40
           ],
           "slot_index": 0,
           "label": "wildcard"
@@ -344,16 +285,18 @@
           "name": "BBOX_DETECTOR",
           "type": "BBOX_DETECTOR",
           "links": [
-            26
+            38
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "BBOX_DETECTOR"
         },
         {
           "name": "SEGM_DETECTOR",
           "type": "SEGM_DETECTOR",
           "links": null,
-          "shape": 3
+          "shape": 3,
+          "label": "SEGM_DETECTOR"
         }
       ],
       "properties": {
@@ -411,7 +354,7 @@
           "name": "DETAILER_PIPE",
           "type": "DETAILER_PIPE",
           "link": 36,
-          "label": null
+          "label": "DETAILER_PIPE"
         }
       ],
       "title": "1.Component Output",
@@ -437,12 +380,14 @@
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 28
+          "link": 28,
+          "label": "image"
         },
         {
           "name": "detailer_pipe",
           "type": "DETAILER_PIPE",
-          "link": 29
+          "link": 41,
+          "label": "detailer_pipe"
         },
         {
           "name": "guide_size",
@@ -459,7 +404,8 @@
                 "step": 8
               }
             ]
-          }
+          },
+          "label": "guide_size"
         },
         {
           "name": "denoise",
@@ -476,7 +422,8 @@
                 "step": 0.01
               }
             ]
-          }
+          },
+          "label": "denoise"
         },
         {
           "name": "steps",
@@ -492,7 +439,8 @@
                 "max": 10000
               }
             ]
-          }
+          },
+          "label": "steps"
         },
         {
           "name": "cfg",
@@ -508,7 +456,8 @@
                 "max": 100
               }
             ]
-          }
+          },
+          "label": "cfg"
         },
         {
           "name": "noise_mask",
@@ -524,7 +473,8 @@
                 "label_off": "disabled"
               }
             ]
-          }
+          },
+          "label": "noise_mask"
         }
       ],
       "outputs": [
@@ -535,25 +485,29 @@
             35
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "image"
         },
         {
           "name": "cropped_refined",
           "type": "IMAGE",
           "links": null,
-          "shape": 6
+          "shape": 6,
+          "label": "cropped_refined"
         },
         {
           "name": "cropped_enhanced_alpha",
           "type": "IMAGE",
           "links": null,
-          "shape": 6
+          "shape": 6,
+          "label": "cropped_enhanced_alpha"
         },
         {
           "name": "mask",
           "type": "MASK",
           "links": null,
-          "shape": 3
+          "shape": 3,
+          "label": "mask"
         },
         {
           "name": "detailer_pipe",
@@ -563,7 +517,8 @@
           ],
           "shape": 3,
           "slot_index": 4,
-          "color": ""
+          "color": "",
+          "label": "detailer_pipe"
         }
       ],
       "properties": {
@@ -594,41 +549,89 @@
         "False",
         10
       ]
+    },
+    {
+      "id": 27,
+      "type": "BasicPipeToDetailerPipe",
+      "pos": [
+        720,
+        940
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 37,
+          "label": "basic_pipe"
+        },
+        {
+          "name": "bbox_detector",
+          "type": "BBOX_DETECTOR",
+          "link": 38,
+          "label": "bbox_detector"
+        },
+        {
+          "name": "sam_model_opt",
+          "type": "SAM_MODEL",
+          "link": 39,
+          "label": "sam_model_opt"
+        },
+        {
+          "name": "segm_detector_opt",
+          "type": "SEGM_DETECTOR",
+          "link": null,
+          "label": "segm_detector_opt"
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null,
+          "label": "detailer_hook"
+        },
+        {
+          "name": "wildcard",
+          "type": "STRING",
+          "link": 40,
+          "widget": {
+            "name": "wildcard",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "detailer_pipe",
+          "type": "DETAILER_PIPE",
+          "links": [
+            41
+          ],
+          "shape": 3,
+          "label": "detailer_pipe",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicPipeToDetailerPipe"
+      },
+      "widgets_values": [
+        "",
+        "Select the LoRA to add to the text"
+      ]
     }
   ],
   "links": [
-    [
-      4,
-      3,
-      0,
-      6,
-      0,
-      "BASIC_PIPE"
-    ],
-    [
-      6,
-      8,
-      0,
-      6,
-      2,
-      "SAM_MODEL"
-    ],
-    [
-      25,
-      19,
-      0,
-      6,
-      3,
-      "STRING"
-    ],
-    [
-      26,
-      20,
-      0,
-      6,
-      1,
-      "BBOX_DETECTOR"
-    ],
     [
       28,
       11,
@@ -636,14 +639,6 @@
       24,
       0,
       "IMAGE"
-    ],
-    [
-      29,
-      6,
-      0,
-      24,
-      1,
-      "DETAILER_PIPE"
     ],
     [
       30,
@@ -700,6 +695,46 @@
       25,
       0,
       "*"
+    ],
+    [
+      37,
+      3,
+      0,
+      27,
+      0,
+      "BASIC_PIPE"
+    ],
+    [
+      38,
+      20,
+      0,
+      27,
+      1,
+      "BBOX_DETECTOR"
+    ],
+    [
+      39,
+      8,
+      0,
+      27,
+      2,
+      "SAM_MODEL"
+    ],
+    [
+      40,
+      19,
+      0,
+      27,
+      5,
+      "STRING"
+    ],
+    [
+      41,
+      27,
+      0,
+      24,
+      1,
+      "DETAILER_PIPE"
     ]
   ],
   "groups": [],
@@ -709,27 +744,6 @@
   "output": {
     "3": {
       "inputs": {}
-    },
-    "6": {
-      "inputs": {
-        "wildcard": [
-          "19",
-          0
-        ],
-        "basic_pipe": [
-          "3",
-          0
-        ],
-        "bbox_detector": [
-          "20",
-          0
-        ],
-        "sam_model_opt": [
-          "8",
-          0
-        ]
-      },
-      "class_type": "BasicPipeToDetailerPipe"
     },
     "8": {
       "inputs": {
@@ -817,7 +831,7 @@
           0
         ],
         "detailer_pipe": [
-          "6",
+          "27",
           0
         ]
       },
@@ -830,6 +844,28 @@
           4
         ]
       }
+    },
+    "27": {
+      "inputs": {
+        "wildcard": [
+          "19",
+          0
+        ],
+        "Select to add LoRA": "Select the LoRA to add to the text",
+        "basic_pipe": [
+          "3",
+          0
+        ],
+        "bbox_detector": [
+          "20",
+          0
+        ],
+        "sam_model_opt": [
+          "8",
+          0
+        ]
+      },
+      "class_type": "BasicPipeToDetailerPipe"
     }
   }
 }
