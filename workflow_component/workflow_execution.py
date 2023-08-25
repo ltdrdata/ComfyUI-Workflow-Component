@@ -144,8 +144,10 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
         except:
             return True
 
+    given_inputs = set([str(value['id']) for key, value in input_mapping.items()])
+
     # get empty prompt option
-    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and not value['inputs']]
+    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and not value['inputs'] and key not in given_inputs]
 
     # unlink unprovided option prompt
     for key, value in prompt.items():
