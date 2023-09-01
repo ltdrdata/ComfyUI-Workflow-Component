@@ -146,15 +146,6 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
 
     given_inputs = set([str(value['id']) for key, value in input_mapping.items()])
 
-    # get empty prompt option
-    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and not value['inputs'] and key not in given_inputs]
-
-    # unlink unprovided option prompt
-    for key, value in prompt.items():
-        new_value = {name: input_value for name, input_value in value['inputs'].items() if
-                     not isinstance(input_value, list) or input_value[0] not in empty_option_prompts}
-        prompt[key]['inputs'] = new_value
-
     # pass input interface to internal nodes
     for key, value in kwargs.items():
         if key not in ["unique_id", "prompt", "extra_pnginfo", 'used_output_names']:
@@ -166,6 +157,15 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
                 changed_inputs.add(input_node_id)
 
             pe.old_prompt[input_node_id] = prompt[input_node_id]  # prevent erasing of output cache
+
+    # get empty prompt option
+    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and key not in pe.outputs]
+
+    # unlink unprovided option prompt
+    for key, value in prompt.items():
+        new_value = {name: input_value for name, input_value in value['inputs'].items() if
+                     not isinstance(input_value, list) or input_value[0] not in empty_option_prompts}
+        prompt[key]['inputs'] = new_value
 
     # remove output's old_prompt for regeneration of changed
     for key, value in prompt.items():

@@ -182,7 +182,7 @@
       ],
       "size": {
         "0": 210,
-        "1": 46
+        "1": 78
       },
       "flags": {},
       "order": 12,
@@ -213,7 +213,10 @@
       ],
       "properties": {
         "Node name for S&R": "VAEDecodeTiled"
-      }
+      },
+      "widgets_values": [
+        512
+      ]
     },
     {
       "id": 5,
@@ -373,7 +376,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "outputs": [
         {
@@ -403,7 +406,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "outputs": [
         {
@@ -607,7 +610,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
@@ -637,7 +640,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 4,
+      "order": 7,
       "mode": 0,
       "outputs": [
         {
@@ -919,6 +922,7 @@
     },
     "32": {
       "inputs": {
+        "tile_size": 512,
         "samples": [
           "30",
           0

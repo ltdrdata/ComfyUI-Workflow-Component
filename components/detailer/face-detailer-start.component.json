@@ -547,7 +547,8 @@
         0,
         0.7,
         "False",
-        10
+        10,
+        0.2
       ]
     },
     {
@@ -557,10 +558,10 @@
         720,
         940
       ],
-      "size": [
-        400,
-        200
-      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
       "flags": {},
       "order": 10,
       "mode": 0,
@@ -826,6 +827,7 @@
         "sam_mask_hint_threshold": 0.7,
         "sam_mask_hint_use_negative": "False",
         "drop_size": 10,
+        "refiner_ratio": 0.2,
         "image": [
           "11",
           0

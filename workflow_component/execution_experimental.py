@@ -662,9 +662,10 @@ class ExpPromptExecutor:
 def validate_prompt(prompt):
     outputs = set()
     for x in prompt:
-        class_ = nodes.NODE_CLASS_MAPPINGS[prompt[x]['class_type']]
-        if hasattr(class_, 'OUTPUT_NODE') and class_.OUTPUT_NODE == True:
-            outputs.add(x)
+        if 'class_type' in prompt[x]:
+            class_ = nodes.NODE_CLASS_MAPPINGS[prompt[x]['class_type']]
+            if hasattr(class_, 'OUTPUT_NODE') and class_.OUTPUT_NODE:
+                outputs.add(x)
 
     if len(outputs) == 0:
         error = {
