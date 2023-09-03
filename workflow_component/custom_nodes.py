@@ -266,7 +266,7 @@ class ComponentInput:
             "required": {
                 "name": ("STRING", {"multiline": False}),
                 "data_type": ("STRING", {"multiline": False, "default": "IMAGE"}),
-                "extra_args": ("STRING", {"multiline": True}),
+                "extra_args": ("STRING", {"multiline": True, "dynamicPrompts": False, "placeholder": "extra_args"}),
                 "explicit_input_order": ("INT", {"default": 0, "min": 0, "max": 1000, "step": 1}),
                 "is_optional": ("BOOLEAN", {"default": False, "label_on": "optional", "label_off": "required"}),
             },
