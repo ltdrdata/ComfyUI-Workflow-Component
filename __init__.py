@@ -8,7 +8,7 @@ sys.path.append(extension_path)
 
 import workflow_component.component_loader as component_loader
 
-print("### Loading: ComfyUI-Workflow-Component (V0.41.3) !! WARN: This is an experimental extension. Extremely unstable. !!")
+print("### Loading: ComfyUI-Workflow-Component (V1.0) !! WARN: This is an experimental extension. Extremely unstable. !!")
 
 comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
@@ -17,23 +17,9 @@ js_path = os.path.join(comfy_path, "web", "extensions")
 def setup_js():
     # setup js
     js_dest_path = os.path.join(js_path, "workflow-component")
-    if not os.path.exists(js_dest_path):
-        os.makedirs(js_dest_path)
 
-    js_src_path = os.path.join(this_extension_path, "js", "workflow-component.js")
-    js_dest_path_full = os.path.join(js_dest_path, "workflow-component.js")
-    if not (os.path.exists(js_dest_path_full) and os.path.islink(js_dest_path_full)):
-        shutil.copy(js_src_path, js_dest_path)
-
-    js_src_path = os.path.join(this_extension_path, "js", "image-refiner.js")
-    js_dest_path_full = os.path.join(js_dest_path, "image-refiner.js")
-    if not (os.path.exists(js_dest_path_full) and os.path.islink(js_dest_path_full)):
-        shutil.copy(js_src_path, js_dest_path)
-
-    js_src_path = os.path.join(this_extension_path, "js", "help.png")
-    js_dest_path_full = os.path.join(js_dest_path, "help.png")
-    if not (os.path.exists(js_dest_path_full) and os.path.islink(js_dest_path_full)):
-        shutil.copy(js_src_path, js_dest_path)
+    if os.path.exists(js_dest_path):
+        shutil.rmtree(js_dest_path)
 
 setup_js()
 
@@ -60,12 +46,12 @@ NODE_CLASS_MAPPINGS = {
     "OptionalTest": OptionalTest,
 }
 
-NODE_DISPLAY_NAME_MAPPINGS = {
-}
+NODE_DISPLAY_NAME_MAPPINGS = {}
 
 directory = os.path.join(os.path.dirname(__file__), "components")
 
 component_loader.load_all(directory)
 NODE_CLASS_MAPPINGS.update(component_loader.NODE_CLASS_MAPPINGS)
 
-__all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
+WEB_DIRECTORY = "./js"
+__all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS', "WEB_DIRECTORY"]
