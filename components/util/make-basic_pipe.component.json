@@ -1,57 +1,13 @@
 {
-  "last_node_id": 13,
-  "last_link_id": 13,
+  "last_node_id": 9,
+  "last_link_id": 12,
   "nodes": [
-    {
-      "id": 2,
-      "type": "ComponentInput",
-      "pos": [
-        50,
-        60
-      ],
-      "size": {
-        "0": 400,
-        "1": 200
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "default_value",
-          "type": "COMBO,",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "COMBO,",
-          "type": "COMBO,",
-          "links": [
-            4
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ComponentInput"
-      },
-      "widgets_values": [
-        "ckpt_name",
-        "COMBO,",
-        "COMBO:CheckpointLoaderSimple:ckpt_name",
-        0,
-        false
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
     {
       "id": 1,
       "type": "ToBasicPipe",
       "pos": [
-        1300,
-        60
+        1240,
+        180
       ],
       "size": {
         "0": 241.79998779296875,
@@ -64,18 +20,18 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 1
+          "link": 2,
+          "slot_index": 0
         },
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 2,
-          "slot_index": 1
+          "link": 3
         },
         {
           "name": "vae",
           "type": "VAE",
-          "link": 3
+          "link": 4
         },
         {
           "name": "positive",
@@ -94,7 +50,7 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "links": [
-            7
+            5
           ],
           "shape": 3,
           "slot_index": 0
@@ -105,69 +61,16 @@
       }
     },
     {
-      "id": 11,
-      "type": "CLIPTextEncode",
-      "pos": [
-        1030,
-        400
-      ],
-      "size": {
-        "0": 210,
-        "1": 54
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 11
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 13,
-          "widget": {
-            "name": "text",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            9
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        ""
-      ]
-    },
-    {
-      "id": 7,
+      "id": 3,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        630,
-        60
+        590,
+        180
       ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
+      "size": [
+        315,
+        98
+      ],
       "flags": {},
       "order": 3,
       "mode": 0,
@@ -175,7 +78,7 @@
         {
           "name": "ckpt_name",
           "type": "SD1.5/V07_v07.safetensors,SD1.5/darkSushi25D25D_v40.safetensors,SD1.5/galaxytimemachinesGTM_photoV20.safetensors,SD1.5/majicmixRealistic_v6.safetensors,SD1.5/photon_v1.safetensors,SD1.5/realisticVisionV51_v51VAE.safetensors,SDXL/angraSDXL10_v22.safetensors,SDXL/animeArtDiffusionXL_alpha3.safetensors,SDXL/copaxTimelessxlSDXL1_v46.safetensors,SDXL/crystalClearXL_ccxl.safetensors,SDXL/duchaitenAiartSDXL_v092.safetensors,SDXL/dynavisionXLAllInOneStylized_alpha013BAKEDVAE.safetensors,SDXL/miamodelSFWNSFWSDXL_v20.safetensors,SDXL/nightvisionXLPhotorealisticPortrait_beta0702Bakedvae.safetensors,SDXL/rundiffusionXL_beta.safetensors,SDXL/sd_xl_base_1.0_0.9vae.safetensors,SDXL/sd_xl_refiner_1.0_0.9vae.safetensors,SDXL/sdvn6Realxl_detailface.safetensors,SDXL/sdxlYamersAnimeUltra_yamersAnimeV2.safetensors,SDXL/talmendoxlSDXL_v11Beta.safetensors",
-          "link": 4,
+          "link": 10,
           "widget": {
             "name": "ckpt_name",
             "config": [
@@ -211,18 +114,17 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            1
+            2
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         },
         {
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            2,
-            10,
-            11
+            3,
+            6,
+            7
           ],
           "shape": 3,
           "slot_index": 1
@@ -231,7 +133,7 @@
           "name": "VAE",
           "type": "VAE",
           "links": [
-            3
+            4
           ],
           "shape": 3,
           "slot_index": 2
@@ -245,11 +147,118 @@
       ]
     },
     {
-      "id": 12,
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [
+        980,
+        410
+      ],
+      "size": [
+        210,
+        54
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 6
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 11,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            8
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        980,
+        530
+      ],
+      "size": [
+        210,
+        54
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 7
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 12,
+          "widget": {
+            "name": "text",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          },
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            9
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 8,
       "type": "ComponentInput",
       "pos": [
-        50,
-        320
+        110,
+        430
       ],
       "size": {
         "0": 400,
@@ -270,10 +279,9 @@
           "name": "STRING",
           "type": "STRING",
           "links": [
-            12
+            11
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
@@ -283,63 +291,18 @@
         "positive",
         "STRING",
         "\"multiline\":true",
-        0,
+        1,
         false
       ],
       "color": "#322",
       "bgcolor": "#533"
     },
     {
-      "id": 13,
-      "type": "ComponentInput",
-      "pos": [
-        50,
-        590
-      ],
-      "size": {
-        "0": 400,
-        "1": 200
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "default_value",
-          "type": "STRING",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            13
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ComponentInput"
-      },
-      "widgets_values": [
-        "negative",
-        "STRING",
-        "\"multiline\":true",
-        0,
-        false
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 8,
+      "id": 4,
       "type": "ComponentOutput",
       "pos": [
-        1630,
-        60
+        1590,
+        180
       ],
       "size": {
         "0": 315,
@@ -352,7 +315,7 @@
         {
           "name": "value",
           "type": "BASIC_PIPE",
-          "link": 7,
+          "link": 5,
           "label": "BASIC_PIPE"
         }
       ],
@@ -376,103 +339,146 @@
       "bgcolor": "#335"
     },
     {
-      "id": 9,
-      "type": "CLIPTextEncode",
+      "id": 7,
+      "type": "ComponentInput",
       "pos": [
-        1030,
-        290
+        110,
+        180
       ],
       "size": {
-        "0": 210,
-        "1": 54
+        "0": 400,
+        "1": 200
       },
       "flags": {},
-      "order": 4,
+      "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 10
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 12,
-          "widget": {
-            "name": "text",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
+          "name": "default_value",
+          "type": "COMBO,",
+          "link": null
         }
       ],
       "outputs": [
         {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
+          "name": "COMBO,",
+          "type": "COMBO,",
           "links": [
-            8
+            10
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "CLIPTextEncode"
+        "Node name for S&R": "ComponentInput"
       },
       "widgets_values": [
-        ""
-      ]
+        "ckpt_name",
+        "COMBO,",
+        "COMBO:CheckpointLoaderSimple:ckpt_name",
+        0,
+        false
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 9,
+      "type": "ComponentInput",
+      "pos": [
+        110,
+        680
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "default_value",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            12
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComponentInput"
+      },
+      "widgets_values": [
+        "negative",
+        "STRING",
+        "\"multiline\":true",
+        2,
+        false
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
     [
-      1,
-      7,
+      2,
+      3,
       0,
       1,
       0,
       "MODEL"
     ],
     [
-      2,
-      7,
+      3,
+      3,
       1,
       1,
       1,
       "CLIP"
     ],
     [
+      4,
       3,
-      7,
       2,
       1,
       2,
       "VAE"
     ],
     [
-      4,
-      2,
-      0,
-      7,
-      0,
-      "SD1.5/V07_v07.safetensors,SD1.5/darkSushi25D25D_v40.safetensors,SD1.5/galaxytimemachinesGTM_photoV20.safetensors,SD1.5/majicmixRealistic_v6.safetensors,SD1.5/photon_v1.safetensors,SD1.5/realisticVisionV51_v51VAE.safetensors,SDXL/angraSDXL10_v22.safetensors,SDXL/animeArtDiffusionXL_alpha3.safetensors,SDXL/copaxTimelessxlSDXL1_v46.safetensors,SDXL/crystalClearXL_ccxl.safetensors,SDXL/duchaitenAiartSDXL_v092.safetensors,SDXL/dynavisionXLAllInOneStylized_alpha013BAKEDVAE.safetensors,SDXL/miamodelSFWNSFWSDXL_v20.safetensors,SDXL/nightvisionXLPhotorealisticPortrait_beta0702Bakedvae.safetensors,SDXL/rundiffusionXL_beta.safetensors,SDXL/sd_xl_base_1.0_0.9vae.safetensors,SDXL/sd_xl_refiner_1.0_0.9vae.safetensors,SDXL/sdvn6Realxl_detailface.safetensors,SDXL/sdxlYamersAnimeUltra_yamersAnimeV2.safetensors,SDXL/talmendoxlSDXL_v11Beta.safetensors"
-    ],
-    [
-      7,
+      5,
       1,
       0,
-      8,
+      4,
       0,
       "*"
     ],
     [
+      6,
+      3,
+      1,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      7,
+      3,
+      1,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
       8,
-      9,
+      5,
       0,
       1,
       3,
@@ -480,7 +486,7 @@
     ],
     [
       9,
-      11,
+      6,
       0,
       1,
       4,
@@ -489,32 +495,24 @@
     [
       10,
       7,
-      1,
-      9,
       0,
-      "CLIP"
+      3,
+      0,
+      "SD1.5/V07_v07.safetensors,SD1.5/darkSushi25D25D_v40.safetensors,SD1.5/galaxytimemachinesGTM_photoV20.safetensors,SD1.5/majicmixRealistic_v6.safetensors,SD1.5/photon_v1.safetensors,SD1.5/realisticVisionV51_v51VAE.safetensors,SDXL/angraSDXL10_v22.safetensors,SDXL/animeArtDiffusionXL_alpha3.safetensors,SDXL/copaxTimelessxlSDXL1_v46.safetensors,SDXL/crystalClearXL_ccxl.safetensors,SDXL/duchaitenAiartSDXL_v092.safetensors,SDXL/dynavisionXLAllInOneStylized_alpha013BAKEDVAE.safetensors,SDXL/miamodelSFWNSFWSDXL_v20.safetensors,SDXL/nightvisionXLPhotorealisticPortrait_beta0702Bakedvae.safetensors,SDXL/rundiffusionXL_beta.safetensors,SDXL/sd_xl_base_1.0_0.9vae.safetensors,SDXL/sd_xl_refiner_1.0_0.9vae.safetensors,SDXL/sdvn6Realxl_detailface.safetensors,SDXL/sdxlYamersAnimeUltra_yamersAnimeV2.safetensors,SDXL/talmendoxlSDXL_v11Beta.safetensors"
     ],
     [
       11,
-      7,
-      1,
-      11,
+      8,
       0,
-      "CLIP"
-    ],
-    [
-      12,
-      12,
-      0,
-      9,
+      5,
       1,
       "STRING"
     ],
     [
-      13,
-      13,
+      12,
+      9,
       0,
-      11,
+      6,
       1,
       "STRING"
     ]
@@ -527,48 +525,38 @@
     "1": {
       "inputs": {
         "model": [
-          "7",
+          "3",
           0
         ],
         "clip": [
-          "7",
+          "3",
           1
         ],
         "vae": [
-          "7",
+          "3",
           2
         ],
         "positive": [
-          "9",
+          "5",
           0
         ],
         "negative": [
-          "11",
+          "6",
           0
         ]
       },
       "class_type": "ToBasicPipe"
     },
-    "2": {
-      "inputs": {
-        "name": "ckpt_name",
-        "data_type": "COMBO,",
-        "extra_args": "COMBO:CheckpointLoaderSimple:ckpt_name",
-        "explicit_input_order": 0,
-        "is_optional": false
-      },
-      "class_type": "ComponentInput"
-    },
-    "7": {
+    "3": {
       "inputs": {
         "ckpt_name": [
-          "2",
+          "7",
           0
         ]
       },
       "class_type": "CheckpointLoaderSimple"
     },
-    "8": {
+    "4": {
       "inputs": {
         "name": "basic_pipe",
         "data_type": "BASIC_PIPE",
@@ -580,48 +568,58 @@
       },
       "class_type": "ComponentOutput"
     },
-    "9": {
+    "5": {
       "inputs": {
         "text": [
-          "12",
+          "8",
           0
         ],
         "clip": [
-          "7",
+          "3",
           1
         ]
       },
       "class_type": "CLIPTextEncode"
     },
-    "11": {
+    "6": {
       "inputs": {
         "text": [
-          "13",
+          "9",
           0
         ],
         "clip": [
-          "7",
+          "3",
           1
         ]
       },
       "class_type": "CLIPTextEncode"
     },
-    "12": {
+    "7": {
       "inputs": {
-        "name": "positive",
-        "data_type": "STRING",
-        "extra_args": "\"multiline\":true",
+        "name": "ckpt_name",
+        "data_type": "COMBO,",
+        "extra_args": "COMBO:CheckpointLoaderSimple:ckpt_name",
         "explicit_input_order": 0,
         "is_optional": false
       },
       "class_type": "ComponentInput"
     },
-    "13": {
+    "8": {
+      "inputs": {
+        "name": "positive",
+        "data_type": "STRING",
+        "extra_args": "\"multiline\":true",
+        "explicit_input_order": 1,
+        "is_optional": false
+      },
+      "class_type": "ComponentInput"
+    },
+    "9": {
       "inputs": {
         "name": "negative",
         "data_type": "STRING",
         "extra_args": "\"multiline\":true",
-        "explicit_input_order": 0,
+        "explicit_input_order": 2,
         "is_optional": false
       },
       "class_type": "ComponentInput"

@@ -27,7 +27,7 @@ def unload_unused_checkpoints(ckpts):
 def unload_all():
     global loaded_checkpoints
     loaded_checkpoints = {}
-    comfy.model_management.unload_model()
+    comfy.model_management.cleanup_models()
 
 
 def load_checkpoint(ckpt_name):
@@ -35,7 +35,7 @@ def load_checkpoint(ckpt_name):
     if ckpt_name in loaded_checkpoints:
         model, clip, vae = loaded_checkpoints[ckpt_name]
     else:
-        model, clip, vae, _ = comfy_nodes.CheckpointLoaderSimple().load_checkpoint(ckpt_name)
+        model, clip, vae = comfy_nodes.CheckpointLoaderSimple().load_checkpoint(ckpt_name)
         loaded_checkpoints[ckpt_name] = model, clip, vae
 
     return model, clip, vae
@@ -174,7 +174,7 @@ def generate(merged_pil, mask_pil, prompt_data):
     input_data_all = prepare_input(class_def, merged_pil, mask_pil, prompt_data)
     output_data, _ = ee.get_output_data(class_def(), input_data_all)
 
-    comfy.model_management.unload_model()
+    comfy.model_management.cleanup_models()
 
     # retrieve output
     return process_output(class_def, output_data)
