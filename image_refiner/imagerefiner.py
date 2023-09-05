@@ -35,7 +35,7 @@ def load_checkpoint(ckpt_name):
     if ckpt_name in loaded_checkpoints:
         model, clip, vae = loaded_checkpoints[ckpt_name]
     else:
-        model, clip, vae, _ = comfy_nodes.CheckpointLoaderSimple().load_checkpoint(ckpt_name)
+        model, clip, vae = comfy_nodes.CheckpointLoaderSimple().load_checkpoint(ckpt_name)
         loaded_checkpoints[ckpt_name] = model, clip, vae
 
     return model, clip, vae
