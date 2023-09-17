@@ -1,6 +1,7 @@
 import os
 import nodes
-import workflow_component.execution_experimental as ee
+# import workflow_component.execution_experimental as ee
+import execution
 import nodes as comfy_nodes
 import numpy as np
 import torch
@@ -172,7 +173,9 @@ def generate(merged_pil, mask_pil, prompt_data):
     class_def = nodes.NODE_CLASS_MAPPINGS[component_name]
 
     input_data_all = prepare_input(class_def, merged_pil, mask_pil, prompt_data)
-    output_data, _ = ee.get_output_data(class_def(), input_data_all)
+    output_data, ui, subgraph = execution.get_output_data(class_def(), input_data_all)
+
+    # todo handling subgraph in output_data
 
     comfy.model_management.cleanup_models()
 
