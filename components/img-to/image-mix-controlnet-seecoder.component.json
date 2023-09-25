@@ -11,7 +11,7 @@
       ],
       "size": {
         "0": 315,
-        "1": 58
+        "1": 82
       },
       "flags": {},
       "order": 15,
@@ -21,7 +21,8 @@
           "name": "image",
           "type": "IMAGE",
           "link": 32,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "image"
         }
       ],
       "outputs": [
@@ -32,14 +33,16 @@
             18
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "IMAGE"
         }
       ],
       "properties": {
         "Node name for S&R": "LineArtPreprocessor"
       },
       "widgets_values": [
-        "disable"
+        "disable",
+        512
       ]
     },
     {
@@ -60,7 +63,8 @@
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 31
+          "link": 31,
+          "label": "image"
         }
       ],
       "outputs": [
@@ -71,7 +75,8 @@
             30
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "CONDITIONING"
         }
       ],
       "properties": {
@@ -103,7 +108,7 @@
             32
           ],
           "slot_index": 0,
-          "label": "base_image"
+          "label": "image"
         }
       ],
       "title": "02. Component Input",
@@ -132,7 +137,8 @@
           "links": [
             23
           ],
-          "shape": 3
+          "shape": 3,
+          "label": "CONTROL_NET"
         }
       ],
       "properties": {
@@ -161,7 +167,8 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "link": 42,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "basic_pipe"
         }
       ],
       "outputs": [
@@ -172,13 +179,15 @@
             37
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "model"
         },
         {
           "name": "clip",
           "type": "CLIP",
           "links": null,
-          "shape": 3
+          "shape": 3,
+          "label": "clip"
         },
         {
           "name": "vae",
@@ -187,7 +196,8 @@
             38
           ],
           "shape": 3,
-          "slot_index": 2
+          "slot_index": 2,
+          "label": "vae"
         },
         {
           "name": "positive",
@@ -196,7 +206,8 @@
             41
           ],
           "shape": 3,
-          "slot_index": 3
+          "slot_index": 3,
+          "label": "positive"
         },
         {
           "name": "negative",
@@ -205,7 +216,8 @@
             36
           ],
           "shape": 3,
-          "slot_index": 4
+          "slot_index": 4,
+          "label": "negative"
         }
       ],
       "properties": {
@@ -230,13 +242,15 @@
         {
           "name": "samples",
           "type": "LATENT",
-          "link": 11
+          "link": 11,
+          "label": "samples"
         },
         {
           "name": "vae",
           "type": "VAE",
           "link": 38,
-          "slot_index": 1
+          "slot_index": 1,
+          "label": "vae"
         }
       ],
       "outputs": [
@@ -248,7 +262,8 @@
           ],
           "shape": 3,
           "slot_index": 0,
-          "color": "#64B5F6"
+          "color": "#5940bb",
+          "label": "IMAGE"
         }
       ],
       "properties": {
@@ -274,7 +289,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "link": 34,
-          "label": null
+          "label": "IMAGE"
         }
       ],
       "title": "2.Component Output",
@@ -333,7 +348,7 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "link": 53,
-          "label": "BASIC_PIPE"
+          "label": "basic_pipe"
         }
       ],
       "title": "1.Component Output",
@@ -363,7 +378,7 @@
             31
           ],
           "slot_index": 0,
-          "label": "reference_image"
+          "label": "image"
         }
       ],
       "title": "03. Component Input",
@@ -462,7 +477,8 @@
               }
             ]
           },
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "width"
         },
         {
           "name": "height",
@@ -480,7 +496,8 @@
               }
             ]
           },
-          "slot_index": 1
+          "slot_index": 1,
+          "label": "height"
         },
         {
           "name": "batch_size",
@@ -497,7 +514,8 @@
               }
             ]
           },
-          "slot_index": 2
+          "slot_index": 2,
+          "label": "batch_size"
         }
       ],
       "outputs": [
@@ -507,7 +525,8 @@
           "links": [
             10
           ],
-          "shape": 3
+          "shape": 3,
+          "label": "LATENT"
         }
       ],
       "properties": {
@@ -717,23 +736,27 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 37
+          "link": 37,
+          "label": "model"
         },
         {
           "name": "positive",
           "type": "CONDITIONING",
-          "link": 22
+          "link": 22,
+          "label": "positive"
         },
         {
           "name": "negative",
           "type": "CONDITIONING",
-          "link": 36
+          "link": 36,
+          "label": "negative"
         },
         {
           "name": "latent_image",
           "type": "LATENT",
           "link": 10,
-          "slot_index": 3
+          "slot_index": 3,
+          "label": "latent_image"
         },
         {
           "name": "seed",
@@ -750,7 +773,8 @@
               }
             ]
           },
-          "slot_index": 4
+          "slot_index": 4,
+          "label": "seed"
         },
         {
           "name": "steps",
@@ -767,7 +791,8 @@
               }
             ]
           },
-          "slot_index": 5
+          "slot_index": 5,
+          "label": "steps"
         },
         {
           "name": "cfg",
@@ -784,7 +809,8 @@
               }
             ]
           },
-          "slot_index": 6
+          "slot_index": 6,
+          "label": "cfg"
         },
         {
           "name": "sampler_name",
@@ -812,7 +838,8 @@
               ]
             ]
           },
-          "slot_index": 7
+          "slot_index": 7,
+          "label": "sampler_name"
         },
         {
           "name": "scheduler",
@@ -830,7 +857,8 @@
               ]
             ]
           },
-          "slot_index": 8
+          "slot_index": 8,
+          "label": "scheduler"
         },
         {
           "name": "denoise",
@@ -848,7 +876,8 @@
               }
             ]
           },
-          "slot_index": 9
+          "slot_index": 9,
+          "label": "denoise"
         }
       ],
       "outputs": [
@@ -859,7 +888,8 @@
             11
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "LATENT"
         }
       ],
       "properties": {
@@ -923,18 +953,21 @@
         {
           "name": "conditioning",
           "type": "CONDITIONING",
-          "link": 19
+          "link": 19,
+          "label": "conditioning"
         },
         {
           "name": "control_net",
           "type": "CONTROL_NET",
           "link": 23,
-          "slot_index": 1
+          "slot_index": 1,
+          "label": "control_net"
         },
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 18
+          "link": 18,
+          "label": "image"
         },
         {
           "name": "strength",
@@ -952,7 +985,8 @@
               }
             ]
           },
-          "slot_index": 3
+          "slot_index": 3,
+          "label": "strength"
         }
       ],
       "outputs": [
@@ -963,7 +997,8 @@
             22
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "CONDITIONING"
         }
       ],
       "properties": {
@@ -994,7 +1029,7 @@
           "links": [
             64
           ],
-          "label": "base_strength",
+          "label": "strength",
           "slot_index": 0
         }
       ],
@@ -1005,7 +1040,7 @@
     },
     {
       "id": 5,
-      "type": "ConditioningAverage ",
+      "type": "ConditioningAverage",
       "pos": [
         1988,
         566
@@ -1021,12 +1056,14 @@
         {
           "name": "conditioning_to",
           "type": "CONDITIONING",
-          "link": 41
+          "link": 41,
+          "label": "conditioning_to"
         },
         {
           "name": "conditioning_from",
           "type": "CONDITIONING",
-          "link": 30
+          "link": 30,
+          "label": "conditioning_from"
         },
         {
           "name": "conditioning_to_strength",
@@ -1044,7 +1081,8 @@
               }
             ]
           },
-          "slot_index": 2
+          "slot_index": 2,
+          "label": "conditioning_to_strength"
         }
       ],
       "outputs": [
@@ -1055,7 +1093,8 @@
             19
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "CONDITIONING"
         }
       ],
       "properties": {
@@ -1086,7 +1125,7 @@
           "links": [
             65
           ],
-          "label": "positive_reference_ratio",
+          "label": "conditioning_to_strength",
           "slot_index": 0
         }
       ],
@@ -1344,7 +1383,7 @@
           0
         ]
       },
-      "class_type": "ConditioningAverage "
+      "class_type": "ConditioningAverage"
     },
     "10": {
       "inputs": {
@@ -1445,6 +1484,7 @@
     "17": {
       "inputs": {
         "coarse": "disable",
+        "resolution": 512,
         "image": [
           "22",
           0

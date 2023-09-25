@@ -1,6 +1,6 @@
 {
-  "last_node_id": 27,
-  "last_link_id": 41,
+  "last_node_id": 25,
+  "last_link_id": 36,
   "nodes": [
     {
       "id": 8,
@@ -21,7 +21,7 @@
           "name": "SAM_MODEL",
           "type": "SAM_MODEL",
           "links": [
-            39
+            6
           ],
           "shape": 3,
           "label": "SAM_MODEL"
@@ -226,7 +226,7 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "links": [
-            37
+            4
           ],
           "label": "basic_pipe"
         }
@@ -235,6 +235,84 @@
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
+    },
+    {
+      "id": 6,
+      "type": "BasicPipeToDetailerPipe",
+      "pos": [
+        750,
+        810
+      ],
+      "size": {
+        "0": 342.5999755859375,
+        "1": 138
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 4,
+          "slot_index": 0,
+          "label": "basic_pipe"
+        },
+        {
+          "name": "bbox_detector",
+          "type": "BBOX_DETECTOR",
+          "link": 26,
+          "slot_index": 1,
+          "label": "bbox_detector"
+        },
+        {
+          "name": "sam_model_opt",
+          "type": "SAM_MODEL",
+          "link": 6,
+          "slot_index": 2,
+          "label": "sam_model_opt"
+        },
+        {
+          "name": "wildcard",
+          "type": "STRING",
+          "link": 25,
+          "widget": {
+            "name": "wildcard",
+            "config": [
+              "STRING",
+              {
+                "multiline": true
+              }
+            ]
+          },
+          "label": "wildcard"
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null,
+          "label": "detailer_hook"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "detailer_pipe",
+          "type": "DETAILER_PIPE",
+          "links": [
+            29
+          ],
+          "shape": 3,
+          "slot_index": 0,
+          "label": "detailer_pipe"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicPipeToDetailerPipe"
+      },
+      "widgets_values": [
+        "",
+        "Select the LoRA to add to the text"
+      ]
     },
     {
       "id": 19,
@@ -255,7 +333,7 @@
           "name": "wildcard",
           "type": "STRING",
           "links": [
-            40
+            25
           ],
           "slot_index": 0,
           "label": "wildcard"
@@ -285,7 +363,7 @@
           "name": "BBOX_DETECTOR",
           "type": "BBOX_DETECTOR",
           "links": [
-            38
+            26
           ],
           "shape": 3,
           "slot_index": 0,
@@ -386,7 +464,7 @@
         {
           "name": "detailer_pipe",
           "type": "DETAILER_PIPE",
-          "link": 41,
+          "link": 29,
           "label": "detailer_pipe"
         },
         {
@@ -519,6 +597,13 @@
           "slot_index": 4,
           "color": "",
           "label": "detailer_pipe"
+        },
+        {
+          "name": "cnet_images",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6,
+          "label": "cnet_images"
         }
       ],
       "properties": {
@@ -550,89 +635,41 @@
         10,
         0.2
       ]
-    },
-    {
-      "id": 27,
-      "type": "BasicPipeToDetailerPipe",
-      "pos": [
-        720,
-        940
-      ],
-      "size": {
-        "0": 400,
-        "1": 200
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "basic_pipe",
-          "type": "BASIC_PIPE",
-          "link": 37,
-          "label": "basic_pipe"
-        },
-        {
-          "name": "bbox_detector",
-          "type": "BBOX_DETECTOR",
-          "link": 38,
-          "label": "bbox_detector"
-        },
-        {
-          "name": "sam_model_opt",
-          "type": "SAM_MODEL",
-          "link": 39,
-          "label": "sam_model_opt"
-        },
-        {
-          "name": "segm_detector_opt",
-          "type": "SEGM_DETECTOR",
-          "link": null,
-          "label": "segm_detector_opt"
-        },
-        {
-          "name": "detailer_hook",
-          "type": "DETAILER_HOOK",
-          "link": null,
-          "label": "detailer_hook"
-        },
-        {
-          "name": "wildcard",
-          "type": "STRING",
-          "link": 40,
-          "widget": {
-            "name": "wildcard",
-            "config": [
-              "STRING",
-              {
-                "multiline": true
-              }
-            ]
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "detailer_pipe",
-          "type": "DETAILER_PIPE",
-          "links": [
-            41
-          ],
-          "shape": 3,
-          "label": "detailer_pipe",
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicPipeToDetailerPipe"
-      },
-      "widgets_values": [
-        "",
-        "Select the LoRA to add to the text"
-      ]
     }
   ],
   "links": [
+    [
+      4,
+      3,
+      0,
+      6,
+      0,
+      "BASIC_PIPE"
+    ],
+    [
+      6,
+      8,
+      0,
+      6,
+      2,
+      "SAM_MODEL"
+    ],
+    [
+      25,
+      19,
+      0,
+      6,
+      3,
+      "STRING"
+    ],
+    [
+      26,
+      20,
+      0,
+      6,
+      1,
+      "BBOX_DETECTOR"
+    ],
     [
       28,
       11,
@@ -640,6 +677,14 @@
       24,
       0,
       "IMAGE"
+    ],
+    [
+      29,
+      6,
+      0,
+      24,
+      1,
+      "DETAILER_PIPE"
     ],
     [
       30,
@@ -696,46 +741,6 @@
       25,
       0,
       "*"
-    ],
-    [
-      37,
-      3,
-      0,
-      27,
-      0,
-      "BASIC_PIPE"
-    ],
-    [
-      38,
-      20,
-      0,
-      27,
-      1,
-      "BBOX_DETECTOR"
-    ],
-    [
-      39,
-      8,
-      0,
-      27,
-      2,
-      "SAM_MODEL"
-    ],
-    [
-      40,
-      19,
-      0,
-      27,
-      5,
-      "STRING"
-    ],
-    [
-      41,
-      27,
-      0,
-      24,
-      1,
-      "DETAILER_PIPE"
     ]
   ],
   "groups": [],
@@ -745,6 +750,28 @@
   "output": {
     "3": {
       "inputs": {}
+    },
+    "6": {
+      "inputs": {
+        "wildcard": [
+          "19",
+          0
+        ],
+        "Select to add LoRA": "Select the LoRA to add to the text",
+        "basic_pipe": [
+          "3",
+          0
+        ],
+        "bbox_detector": [
+          "20",
+          0
+        ],
+        "sam_model_opt": [
+          "8",
+          0
+        ]
+      },
+      "class_type": "BasicPipeToDetailerPipe"
     },
     "8": {
       "inputs": {
@@ -833,7 +860,7 @@
           0
         ],
         "detailer_pipe": [
-          "27",
+          "6",
           0
         ]
       },
@@ -846,28 +873,6 @@
           4
         ]
       }
-    },
-    "27": {
-      "inputs": {
-        "wildcard": [
-          "19",
-          0
-        ],
-        "Select to add LoRA": "Select the LoRA to add to the text",
-        "basic_pipe": [
-          "3",
-          0
-        ],
-        "bbox_detector": [
-          "20",
-          0
-        ],
-        "sam_model_opt": [
-          "8",
-          0
-        ]
-      },
-      "class_type": "BasicPipeToDetailerPipe"
     }
   }
 }

@@ -21,7 +21,8 @@
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "link": 38,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "basic_pipe"
         }
       ],
       "outputs": [
@@ -32,14 +33,16 @@
             44
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "model"
         },
         {
           "name": "clip",
           "type": "CLIP",
           "links": [],
           "shape": 3,
-          "slot_index": 1
+          "slot_index": 1,
+          "label": "clip"
         },
         {
           "name": "vae",
@@ -49,7 +52,8 @@
             55
           ],
           "shape": 3,
-          "slot_index": 2
+          "slot_index": 2,
+          "label": "vae"
         },
         {
           "name": "positive",
@@ -58,7 +62,8 @@
             45
           ],
           "shape": 3,
-          "slot_index": 3
+          "slot_index": 3,
+          "label": "positive"
         },
         {
           "name": "negative",
@@ -67,7 +72,8 @@
             46
           ],
           "shape": 3,
-          "slot_index": 4
+          "slot_index": 4,
+          "label": "negative"
         }
       ],
       "properties": {
@@ -122,13 +128,15 @@
         {
           "name": "pixels",
           "type": "IMAGE",
-          "link": 41
+          "link": 41,
+          "label": "pixels"
         },
         {
           "name": "vae",
           "type": "VAE",
           "link": 42,
-          "slot_index": 1
+          "slot_index": 1,
+          "label": "vae"
         }
       ],
       "outputs": [
@@ -139,7 +147,8 @@
             47
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "label": "LATENT"
         }
       ],
       "properties": {
@@ -165,7 +174,7 @@
           "name": "LATENT",
           "type": "LATENT",
           "link": 57,
-          "label": null
+          "label": "LATENT"
         }
       ],
       "title": "3.Component Output",
@@ -191,12 +200,14 @@
         {
           "name": "samples",
           "type": "LATENT",
-          "link": 54
+          "link": 54,
+          "label": "samples"
         },
         {
           "name": "vae",
           "type": "VAE",
-          "link": 55
+          "link": 55,
+          "label": "vae"
         }
       ],
       "outputs": [
@@ -208,7 +219,8 @@
           ],
           "shape": 3,
           "slot_index": 0,
-          "color": "#64B5F6"
+          "color": "#5940bb",
+          "label": "IMAGE"
         }
       ],
       "properties": {
@@ -237,7 +249,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "link": 56,
-          "label": null
+          "label": "IMAGE"
         }
       ],
       "title": "2.Component Output",
@@ -442,22 +454,26 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 44
+          "link": 44,
+          "label": "model"
         },
         {
           "name": "positive",
           "type": "CONDITIONING",
-          "link": 45
+          "link": 45,
+          "label": "positive"
         },
         {
           "name": "negative",
           "type": "CONDITIONING",
-          "link": 46
+          "link": 46,
+          "label": "negative"
         },
         {
           "name": "latent_image",
           "type": "LATENT",
-          "link": 47
+          "link": 47,
+          "label": "latent_image"
         },
         {
           "name": "seed",
@@ -473,7 +489,8 @@
                 "max": 18446744073709552000
               }
             ]
-          }
+          },
+          "label": "seed"
         },
         {
           "name": "steps",
@@ -489,7 +506,8 @@
                 "max": 10000
               }
             ]
-          }
+          },
+          "label": "steps"
         },
         {
           "name": "cfg",
@@ -505,7 +523,8 @@
                 "max": 100
               }
             ]
-          }
+          },
+          "label": "cfg"
         },
         {
           "name": "sampler_name",
@@ -532,7 +551,8 @@
                 "uni_pc_bh2"
               ]
             ]
-          }
+          },
+          "label": "sampler_name"
         },
         {
           "name": "scheduler",
@@ -549,7 +569,8 @@
                 "ddim_uniform"
               ]
             ]
-          }
+          },
+          "label": "scheduler"
         },
         {
           "name": "denoise",
@@ -566,7 +587,8 @@
                 "step": 0.01
               }
             ]
-          }
+          },
+          "label": "denoise"
         }
       ],
       "outputs": [
@@ -579,7 +601,8 @@
           ],
           "shape": 3,
           "slot_index": 0,
-          "color": "#FF9CF9"
+          "color": "#FF9CF9",
+          "label": "LATENT"
         }
       ],
       "properties": {
