@@ -249,7 +249,7 @@
       "inputs": [
         {
           "name": "basic_pipe",
-          "type": "*",
+          "type": "BASIC_PIPE",
           "link": 8,
           "label": "basic_pipe"
         }

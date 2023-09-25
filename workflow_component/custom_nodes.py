@@ -199,9 +199,9 @@ class LoopCounterCondition:
 class TensorToCPU:
     @classmethod
     def INPUT_TYPES(s):
-        return {"required": {"tensor": ("*", ), }, }
+        return {"required": {"tensor": ("IMAGE", ), }, }
 
-    RETURN_TYPES = ("*", )
+    RETURN_TYPES = ("IMAGE", )
     FUNCTION = "doit"
 
     CATEGORY = "execution"
