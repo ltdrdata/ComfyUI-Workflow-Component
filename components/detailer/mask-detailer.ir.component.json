@@ -1,6 +1,6 @@
 {
-  "last_node_id": 29,
-  "last_link_id": 47,
+  "last_node_id": 32,
+  "last_link_id": 67,
   "nodes": [
     {
       "id": 11,
@@ -21,7 +21,7 @@
           "name": "image",
           "type": "IMAGE",
           "links": [
-            44
+            50
           ],
           "slot_index": 0,
           "label": "image"
@@ -52,7 +52,7 @@
           "type": "BASIC_PIPE",
           "links": [
             20,
-            42
+            52
           ],
           "slot_index": 0,
           "color": "",
@@ -69,7 +69,7 @@
       "type": "ComponentInput",
       "pos": [
         40,
-        970
+        1150
       ],
       "size": {
         "0": 178,
@@ -89,7 +89,7 @@
           "label": "mask"
         }
       ],
-      "title": "09.Component Input",
+      "title": "19.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -106,7 +106,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 12,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -117,33 +117,6 @@
         }
       ],
       "title": "1.Component Output",
-      "properties": {},
-      "color": "#223",
-      "bgcolor": "#335"
-    },
-    {
-      "id": 9,
-      "type": "ComponentOutput",
-      "pos": [
-        1960,
-        330
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "link": 45,
-          "label": "IMAGE"
-        }
-      ],
-      "title": "2.Component Output",
       "properties": {},
       "color": "#223",
       "bgcolor": "#335"
@@ -160,7 +133,7 @@
         "1": 130
       },
       "flags": {},
-      "order": 13,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -194,7 +167,7 @@
           "name": "SEGS",
           "type": "SEGS",
           "links": [
-            43
+            51
           ],
           "shape": 3,
           "slot_index": 0,
@@ -216,7 +189,7 @@
       "type": "ComponentInput",
       "pos": [
         40,
-        1080
+        1260
       ],
       "size": {
         "0": 178,
@@ -235,7 +208,7 @@
           "label": "crop_factor"
         }
       ],
-      "title": "10.Component Input",
+      "title": "20.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -259,43 +232,13 @@
           "name": "steps",
           "type": "INT",
           "links": [
-            39
+            55
           ],
           "slot_index": 0,
           "label": "steps"
         }
       ],
       "title": "04.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 13,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        630
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "denoise",
-          "type": "FLOAT",
-          "links": [
-            40
-          ],
-          "slot_index": 0,
-          "label": "denoise"
-        }
-      ],
-      "title": "06.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -312,14 +255,14 @@
         "1": 26
       },
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "outputs": [
         {
           "name": "guide_size",
           "type": "FLOAT",
           "links": [
-            41
+            59
           ],
           "slot_index": 0,
           "label": "guide_size"
@@ -342,14 +285,14 @@
         "1": 26
       },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
           "name": "cfg",
           "type": "FLOAT",
           "links": [
-            38
+            58
           ],
           "slot_index": 0,
           "label": "cfg"
@@ -365,27 +308,27 @@
       "type": "ComponentInput",
       "pos": [
         40,
-        850
+        1030
       ],
       "size": {
         "0": 178,
         "1": 26
       },
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 0,
       "outputs": [
         {
           "name": "seed",
           "type": "INT",
           "links": [
-            36
+            65
           ],
           "slot_index": 0,
           "label": "seed"
         }
       ],
-      "title": "08.Component Input",
+      "title": "18.Component Input",
       "properties": {},
       "color": "#322",
       "bgcolor": "#533"
@@ -402,7 +345,7 @@
         "1": 180
       },
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 0,
       "title": "input-spec",
       "properties": {
@@ -415,42 +358,195 @@
       "bgcolor": "#653"
     },
     {
-      "id": 24,
-      "type": "DetailerForEachPipe",
+      "id": 28,
+      "type": "ComponentInput",
       "pos": [
-        1140,
-        230
+        40,
+        910
       ],
       "size": {
-        "0": 315,
-        "1": 400
+        "0": 178,
+        "1": 26
       },
       "flags": {},
-      "order": 14,
+      "order": 9,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "noise_mask",
+          "type": "BOOLEAN",
+          "links": [
+            64
+          ],
+          "label": "noise_mask"
+        }
+      ],
+      "title": "17.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 29,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        1360
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "force_inpaint",
+          "type": "BOOLEAN",
+          "links": [
+            66
+          ],
+          "label": "force_inpaint"
+        }
+      ],
+      "title": "21.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 30,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        710
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "scheduler",
+          "type": "normal,karras,exponential,sgm_uniform,simple,ddim_uniform",
+          "links": [
+            62
+          ],
+          "label": "scheduler"
+        }
+      ],
+      "title": "07.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 31,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        630
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "sampler_name",
+          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2",
+          "links": [
+            61
+          ],
+          "label": "sampler_name"
+        }
+      ],
+      "title": "06.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 13,
+      "type": "ComponentInput",
+      "pos": [
+        40,
+        810
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "links": [
+            63
+          ],
+          "slot_index": 0,
+          "label": "denoise"
+        }
+      ],
+      "title": "16.Component Input",
+      "properties": {},
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 32,
+      "type": "DetailerForEachDebugPipe",
+      "pos": [
+        1050,
+        220
+      ],
+      "size": [
+        556.800048828125,
+        532
+      ],
+      "flags": {},
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 44,
-          "label": "image"
+          "link": 50
         },
         {
           "name": "segs",
           "type": "SEGS",
-          "link": 43,
-          "label": "segs"
+          "link": 51
         },
         {
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
-          "link": 42,
-          "label": "basic_pipe"
+          "link": 52
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null
+        },
+        {
+          "name": "refiner_basic_pipe_opt",
+          "type": "BASIC_PIPE",
+          "link": null
         },
         {
           "name": "guide_size",
           "type": "FLOAT",
-          "link": 41,
+          "link": 59,
           "widget": {
             "name": "guide_size",
             "config": [
@@ -463,12 +559,94 @@
               }
             ]
           },
-          "label": "guide_size"
+          "slot_index": 5
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": 55,
+          "widget": {
+            "name": "steps",
+            "config": [
+              "INT",
+              {
+                "default": 20,
+                "min": 1,
+                "max": 10000
+              }
+            ]
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": 58,
+          "widget": {
+            "name": "cfg",
+            "config": [
+              "FLOAT",
+              {
+                "default": 8,
+                "min": 0,
+                "max": 100
+              }
+            ]
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2",
+          "link": 61,
+          "widget": {
+            "name": "sampler_name",
+            "config": [
+              [
+                "euler",
+                "euler_ancestral",
+                "heun",
+                "dpm_2",
+                "dpm_2_ancestral",
+                "lms",
+                "dpm_fast",
+                "dpm_adaptive",
+                "dpmpp_2s_ancestral",
+                "dpmpp_sde",
+                "dpmpp_sde_gpu",
+                "dpmpp_2m",
+                "dpmpp_2m_sde",
+                "dpmpp_2m_sde_gpu",
+                "dpmpp_3m_sde",
+                "dpmpp_3m_sde_gpu",
+                "ddpm",
+                "ddim",
+                "uni_pc",
+                "uni_pc_bh2"
+              ]
+            ]
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "normal,karras,exponential,sgm_uniform,simple,ddim_uniform",
+          "link": 62,
+          "widget": {
+            "name": "scheduler",
+            "config": [
+              [
+                "normal",
+                "karras",
+                "exponential",
+                "sgm_uniform",
+                "simple",
+                "ddim_uniform"
+              ]
+            ]
+          }
         },
         {
           "name": "denoise",
           "type": "FLOAT",
-          "link": 40,
+          "link": 63,
           "widget": {
             "name": "denoise",
             "config": [
@@ -480,64 +658,12 @@
                 "step": 0.01
               }
             ]
-          },
-          "label": "denoise"
-        },
-        {
-          "name": "steps",
-          "type": "INT",
-          "link": 39,
-          "widget": {
-            "name": "steps",
-            "config": [
-              "INT",
-              {
-                "default": 20,
-                "min": 1,
-                "max": 10000
-              }
-            ]
-          },
-          "label": "steps"
-        },
-        {
-          "name": "cfg",
-          "type": "FLOAT",
-          "link": 38,
-          "widget": {
-            "name": "cfg",
-            "config": [
-              "FLOAT",
-              {
-                "default": 8,
-                "min": 0,
-                "max": 100
-              }
-            ]
-          },
-          "label": "cfg"
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 36,
-          "widget": {
-            "name": "seed",
-            "config": [
-              "INT",
-              {
-                "default": 0,
-                "min": 0,
-                "max": 18446744073709552000
-              }
-            ]
-          },
-          "label": "seed"
+          }
         },
         {
           "name": "noise_mask",
           "type": "BOOLEAN",
-          "link": 46,
+          "link": 64,
           "widget": {
             "name": "noise_mask",
             "config": [
@@ -548,14 +674,28 @@
                 "label_off": "disabled"
               }
             ]
-          },
-          "slot_index": 8,
-          "label": "noise_mask"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 65,
+          "widget": {
+            "name": "seed",
+            "config": [
+              "INT",
+              {
+                "default": 0,
+                "min": 0,
+                "max": 18446744073709552000
+              }
+            ]
+          }
         },
         {
           "name": "force_inpaint",
           "type": "BOOLEAN",
-          "link": 47,
+          "link": 66,
           "widget": {
             "name": "force_inpaint",
             "config": [
@@ -566,51 +706,63 @@
                 "label_off": "disabled"
               }
             ]
-          },
-          "slot_index": 9,
-          "label": "force_inpaint"
+          }
         }
       ],
       "outputs": [
         {
-          "name": "IMAGE",
+          "name": "image",
           "type": "IMAGE",
           "links": [
-            45
+            67
           ],
           "shape": 3,
-          "slot_index": 0,
-          "label": "IMAGE"
+          "slot_index": 0
         },
         {
           "name": "segs",
           "type": "SEGS",
           "links": null,
-          "shape": 3,
-          "label": "segs"
+          "shape": 3
         },
         {
           "name": "basic_pipe",
           "type": "BASIC_PIPE",
           "links": null,
-          "shape": 3,
-          "label": "basic_pipe"
+          "shape": 3
+        },
+        {
+          "name": "cropped",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "cropped_refined",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "cropped_refined_alpha",
+          "type": "IMAGE",
+          "links": null,
+          "shape": 6
         },
         {
           "name": "cnet_images",
           "type": "IMAGE",
           "links": null,
-          "shape": 6,
-          "label": "cnet_images"
+          "shape": 6
         }
       ],
       "properties": {
-        "Node name for S&R": "DetailerForEachPipe"
+        "Node name for S&R": "DetailerForEachDebugPipe"
       },
       "widgets_values": [
         256,
         true,
-        768,
+        1024,
         0,
         "randomize",
         20,
@@ -620,68 +772,37 @@
         0.5,
         5,
         true,
-        false,
+        true,
         "",
         0.2
       ]
     },
     {
-      "id": 28,
-      "type": "ComponentInput",
+      "id": 9,
+      "type": "ComponentOutput",
       "pos": [
-        40,
-        730
+        1960,
+        220
       ],
       "size": {
         "0": 178,
         "1": 26
       },
       "flags": {},
-      "order": 10,
+      "order": 17,
       "mode": 0,
-      "outputs": [
+      "inputs": [
         {
-          "name": "noise_mask",
-          "type": "BOOLEAN",
-          "links": [
-            46
-          ],
-          "label": "noise_mask"
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 67,
+          "label": "IMAGE"
         }
       ],
-      "title": "07.Component Input",
+      "title": "2.Component Output",
       "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 29,
-      "type": "ComponentInput",
-      "pos": [
-        40,
-        1180
-      ],
-      "size": {
-        "0": 178,
-        "1": 26
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "force_inpaint",
-          "type": "BOOLEAN",
-          "links": [
-            47
-          ],
-          "label": "force_inpaint"
-        }
-      ],
-      "title": "11.Component Input",
-      "properties": {},
-      "color": "#322",
-      "bgcolor": "#533"
+      "color": "#223",
+      "bgcolor": "#335"
     }
   ],
   "links": [
@@ -710,92 +831,108 @@
       "FLOAT"
     ],
     [
-      36,
-      21,
+      50,
+      11,
       0,
-      24,
-      7,
-      "INT"
+      32,
+      0,
+      "IMAGE"
     ],
     [
-      38,
-      15,
-      0,
-      24,
-      6,
-      "FLOAT"
-    ],
-    [
-      39,
-      14,
-      0,
-      24,
-      5,
-      "INT"
-    ],
-    [
-      40,
-      13,
-      0,
-      24,
-      4,
-      "FLOAT"
-    ],
-    [
-      41,
-      12,
-      0,
-      24,
-      3,
-      "FLOAT"
-    ],
-    [
-      42,
-      3,
-      0,
-      24,
-      2,
-      "BASIC_PIPE"
-    ],
-    [
-      43,
+      51,
       17,
       0,
-      24,
+      32,
       1,
       "SEGS"
     ],
     [
-      44,
-      11,
+      52,
+      3,
       0,
-      24,
-      0,
-      "IMAGE"
+      32,
+      2,
+      "BASIC_PIPE"
     ],
     [
-      45,
-      24,
+      55,
+      14,
       0,
+      32,
+      6,
+      "INT"
+    ],
+    [
+      58,
+      15,
+      0,
+      32,
+      7,
+      "FLOAT"
+    ],
+    [
+      59,
+      12,
+      0,
+      32,
+      5,
+      "FLOAT"
+    ],
+    [
+      61,
+      31,
+      0,
+      32,
+      8,
+      "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2"
+    ],
+    [
+      62,
+      30,
+      0,
+      32,
       9,
-      0,
-      "IMAGE"
+      "normal,karras,exponential,sgm_uniform,simple,ddim_uniform"
     ],
     [
-      46,
+      63,
+      13,
+      0,
+      32,
+      10,
+      "FLOAT"
+    ],
+    [
+      64,
       28,
       0,
-      24,
-      8,
+      32,
+      11,
       "BOOLEAN"
     ],
     [
-      47,
+      65,
+      21,
+      0,
+      32,
+      12,
+      "INT"
+    ],
+    [
+      66,
       29,
       0,
-      24,
-      9,
+      32,
+      13,
       "BOOLEAN"
+    ],
+    [
+      67,
+      32,
+      0,
+      9,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [],
@@ -809,7 +946,7 @@
     "9": {
       "inputs": {
         "IMAGE": [
-          "24",
+          "32",
           0
         ]
       }
@@ -862,14 +999,26 @@
     "22": {
       "inputs": {}
     },
-    "24": {
+    "28": {
+      "inputs": {}
+    },
+    "29": {
+      "inputs": {}
+    },
+    "30": {
+      "inputs": {}
+    },
+    "31": {
+      "inputs": {}
+    },
+    "32": {
       "inputs": {
         "guide_size": [
           "12",
           0
         ],
         "guide_size_for": true,
-        "max_size": 768,
+        "max_size": 1024,
         "seed": [
           "21",
           0
@@ -882,8 +1031,14 @@
           "15",
           0
         ],
-        "sampler_name": "euler",
-        "scheduler": "normal",
+        "sampler_name": [
+          "31",
+          0
+        ],
+        "scheduler": [
+          "30",
+          0
+        ],
         "denoise": [
           "13",
           0
@@ -912,13 +1067,7 @@
           0
         ]
       },
-      "class_type": "DetailerForEachPipe"
-    },
-    "28": {
-      "inputs": {}
-    },
-    "29": {
-      "inputs": {}
+      "class_type": "DetailerForEachDebugPipe"
     }
   }
 }
