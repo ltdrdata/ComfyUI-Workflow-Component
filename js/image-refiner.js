@@ -105,10 +105,12 @@ style.innerHTML = `
 	}
 	.toggle-handle {
 		position: absolute;
-		width: 25px;
+		width: 50px;
 		height: 25px;
+		margin-top: -8px;
 		background-color: #fff;
-		border-radius: 50%;
+		border-radius: 40px;
+		transform: translateX(-12px);
 		transition: transform 0.2s ease;
 		z-index: 2;
 	}
@@ -118,12 +120,16 @@ style.innerHTML = `
 		font-size: 14px;
 		pointer-events: none;
 		position: relative;
+		margin-top: -8px;
+		transform: translateX(-22px);
 		z-index: 3;
 	}
 	.on-text {
+		color: #2196F3;
 		margin-right: 2px;
 		opacity: 0;
 		transition: opacity 0.2s ease;
+		transform: translateX(-3px);
 	}
 	.off-text {
 		margin-left: 2px;
@@ -135,7 +141,7 @@ style.innerHTML = `
 		background-color: #2196F3;
 	}
 	.toggle-switch:checked + .toggle-label .toggle-handle {
-		transform: translateX(33px);
+		transform: translateX(8px);
 	}
 	.toggle-switch:checked + .toggle-label .on-text {
 		opacity: 0;
@@ -143,7 +149,6 @@ style.innerHTML = `
 	.toggle-switch:checked + .toggle-label .off-text {
 		opacity: 1;
 	}
-
 
 	.toggle-prompt-control {
 		display: inline-block;
@@ -175,19 +180,23 @@ style.innerHTML = `
 		color: white;
 		white-space: nowrap;
 		overflow: hidden;
+		margin-top: -8px;
+		transform: translateX(-86px);
 	}
 
 	.toggle-prompt:checked + .toggle-label {
 		background-color: #2196F3;
 	}
 	.toggle-prompt:checked + .toggle-label .toggle-handle-prompt {
-		transform: translateX(85px);
+		transform: translateX(7px);
 	}
 	.toggle-prompt:checked + .toggle-label .on-text {
-		opacity: 0;
+		color: #fff;
+		opacity: 1;
+		transform: translateX(-115px);
 	}
 	.toggle-prompt:checked + .toggle-label .off-text {
-		opacity: 1;
+		opacity: 0;
 	}
 
     .progress-button {
@@ -1848,7 +1857,7 @@ class ImageRefinerDialog extends ComfyDialog {
         link.style.marginLeft = "10px";
 
         const icon = document.createElement("img");
-        icon.src = "extensions/workflow-component/help.png";
+        icon.src = "extensions/ComfyUI-Workflow-Component/help.png";
         icon.alt = "Help Icon";
         icon.style.width = "30px";
         icon.style.height = "30px";
