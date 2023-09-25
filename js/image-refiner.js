@@ -237,14 +237,16 @@ style.innerHTML = `
         z-index: 1;
         top: 35px;
         left: 5px;
-        width: 550px;
+        width: 600px;
         opacity: 0;
         transition: opacity 0.3s, visibility 0.3s;
+		transform: translateY(300px);
     }
 
     .tooltip:hover .tooltiptext {
         visibility: visible;
-        opacity: 1;
+        width: 600px;
+        opacity: 0.8;
     }
 `;
 
