@@ -105,12 +105,10 @@ style.innerHTML = `
 	}
 	.toggle-handle {
 		position: absolute;
-		width: 50px;
+		width: 25px;
 		height: 25px;
-		margin-top: -8px;
 		background-color: #fff;
-		border-radius: 40px;
-		transform: translateX(-12px);
+		border-radius: 50%;
 		transition: transform 0.2s ease;
 		z-index: 2;
 	}
@@ -120,16 +118,12 @@ style.innerHTML = `
 		font-size: 14px;
 		pointer-events: none;
 		position: relative;
-		margin-top: -8px;
-		transform: translateX(-22px);
 		z-index: 3;
 	}
 	.on-text {
-		color: #2196F3;
 		margin-right: 2px;
 		opacity: 0;
 		transition: opacity 0.2s ease;
-		transform: translateX(-3px);
 	}
 	.off-text {
 		margin-left: 2px;
@@ -141,7 +135,7 @@ style.innerHTML = `
 		background-color: #2196F3;
 	}
 	.toggle-switch:checked + .toggle-label .toggle-handle {
-		transform: translateX(8px);
+		transform: translateX(33px);
 	}
 	.toggle-switch:checked + .toggle-label .on-text {
 		opacity: 0;
@@ -180,23 +174,19 @@ style.innerHTML = `
 		color: white;
 		white-space: nowrap;
 		overflow: hidden;
-		margin-top: -8px;
-		transform: translateX(-86px);
 	}
 
 	.toggle-prompt:checked + .toggle-label {
 		background-color: #2196F3;
 	}
 	.toggle-prompt:checked + .toggle-label .toggle-handle-prompt {
-		transform: translateX(7px);
+		transform: translateX(85px);
 	}
 	.toggle-prompt:checked + .toggle-label .on-text {
-		color: #fff;
-		opacity: 1;
-		transform: translateX(-115px);
+		opacity: 0;
 	}
 	.toggle-prompt:checked + .toggle-label .off-text {
-		opacity: 0;
+		opacity: 1;
 	}
 
     .progress-button {
@@ -237,15 +227,13 @@ style.innerHTML = `
         z-index: 1;
         top: 35px;
         left: 5px;
-        width: 600px;
+        width: 550px;
         opacity: 0;
         transition: opacity 0.3s, visibility 0.3s;
-		transform: translateY(300px);
     }
 
     .tooltip:hover .tooltiptext {
         visibility: visible;
-        width: 600px;
         opacity: 0.8;
     }
 `;
