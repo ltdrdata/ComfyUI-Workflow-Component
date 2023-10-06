@@ -1,3 +1,4 @@
+import copy
 import os
 import sys
 import json
@@ -5,6 +6,8 @@ import traceback
 import copy
 
 import workflow_component.workflow_execution as workflow_execution
+
+import nodes
 import nodes as comfy_nodes
 import hashlib
 
@@ -111,6 +114,9 @@ def get_spec_map(nodes):
                 spec_map[key] = value_dict
 
     return spec_map
+
+
+node_input_types = {}
 
 
 def get_linked_slots_config(json_data):
@@ -239,12 +245,12 @@ def create_dynamic_class(component_name, workflow, category=None):
                 return {
                     "required": get_input_types_dynamic(),
                     "optional": input_optional_types,
-                    "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"},
+                    "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO", "out_prompt": "PROMPT"},
                 }
             else:
                 return {
                     "required": get_input_types_dynamic(),
-                    "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"},
+                    "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO", "out_prompt": "PROMPT"},
                 }
 
         RETURN_TYPES = tuple(return_types)

@@ -429,6 +429,23 @@ app.registerExtension({
 					const p = await app.graphToPrompt();
 					p.workflow.output = p.output;
 
+                    for(let i in p.workflow.nodes) {
+                        let node = p.workflow.nodes[i];
+                        if(node.inputs) {
+                            for(let j in node.inputs) {
+                                if(node.inputs[j].widget) {
+                                    let config = node.inputs[j].widget.getConfig();
+
+                                    if(config[0] instanceof Array) {
+                                        config = [[]];
+                                    }
+
+                                    node.inputs[j].widget.config = config;
+                                }
+                            }
+                        }
+                    }
+
 					const json = JSON.stringify(p.workflow, null, 2); // convert the data to a JSON string
 					const blob = new Blob([json], { type: "application/json" });
 					const url = URL.createObjectURL(blob);
