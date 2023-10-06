@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import traceback
+import copy
 
 import workflow_component.workflow_execution as workflow_execution
 import nodes as comfy_nodes
@@ -256,7 +257,7 @@ def create_dynamic_class(component_name, workflow, category=None):
         CATEGORY = category
 
         def doit(self, *args, **kwargs):
-            return workflow_execution.execute(component_name, prompt, workflow,
+            return workflow_execution.execute(component_name, copy.deepcopy(prompt), workflow,
                                               internal_id_name_map, optional_inputs, input_mapping, output_mapping,
                                               *args, **kwargs)
 

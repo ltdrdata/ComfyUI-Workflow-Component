@@ -145,10 +145,11 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
             return True
 
     given_inputs = set([str(value['id']) for key, value in input_mapping.items()])
+    excluded_keys = ["unique_id", "prompt", "extra_pnginfo", 'used_output_names']
 
     # pass input interface to internal nodes
     for key, value in kwargs.items():
-        if key not in ["unique_id", "prompt", "extra_pnginfo", 'used_output_names']:
+        if key not in excluded_keys:
             input_node = input_mapping[key]
             input_node_id = str(input_node['id'])
 
@@ -156,10 +157,12 @@ def execute(component_name, prompt, workflow, internal_id_name_map, optional_inp
                 pe.outputs[input_node_id] = [[value]]  # TODO: check
                 changed_inputs.add(input_node_id)
 
+
             pe.old_prompt[input_node_id] = prompt[input_node_id]  # prevent erasing of output cache
 
     # get empty prompt option
-    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and key not in pe.outputs]
+    prompt_ids = [str(input_mapping[key]['id']) for key, value in kwargs.items() if key not in excluded_keys]
+    empty_option_prompts = [key for key, value in prompt.items() if key in optional_inputs and key not in prompt_ids]
 
     # unlink unprovided option prompt
     for key, value in prompt.items():
