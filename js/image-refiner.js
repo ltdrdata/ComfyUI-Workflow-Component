@@ -14,53 +14,53 @@ function itemToImagepath(data) {
 }
 
 function loadImage(imagePath) {
-    return new Promise((resolve, reject) => {
-        const image = new Image();
+	return new Promise((resolve, reject) => {
+		const image = new Image();
 
-        image.onload = function() {
-          resolve(image);
-        };
+		image.onload = function() {
+			resolve(image);
+		};
 
-        image.src = imagePath;
-    });
+		image.src = imagePath;
+	});
 }
 
 function drawImageToCanvas(image, canvas) {
-    canvas.width = image.width;
-    canvas.height = image.height;
+	canvas.width = image.width;
+	canvas.height = image.height;
 
-    const ctx = canvas.getContext('2d', {willReadFrequently: true });
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+	const ctx = canvas.getContext('2d', {willReadFrequently: true });
+	ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
 async function load_image_to_canvas(imagePath, canvas) {
-    const image = await loadImage(imagePath);
-    drawImageToCanvas(image, canvas);
-    return image;
+	const image = await loadImage(imagePath);
+	drawImageToCanvas(image, canvas);
+	return image;
 }
 
 function createToggleControl() {
 	var control = document.createElement('div');
-	control.className = 'toggle-control';
+	control.className = 'ir-toggle-control';
 
 	var toggle = document.createElement('input');
 	toggle.type = 'checkbox';
-	toggle.className = 'toggle-switch';
-	toggle.id = 'toggle-switch-pen-mask';
+	toggle.className = 'ir-toggle-switch';
+	toggle.id = 'ir-toggle-switch-pen-mask';
 
 	var label = document.createElement('label');
-	label.className = 'toggle-label';
-	label.setAttribute('for', `toggle-switch-pen-mask`);
+	label.className = 'ir-toggle-label';
+	label.setAttribute('for', `ir-toggle-switch-pen-mask`);
 
-	var toggleHandle = document.createElement('span');
-	toggleHandle.className = 'toggle-handle';
+	var toggleHandle = document.createElement('div');
+	toggleHandle.className = 'ir-toggle-handle';
 
-	var penText = document.createElement('span');
-	penText.className = 'toggle-text on-text';
+	var penText = document.createElement('div');
+	penText.className = 'ir-toggle-text on-text';
 	penText.innerText = 'Pen';
 
-	var maskText = document.createElement('span');
-	maskText.className = 'toggle-text off-text';
+	var maskText = document.createElement('div');
+	maskText.className = 'ir-toggle-text off-text';
 	maskText.innerText = 'Mask';
 
 	label.appendChild(penText);
@@ -75,19 +75,19 @@ function createToggleControl() {
 // CSS 스타일 추가
 var style = document.createElement('style');
 style.innerHTML = `
-	.toggle-control {
+	.ir-toggle-control {
 		display: inline-block;
 		position: relative;
 		width: 75px;
 		height: 28px;
 		margin-top: 3px;
 	}
-	.toggle-switch {
+	.ir-toggle-switch {
 		opacity: 0;
 		width: 0;
 		height: 0;
 	}
-	.toggle-label {
+	.ir-toggle-label {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -103,7 +103,7 @@ style.innerHTML = `
 		box-sizing: border-box;
 		z-index: 1;
 	}
-	.toggle-handle {
+	.ir-toggle-handle {
 		position: absolute;
 		width: 25px;
 		height: 25px;
@@ -112,7 +112,7 @@ style.innerHTML = `
 		transition: transform 0.2s ease;
 		z-index: 2;
 	}
-	.toggle-text {
+	.ir-toggle-text {
 		color: #fff;
 		font-weight: bold;
 		font-size: 14px;
@@ -131,35 +131,34 @@ style.innerHTML = `
 		color: #2196F3;
 		transition: opacity 0.2s ease;
 	}
-	.toggle-switch:checked + .toggle-label {
+	.ir-toggle-switch:checked + .ir-toggle-label {
 		background-color: #2196F3;
 	}
-	.toggle-switch:checked + .toggle-label .toggle-handle {
+	.ir-toggle-switch:checked + .ir-toggle-label .ir-toggle-handle {
 		transform: translateX(33px);
 	}
-	.toggle-switch:checked + .toggle-label .on-text {
+	.ir-toggle-switch:checked + .ir-toggle-label .on-text {
 		opacity: 0;
 	}
-	.toggle-switch:checked + .toggle-label .off-text {
+	.ir-toggle-switch:checked + .ir-toggle-label .off-text {
 		opacity: 1;
 	}
 
-
-	.toggle-prompt-control {
+	.ir-toggle-prompt-control {
 		display: inline-block;
 		position: relative;
 		width: 200px;
 		height: 28px;
 		margin-top: 3px;
 	}
-	.toggle-prompt {
+	.ir-toggle-prompt {
 		opacity: 0;
 		width: 0;
 		height: 0;
 	}
 
-	.toggle-handle-prompt {
-		position: absolute;
+	.ir-toggle-handle-prompt {
+		position: absolute !important;
 		width: 100px;
 		height: 25px;
 		background-color: black;
@@ -177,66 +176,66 @@ style.innerHTML = `
 		overflow: hidden;
 	}
 
-	.toggle-prompt:checked + .toggle-label {
+	.ir-toggle-prompt:checked + .ir-toggle-label {
 		background-color: #2196F3;
 	}
-	.toggle-prompt:checked + .toggle-label .toggle-handle-prompt {
+	.ir-toggle-prompt:checked + .ir-toggle-label .ir-toggle-handle-prompt {
 		transform: translateX(85px);
 	}
-	.toggle-prompt:checked + .toggle-label .on-text {
+	.ir-toggle-prompt:checked + .ir-toggle-label .on-text {
 		opacity: 0;
 	}
-	.toggle-prompt:checked + .toggle-label .off-text {
+	.ir-toggle-prompt:checked + .ir-toggle-label .off-text {
 		opacity: 1;
 	}
 
-    .progress-button {
-        position: relative;
-        width: 200px;
-        height: 30px;
-        background-color: #f0f0f0;
-        border: none;
-        overflow: hidden;
-    }
-    .progress-button::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background-color: #4caf50;
-        transition: width 0.5s ease;
-    }
-    .progress-button.progress::before {
-        width: 100%;
-    }
+	.progress-button {
+		position: relative;
+		width: 200px;
+		height: 30px;
+		background-color: #f0f0f0;
+		border: none;
+		overflow: hidden;
+	}
+	.progress-button::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 0;
+		height: 100%;
+		background-color: #4caf50;
+		transition: width 0.5s ease;
+	}
+	.progress-button.progress::before {
+		width: 100%;
+	}
 
-    .tooltip {
-        position: relative;
-        display: inline-block;
-    }
+	.ir_tooltip {
+		position: relative;
+		display: inline-block;
+	}
 
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        background-color: black;
-        color: #fff;
-        text-align: left;
-        border-radius: 5px;
-        padding: 5px;
-        position: absolute;
-        z-index: 1;
-        top: 35px;
-        left: 5px;
-        width: 550px;
-        opacity: 0;
-        transition: opacity 0.3s, visibility 0.3s;
-    }
+	.ir_tooltip .tooltiptext {
+		visibility: hidden;
+		background-color: black;
+		color: #fff;
+		text-align: left;
+		border-radius: 5px;
+		padding: 5px;
+		position: absolute;
+		z-index: 1;
+		top: 35px;
+		left: 5px;
+		width: 550px;
+		opacity: 0;
+		transition: opacity 0.3s, visibility 0.3s;
+	}
 
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-        opacity: 1;
-    }
+	.ir_tooltip:hover .tooltiptext {
+		visibility: visible;
+		opacity: 0.8;
+	}
 `;
 
 document.head.appendChild(style);
@@ -267,18 +266,18 @@ function getOriginalSizeMaskCanvas(mask_canvas, orig_image, dont_touch, whole_in
 	// refine mask image
 	if(!dont_touch) {
 		for (let i = 0; i < data.data.length; i += 4) {
-            if(whole_inpaint) {
-                data.data[i] = 0;
-                data.data[i+1] = 0;
-                data.data[i+2] = 0;
-                data.data[i+3] = 0;
-            }
-            else {
-                if(data.data[i+3] == 255)
-                    data.data[i+3] = 0;
-                else
-                    data.data[i+3] = 255;
-            }
+			if(whole_inpaint) {
+				data.data[i] = 0;
+				data.data[i+1] = 0;
+				data.data[i+2] = 0;
+				data.data[i+3] = 0;
+			}
+			else {
+				if(data.data[i+3] == 255)
+					data.data[i+3] = 0;
+				else
+					data.data[i+3] = 255;
+			}
 		}
 	}
 
@@ -341,9 +340,9 @@ async function gen_flatten(base_image, layers) {
 	var id = 0;
 	for(let x in layers) {
 		id++;
-        if(layers[x].image) {
-		    image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
-        }
+		if(layers[x].image) {
+			image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
+		}
 
 		let dataURL = layers[x].mask.toDataURL();
 		let blob = dataURLToBlob(dataURL);
@@ -384,19 +383,19 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 	const dataURL = mask_canvas.toDataURL();
 	const blob = dataURLToBlob(dataURL);
 
-    if(images_in_layers)
-        prompt_data.image_paths = images_in_layers;
-    else
-	    prompt_data.image_paths = [{id:0, image:image_to_filepath(base_image)}];
+	if(images_in_layers)
+		prompt_data.image_paths = images_in_layers;
+	else
+		prompt_data.image_paths = [{id:0, image:image_to_filepath(base_image)}];
 
 	if(layers) {
 		for(let x in layers) {
 			var is_hidden = false;
 			if(!layers[x].visibilityCheckbox.checked)
-                continue;
+				continue;
 
 			unique_id++;
-            let base_item = {id:unique_id, mask:layers[x].mask};
+			let base_item = {id:unique_id, mask:layers[x].mask};
 
 			if(layers[x].prompt_data) {
 				let image_path = image_to_filepath(layers[x].image);
@@ -417,11 +416,11 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 	else {
 		// regenerate mode
 		for(let x in prompt_data.image_paths) {
-            unique_id++;
+			unique_id++;
 
 			if((x+"") == '0') {
 				continue;
-            }
+			}
 
 			let item = prompt_data.image_paths[x];
 			let dataURL = item.mask.toDataURL();
@@ -440,38 +439,38 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 }
 
 function prepare_export_data_layer(formData, layer) {
-    let result = {};
+	let result = {};
 
-    // common
-    result.id = layer.id;
-    result.is_visible = layer.visibilityCheckbox.checked;
+	// common
+	result.id = layer.id;
+	result.is_visible = layer.visibilityCheckbox.checked;
 
-    let dataURL = layer.mask.toDataURL();
-    let blob = dataURLToBlob(dataURL);
-    formData.append(result.id+"", blob);
+	let dataURL = layer.mask.toDataURL();
+	let blob = dataURLToBlob(dataURL);
+	formData.append(result.id+"", blob);
 
-    if(layer.prompt_data) {
-        // mask mode layer: image, prompt_data, cands
-        result.image = image_to_filepath(layer.image);
+	if(layer.prompt_data) {
+		// mask mode layer: image, prompt_data, cands
+		result.image = image_to_filepath(layer.image);
 
-        result.cands = [];
-        for(let i in layer.cands) {
-            result.cands.push(image_to_filepath(layer.cands[i]));
-        }
+		result.cands = [];
+		for(let i in layer.cands) {
+			result.cands.push(image_to_filepath(layer.cands[i]));
+		}
 
-        for(let i in layer.prompt_data.image_paths) {
-            let item = layer.prompt_data.image_paths[i];
-            if(item.is_mask_mode == false) {
-                let dataURL = item.mask.toDataURL();
-                let blob = dataURLToBlob(dataURL);
-                formData.append("draw_"+item.id, blob);
-            }
-        }
+		for(let i in layer.prompt_data.image_paths) {
+			let item = layer.prompt_data.image_paths[i];
+			if(item.is_mask_mode == false) {
+				let dataURL = item.mask.toDataURL();
+				let blob = dataURLToBlob(dataURL);
+				formData.append("draw_"+item.id, blob);
+			}
+		}
 
-        result.prompt_data = layer.prompt_data;
-    }
+		result.prompt_data = layer.prompt_data;
+	}
 
-    return result;
+	return result;
 }
 
 function prepare_export_data(component_name, prompt_data, mask_canvas, base_image, layers) {
@@ -480,21 +479,21 @@ function prepare_export_data(component_name, prompt_data, mask_canvas, base_imag
 	prompt_data.base_image_path = image_to_filepath(base_image);
 	var id = 0;
 
-    let layers_data = [];
+	let layers_data = [];
 	if(layers) {
 		for(let x in layers) {
-		    let info = prepare_export_data_layer(formData, layers[x]);
-		    layers_data.push(info);
+			let info = prepare_export_data_layer(formData, layers[x]);
+			layers_data.push(info);
 		}
 	}
 
 	prompt_data.component_name = component_name;
 
-    let data =
-        {
-            prompt_data: prompt_data,
-            layers_data: layers_data
-        }
+	let data =
+		{
+			prompt_data: prompt_data,
+			layers_data: layers_data
+		}
 
 	const dataURL = mask_canvas.toDataURL();
 	const blob = dataURLToBlob(dataURL);
@@ -527,10 +526,10 @@ async function export_work(component_name, prompt_data, mask_canvas, base_image,
 		body: formData,
 	})
 		.then(response => {
-                const contentDisposition = response.headers.get('Content-Disposition');
-                const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+				const contentDisposition = response.headers.get('Content-Disposition');
+				const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
 
-                return { response, filename };
+				return { response, filename };
 			})
 		.then(({ response, filename }) => response.blob().then(blob => ({ blob, filename })))
 		.then(({ blob, filename }) => {
@@ -561,19 +560,19 @@ async function save_to_clipspace(base_image, layers) {
 	var id = 0;
 	for(let x in layers) {
 		id++;
-        if(layers[x].visibilityCheckbox.checked) {
-            if(layers[x].image) {
-                image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
-            }
-            else {
-                image_paths.push({id:id});
-            }
+		if(layers[x].visibilityCheckbox.checked) {
+			if(layers[x].image) {
+				image_paths.push({id:id, image:image_to_filepath(layers[x].image)});
+			}
+			else {
+				image_paths.push({id:id});
+			}
 
-            let dataURL = layers[x].mask.toDataURL();
-            let blob = dataURLToBlob(dataURL);
-            formData.append(id+"", blob);
-        }
-    }
+			let dataURL = layers[x].mask.toDataURL();
+			let blob = dataURLToBlob(dataURL);
+			formData.append(id+"", blob);
+		}
+	}
 
 	const filename = "imagerefiner-" + performance.now() + ".png";
 	const savepath =
@@ -804,26 +803,26 @@ class ImageRefinerDialog extends ComfyDialog {
 	}
 
 
-    createProgressButton(name, callback) {
-        var button = this.createRightButton(name, callback);
+	createProgressButton(name, callback) {
+		var button = this.createRightButton(name, callback);
 
-        var progress = 0;
-//        button.style.background = 'black';
-        button.style.transition = "background 0.5s";
+		var progress = 0;
+//		button.style.background = 'black';
+		button.style.transition = "background 0.5s";
 
-        button.setProgress = function(newProgress) {
-            progress = newProgress;
-            let color = `linear-gradient(90deg, #00b300 ${progress}%, red ${progress}%)`;
-            button.style.background = color;
-        };
+		button.setProgress = function(newProgress) {
+			progress = newProgress;
+			let color = `linear-gradient(90deg, #00b300 ${progress}%, red ${progress}%)`;
+			button.style.background = color;
+		};
 
-        button.stopProgress = () => {
-            button.style.removeProperty('background');
-            button.style.removeProperty('color');
-        }
+		button.stopProgress = () => {
+			button.style.removeProperty('background');
+			button.style.removeProperty('color');
+		}
 
-        return button;
-    }
+		return button;
+	}
 
 
 	open_cands_selector(layer) {
@@ -1086,19 +1085,19 @@ class ImageRefinerDialog extends ComfyDialog {
 
 	createTogglePrompt(name, item) {
 		var control = document.createElement('div');
-		control.className = `toggle-prompt-control`;
+		control.className = `ir-toggle-prompt-control`;
 
 		var toggle = document.createElement('input');
 		toggle.type = 'checkbox';
-		toggle.className = 'toggle-prompt';
-		toggle.id = `toggle-prompt-${name}`;
+		toggle.className = 'ir-toggle-prompt';
+		toggle.id = `ir-toggle-prompt-${name}`;
 
 		var label = document.createElement('label');
-		label.className = 'toggle-label';
-		label.setAttribute('for', `toggle-prompt-${name}`);
+		label.className = 'ir-toggle-label';
+		label.setAttribute('for', `ir-toggle-prompt-${name}`);
 
-		var toggleHandle = document.createElement('span');
-		toggleHandle.className = 'toggle-handle-prompt';
+		var toggleHandle = document.createElement('div');
+		toggleHandle.className = 'ir-toggle-handle-prompt';
 
 		if (name.length > 13) {
 			toggleHandle.innerText = name.substring(0, 12) + '..';
@@ -1106,12 +1105,12 @@ class ImageRefinerDialog extends ComfyDialog {
 			toggleHandle.innerText = name;
 		}
 
-		var onText = document.createElement('span');
-		onText.className = 'toggle-text on-text';
+		var onText = document.createElement('div');
+		onText.className = 'ir-toggle-text on-text';
 		onText.innerText = item.label_on?item.label_on:"true";
 
-		var offText = document.createElement('span');
-		offText.className = 'toggle-text off-text';
+		var offText = document.createElement('div');
+		offText.className = 'ir-toggle-text off-text';
 		offText.innerText = item.label_off?item.label_off:"false";
 
 		label.appendChild(onText);
@@ -1242,30 +1241,30 @@ class ImageRefinerDialog extends ComfyDialog {
 		tempCanvas.width = width;
 		tempCanvas.height = height;
 
-        if(item.prompt_data) {
-            tempCtx.drawImage(item.image, 0, 0, width, height);
-        }
-        else {
-            tempCtx.drawImage(item.mask, 0, 0, width, height);
-        }
+		if(item.prompt_data) {
+			tempCtx.drawImage(item.image, 0, 0, width, height);
+		}
+		else {
+			tempCtx.drawImage(item.mask, 0, 0, width, height);
+		}
 
-        var maskCtx = maskCanvas.getContext('2d', {willReadFrequently: true });
-        var maskImageData = maskCtx.getImageData(0, 0, width, height);
-        var maskData = maskImageData.data;
+		var maskCtx = maskCanvas.getContext('2d', {willReadFrequently: true });
+		var maskImageData = maskCtx.getImageData(0, 0, width, height);
+		var maskData = maskImageData.data;
 
-        var imageData = tempCtx.getImageData(0, 0, width, height);
-        var pixelData = imageData.data;
+		var imageData = tempCtx.getImageData(0, 0, width, height);
+		var pixelData = imageData.data;
 
-        if(item.prompt_data) {
-            for (var i = 0; i < pixelData.length; i += 4) {
-                pixelData[i + 3] = 255-maskData[i + 3];
-            }
-        }
+		if(item.prompt_data) {
+			for (var i = 0; i < pixelData.length; i += 4) {
+				pixelData[i + 3] = 255-maskData[i + 3];
+			}
+		}
 
-        tempCtx.putImageData(imageData, 0, 0);
+		tempCtx.putImageData(imageData, 0, 0);
 
-        var outputCtx = outputCanvas.getContext('2d', {willReadFrequently: true });
-        outputCtx.drawImage(tempCanvas, 0, 0, width, height, 0, 0, width, height);
+		var outputCtx = outputCanvas.getContext('2d', {willReadFrequently: true });
+		outputCtx.drawImage(tempCanvas, 0, 0, width, height, 0, 0, width, height);
 	}
 
 	async invalidateComponentSelectCombo() {
@@ -1422,9 +1421,9 @@ class ImageRefinerDialog extends ComfyDialog {
 						this.prompts[name] = item;
 
 						if(prompt_data_opt && prompt_data_opt[name]) {
-						    checkpoint.value = prompt_data_opt[name].checkpoint;
-						    positive.value = prompt_data_opt[name].positive;
-						    negative.value = prompt_data_opt[name].negative;
+							checkpoint.value = prompt_data_opt[name].checkpoint;
+							positive.value = prompt_data_opt[name].positive;
+							negative.value = prompt_data_opt[name].negative;
 						}
 					}
 					break;
@@ -1443,8 +1442,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						this.prompts[name] = item;
 
-                        if(prompt_data_opt && prompt_data_opt[name]) {
-						    checkpoint.value = prompt_data_opt[name].checkpoint;
+						if(prompt_data_opt && prompt_data_opt[name]) {
+							checkpoint.value = prompt_data_opt[name].checkpoint;
 						}
 					}
 					break;
@@ -1458,8 +1457,8 @@ class ImageRefinerDialog extends ComfyDialog {
 						let item = { MODEL: checkpoint };
 						this.prompts[name] = item;
 
-                        if(prompt_data_opt && prompt_data_opt[name]) {
-						    checkpoint.value = prompt_data_opt[name].checkpoint;
+						if(prompt_data_opt && prompt_data_opt[name]) {
+							checkpoint.value = prompt_data_opt[name].checkpoint;
 						}
 					}
 					break;
@@ -1482,9 +1481,9 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						this.prompts[name] = item;
 
-                        if(prompt_data_opt && prompt_data_opt[name]) {
-						    checkpoint.value = prompt_data_opt[name].checkpoint;
-						    text_prompt.value = prompt_data_opt[name].text_prompt;
+						if(prompt_data_opt && prompt_data_opt[name]) {
+							checkpoint.value = prompt_data_opt[name].checkpoint;
+							text_prompt.value = prompt_data_opt[name].text_prompt;
 						}
 					}
 					break;
@@ -1501,8 +1500,8 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						this.prompts[name] = item;
 
-                        if(prompt_data_opt && prompt_data_opt[name]) {
-						    control.value = prompt_data_opt[name].value;
+						if(prompt_data_opt && prompt_data_opt[name]) {
+							control.value = prompt_data_opt[name].value;
 						}
 					}
 					break;
@@ -1528,11 +1527,11 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						this.prompts[name] = item;
 
-                        if(prompt_data_opt && prompt_data_opt[name]) {
-                            if(item.INT)
-						        item.INT.value = prompt_data_opt[name].value;
-                            else if(item.FLOAT)
-						        item.FLOAT.value = prompt_data_opt[name].value;
+						if(prompt_data_opt && prompt_data_opt[name]) {
+							if(item.INT)
+								item.INT.value = prompt_data_opt[name].value;
+							else if(item.FLOAT)
+								item.FLOAT.value = prompt_data_opt[name].value;
 						}
 					}
 					break;
@@ -1546,9 +1545,9 @@ class ImageRefinerDialog extends ComfyDialog {
 
 					this.prompts[name] = item;
 
-                    if(prompt_data_opt && prompt_data_opt[name]) {
-                        item.BOOLEAN.value = prompt_data_opt[name].value;
-                    }
+					if(prompt_data_opt && prompt_data_opt[name]) {
+						item.BOOLEAN.value = prompt_data_opt[name].value;
+					}
 					break;
 
 				default:
@@ -1564,9 +1563,9 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						this.prompts[name] = item;
 
-                        if(prompt_data_opt && prompt_data_opt[name]) {
-                            item.COMBO.value = prompt_data_opt[name].value;
-                        }
+						if(prompt_data_opt && prompt_data_opt[name]) {
+							item.COMBO.value = prompt_data_opt[name].value;
+						}
 					}
 				}
 			}
@@ -1627,8 +1626,8 @@ class ImageRefinerDialog extends ComfyDialog {
 					break;
 
 				case "BOOLEAN":
-				    new_item = { type:key, value: item[key].children[0].checked };
-                    break;
+					new_item = { type:key, value: item[key].children[0].checked };
+					break;
 
 				case "STRING":
 				case "COMBO":
@@ -1689,8 +1688,8 @@ class ImageRefinerDialog extends ComfyDialog {
 		return await load_image_to_canvas(path, canvas);
 	}
 
-    async import_work() {
-        let self = this;
+	async import_work() {
+		let self = this;
 
 		const fileInput = document.createElement("input");
 		Object.assign(fileInput, {
@@ -1702,9 +1701,9 @@ class ImageRefinerDialog extends ComfyDialog {
 					if(confirm("Current results will be lost. Do you want to continue?")) {
 						let json_data = await uploadWork(fileInput.files[0]);
 						let prompt_data = json_data.prompt_data;
-						// phase1:  set load base image and initialize state
+						// phase1: set load base image and initialize state
 						if(ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']])
-						    delete ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].cache;
+							delete ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].cache;
 
 						ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src = itemToImagepath(prompt_data.base_image_path);
 						await self.show();
@@ -1725,11 +1724,11 @@ class ImageRefinerDialog extends ComfyDialog {
 
 						// prompt load
 						for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
-						  if (self.componentSelectCombo.options[i].value === prompt_data.component_name) {
-						    self.componentSelectCombo.value = prompt_data.component_name;
-						    await self.invalidatePromptControls(prompt_data);
-						    break;
-						  }
+							if (self.componentSelectCombo.options[i].value === prompt_data.component_name) {
+							self.componentSelectCombo.value = prompt_data.component_name;
+							await self.invalidatePromptControls(prompt_data);
+							break;
+							}
 						}
 					}
 				}
@@ -1737,7 +1736,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		});
 
 		fileInput.click();
-    }
+	}
 
 	async add_draw_to_layer() {
 		let mask = getOriginalSizeMaskCanvas(this.maskCanvas, this.image, !this.is_mask_mode);
@@ -1748,13 +1747,13 @@ class ImageRefinerDialog extends ComfyDialog {
 
 	async generative_fill() {
 		if(!this.is_generating) {
-		    var whole_inpaint = false;
+			var whole_inpaint = false;
 			if(this.isCanvasEmpty(this.maskCanvas)) {
-			    if(confirm("The current mask is empty. Would you like to inpaint the entire area?")) {
-			        whole_inpaint = true;
-			    }
-			    else
-				    return;
+				if(confirm("The current mask is empty. Would you like to inpaint the entire area?")) {
+					whole_inpaint = true;
+				}
+				else
+					return;
 			}
 
 			this.is_generating = true;
@@ -1842,24 +1841,24 @@ class ImageRefinerDialog extends ComfyDialog {
 		titleLabel.style.fontSize = "20px";
 		this.topPanel.appendChild(titleLabel);
 
-        const link = document.createElement("a");
-        link.className = "tooltip";
-        link.href = "#";
-        link.style.marginLeft = "10px";
+		const link = document.createElement("a");
+		link.className = "ir_tooltip";
+		link.href = "#";
+		link.style.marginLeft = "10px";
 
-        const icon = document.createElement("img");
-        icon.src = "extensions/workflow-component/help.png";
-        icon.alt = "Help Icon";
-        icon.style.width = "30px";
-        icon.style.height = "30px";
+		const icon = document.createElement("img");
+		icon.src = "extensions/ComfyUI-Workflow-Component/help.png";
+		icon.alt = "Help Icon";
+		icon.style.width = "30px";
+		icon.style.height = "30px";
 
-        const tooltip = document.createElement("span");
-        tooltip.className = "tooltiptext";
-        tooltip.innerHTML = "<ul><li>Wheel: brush size adjustment</li><li>Left button-Drag: draw mask</li><li>Right button-Drag: erase mask</li><li>Ctrl-Wheel: Zoom adjustment</li><li>Ctrl-Drag: Pan</li><li>Esc: Close</li><li>Layer [R]: Regenerate layer with random seed(discard previous images)</li><li>Layer [S]: Selecting a different candidate image within the layer.</li><li>Layer [M]: Getting the mask of the layer.</li><li>Layer [X]: Delete layer</li><li>Regenerating without a mask will perform a complete inpainting</li><li>When switching to the pen mode and pressing 'Add to layer', the currently drawn image is added to the layer.</li><li>When switching to mask mode and clicking the regenerate button, the regeneration is performed only on the layers that are checked as visible.</li><li>Clicking on the layer generated by regenerate will display the prompt used for its creation. (except random seed)</li></ul>";
+		const tooltip = document.createElement("span");
+		tooltip.className = "tooltiptext";
+		tooltip.innerHTML = "<ul><li>Wheel: brush size adjustment</li><li>Left button-Drag: draw mask</li><li>Right button-Drag: erase mask</li><li>Ctrl-Wheel: Zoom adjustment</li><li>Ctrl-Drag: Pan</li><li>Esc: Close</li><li>Layer [R]: Regenerate layer with random seed(discard previous images)</li><li>Layer [S]: Selecting a different candidate image within the layer.</li><li>Layer [M]: Getting the mask of the layer.</li><li>Layer [X]: Delete layer</li><li>Regenerating without a mask will perform a complete inpainting</li><li>When switching to the pen mode and pressing 'Add to layer', the currently drawn image is added to the layer.</li><li>When switching to mask mode and clicking the regenerate button, the regeneration is performed only on the layers that are checked as visible.</li><li>Clicking on the layer generated by regenerate will display the prompt used for its creation. (except random seed)</li></ul>";
 
-        link.appendChild(icon);
-        link.appendChild(tooltip);
-        this.topPanel.appendChild(link);
+		link.appendChild(icon);
+		link.appendChild(tooltip);
+		this.topPanel.appendChild(link);
 
 		// Left div
 		this.leftDiv = document.createElement("div");
@@ -2007,7 +2006,7 @@ class ImageRefinerDialog extends ComfyDialog {
 		let cancelButton = this.createRightButton("Cancel", () => {
 			document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
 			self.close();
-            self.is_visible = false;
+			self.is_visible = false;
 		});
 
 		this.saveButton = this.createRightButton("Save", async () => {
@@ -2028,7 +2027,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			});
 
 		let importButton = this.createRightButton("Import Work", async () => {
-                self.import_work();
+				self.import_work();
 			});
 
 		this.componentSelectCombo = this.createComponentSelectCombo();
@@ -2080,16 +2079,16 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 		let added_layer = await this.addLayer(image_paths, mask_canvas, layer.prompt_data, layer.is_visible);
 
-        if(added_layer.prompt_data)
-            for(let i in added_layer.prompt_data.image_paths) {
-                let item = added_layer.prompt_data.image_paths[i];
-                if(item.is_mask_mode == false) {
-                    let layer_prompt_mask_canvas = document.createElement("canvas");
-                    let layer_prompt_mask_path = `view?filename=draw_${item.id}.png&subfolder=imagerefiner&type=temp&no-cache=${Date.now()}`;
-                    await load_image_to_canvas(layer_prompt_mask_path, layer_prompt_mask_canvas);
-                    item.mask = layer_prompt_mask_canvas;
-                }
-            }
+		if(added_layer.prompt_data)
+			for(let i in added_layer.prompt_data.image_paths) {
+				let item = added_layer.prompt_data.image_paths[i];
+				if(item.is_mask_mode == false) {
+					let layer_prompt_mask_canvas = document.createElement("canvas");
+					let layer_prompt_mask_path = `view?filename=draw_${item.id}.png&subfolder=imagerefiner&type=temp&no-cache=${Date.now()}`;
+					await load_image_to_canvas(layer_prompt_mask_path, layer_prompt_mask_canvas);
+					item.mask = layer_prompt_mask_canvas;
+				}
+			}
 
 		if(layer.cands) {
 			let selected_index = null;
@@ -2103,8 +2102,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			added_layer.image = added_layer.cands[selected_index];
 		}
 		else {
-		    // draw restore
-            await load_image_to_canvas(mask_path, mask_canvas);
+			// draw restore
+			await load_image_to_canvas(mask_path, mask_canvas);
 		}
 
 		this.invalidateLayerItem(added_layer);
@@ -2139,15 +2138,15 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		visibilityCheckbox.type = "checkbox";
 		if(is_visible != null)
-		    visibilityCheckbox.checked = is_visible;
+			visibilityCheckbox.checked = is_visible;
 		else
-		    visibilityCheckbox.checked = true;
+			visibilityCheckbox.checked = true;
 
-        if (visibilityCheckbox.checked) {
-            layer.canvas.style.display = "block";
-        } else {
-            layer.canvas.style.display = "none";
-        }
+		if (visibilityCheckbox.checked) {
+			layer.canvas.style.display = "block";
+		} else {
+			layer.canvas.style.display = "none";
+		}
 
 		visibilityCheckbox.addEventListener("change", (event) => {
 			const isChecked = event.target.checked;
@@ -2232,55 +2231,55 @@ class ImageRefinerDialog extends ComfyDialog {
 		const callButton = document.createElement("button");
 		callButton.innerText = "Call";
 
-        layerItem.deselect = () => {
-                layerItem.style.backgroundColor = '';
-                label.style.color = 'var(--descrip-text)';
-                self.selectedLayerItem = null;
-            };
+		layerItem.deselect = () => {
+				layerItem.style.backgroundColor = '';
+				label.style.color = 'var(--descrip-text)';
+				self.selectedLayerItem = null;
+			};
 
-        layerItem.select = async () => {
-		        if(self.selectedLayerItem)
-		            self.selectedLayerItem.deselect();
-                else {
-                    self.non_select_prompt = this.getPrompts();
-                    self.non_select_prompt.component_name = self.componentSelectCombo.value;
-                }
+		layerItem.select = async () => {
+				if(self.selectedLayerItem)
+					self.selectedLayerItem.deselect();
+				else {
+					self.non_select_prompt = this.getPrompts();
+					self.non_select_prompt.component_name = self.componentSelectCombo.value;
+				}
 
-                self.selectedLayerItem = layerItem;
-                layerItem.style.backgroundColor = "#3F3F3F";
-                label.style.color = 'white';
+				self.selectedLayerItem = layerItem;
+				layerItem.style.backgroundColor = "#3F3F3F";
+				label.style.color = 'white';
 
-                if(layer.prompt_data) {
-                    for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
-                      if (self.componentSelectCombo.options[i].value === layer.prompt_data.component_name) {
-                        self.componentSelectCombo.value = layer.prompt_data.component_name;
-                        await self.invalidatePromptControls(layer.prompt_data);
-                        break;
-                      }
-                    }
-                }
-            };
+				if(layer.prompt_data) {
+					for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
+						if (self.componentSelectCombo.options[i].value === layer.prompt_data.component_name) {
+						self.componentSelectCombo.value = layer.prompt_data.component_name;
+						await self.invalidatePromptControls(layer.prompt_data);
+						break;
+						}
+					}
+				}
+			};
 
-        layerItem.layer = layer;
+		layerItem.layer = layer;
 
 		label.onclick = () => {
-                if(self.selectedLayerItem != layerItem) {
-                    layerItem.select();
-		        }
-		        else {
-                    layerItem.deselect();
+				if(self.selectedLayerItem != layerItem) {
+					layerItem.select();
+				}
+				else {
+					layerItem.deselect();
 
-                    if(self.non_select_prompt) {
-                        for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
-                            if (self.componentSelectCombo.options[i].value === self.non_select_prompt.component_name) {
-                                self.componentSelectCombo.value = self.non_select_prompt.component_name;
-                                self.invalidatePromptControls(self.non_select_prompt);
-                                break;
-                            }
-                        }
-                    }
-		        }
-		    };
+					if(self.non_select_prompt) {
+						for (let i = 0; i < self.componentSelectCombo.options.length; i++) {
+							if (self.componentSelectCombo.options[i].value === self.non_select_prompt.component_name) {
+								self.componentSelectCombo.value = self.non_select_prompt.component_name;
+								self.invalidatePromptControls(self.non_select_prompt);
+								break;
+							}
+						}
+					}
+				}
+			};
 
 		await this.resolve_image_for_image(layer, image_paths);
 
@@ -2310,13 +2309,13 @@ class ImageRefinerDialog extends ComfyDialog {
 		let self = this;
 		for(let i in image_paths) {
 			let image_path = image_paths[i];
-		    let url = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}&no-cache=${Date.now()}`
+			let url = `view?filename=${image_path.filename}&subfolder=${image_path.subfolder}&type=${image_path.type}${app.getPreviewFormatParam()}&no-cache=${Date.now()}`
 
-            let image = await loadImage(url);
+			let image = await loadImage(url);
 
 			if(i == 0) {
 				layer.image = image;
-                self.invalidateLayerItem(layer);
+				self.invalidateLayerItem(layer);
 			}
 
 			layer.cands.push(image);
@@ -2349,13 +2348,13 @@ class ImageRefinerDialog extends ComfyDialog {
 						let seed = new_prompt[name];
 						const min = parseFloat(seed.min);
 						const max = parseFloat(seed.max);
-						seed.value =  Math.floor(Math.random() * (max - min + 1)) + min;
+						seed.value = Math.floor(Math.random() * (max - min + 1)) + min;
 					}
 				}
 
 				let prompt_data = this.getPrompts();
 
-                this.fillButton.setProgress(100*i/regen_count);
+				this.fillButton.setProgress(100*i/regen_count);
 				let generated_image = await generate(this.componentSelectCombo.value, new_prompt, mask, this.image, null, layer.prompt_data.image_paths);
 				cands.push(generated_image);
 			}
@@ -2468,9 +2467,9 @@ class ImageRefinerDialog extends ComfyDialog {
 			mutations.forEach(function(mutation) {
 					if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
 						if(self.last_display_style && self.last_display_style != 'none' && self.element.style.display == 'none') {
-                            document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
-                            self.brush.style.display = "none";
-                            ComfyApp.onClipspaceEditorClosed();
+							document.removeEventListener("mouseup", ImageRefinerDialog.handleMouseUp);
+							self.brush.style.display = "none";
+							ComfyApp.onClipspaceEditorClosed();
 						}
 
 						self.last_display_style = self.element.style.display;
@@ -2500,7 +2499,7 @@ class ImageRefinerDialog extends ComfyDialog {
 
 		await this.setImages(this.imgCanvas, this.backupCanvas);
 
-	    this.is_visible = true;
+		this.is_visible = true;
 	}
 
 	isOpened() {
@@ -2547,10 +2546,10 @@ class ImageRefinerDialog extends ComfyDialog {
 		alpha_url.searchParams.set('channel', 'a');
 		let touched_image = await loadImage(alpha_url);
 
-        backupCanvas.width = touched_image.width;
-        backupCanvas.height = touched_image.height;
+		backupCanvas.width = touched_image.width;
+		backupCanvas.height = touched_image.height;
 
-        prepareRGB(touched_image, backupCanvas, backupCtx);
+		prepareRGB(touched_image, backupCanvas, backupCtx);
 
 		// original image load
 		const rgb_url = new URL(ComfyApp.clipspace.imgs[ComfyApp.clipspace['selectedIndex']].src);
@@ -2558,8 +2557,8 @@ class ImageRefinerDialog extends ComfyDialog {
 		rgb_url.searchParams.set('channel', 'rgb');
 		this.image = await loadImage(rgb_url);
 
-        this.invalidateCanvas(this.image);
-        this.initializeCanvasPanZoom();
+		this.invalidateCanvas(this.image);
+		this.initializeCanvasPanZoom();
 	}
 
 	initializeCanvasPanZoom() {
@@ -2660,8 +2659,8 @@ class ImageRefinerDialog extends ComfyDialog {
 			maskCanvas.addEventListener('pointerover', (event) => { this.brush.style.display = "block"; });
 			maskCanvas.addEventListener('pointerleave', (event) => { this.brush.style.display = "none"; });
 
-            document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
-            document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
+			document.addEventListener('pointerup', ImageRefinerDialog.handlePointerUp);
+			document.addEventListener('keydown', ImageRefinerDialog.handleKeyDown);
 
 			this.handler_registered = true;
 		}
@@ -2676,8 +2675,8 @@ class ImageRefinerDialog extends ComfyDialog {
 	static handleKeyDown(event) {
 		const self = ImageRefinerDialog.instance;
 
-	    if(!self.is_visible)
-	        return;
+		if(!self.is_visible)
+			return;
 
 		if (event.key === ']') {
 			self.brush_size = Math.min(self.brush_size+2, 100);
@@ -2685,12 +2684,12 @@ class ImageRefinerDialog extends ComfyDialog {
 			self.brush_size = Math.max(self.brush_size-2, 1);
 		}
 		else if(event.key === 'Escape') {
-            if(confirm("All current work will be lost. Are you sure you want to close it?")) {
-                self.close();
-            }
-            else {
-		        self.element.style.display = "block";
-            }
+			if(confirm("All current work will be lost. Are you sure you want to close it?")) {
+				self.close();
+			}
+			else {
+				self.element.style.display = "block";
+			}
 		}
 
 		self.updateBrushPreview(self);
@@ -2770,25 +2769,25 @@ class ImageRefinerDialog extends ComfyDialog {
 		}
 	}
 
-    edit_layer(layer, is_drawing, x, y, brush_sze) {
-        // todo
-    }
+	edit_layer(layer, is_drawing, x, y, brush_sze) {
+		// todo
+	}
 
-    edit_layer_cont(layer, is_drawing, directionX, directionY, distance, brush_sze) {
-        // todo
-    }
+	edit_layer_cont(layer, is_drawing, directionX, directionY, distance, brush_sze) {
+		// todo
+	}
 
 	draw_move(self, event) {
-	    var layer_draw_mode = false;
+		var layer_draw_mode = false;
 
 		if(event.ctrlKey) {
 			return;
 		}
 
 		if(event.altKey) {
-		    if(self.selectedLayerItem) {
-		        layer_draw_mode = true;
-		    }
+			if(self.selectedLayerItem) {
+				layer_draw_mode = true;
+			}
 		}
 
 		if (window.TouchEvent && event instanceof TouchEvent || event.buttons == 1) {
@@ -2833,48 +2832,48 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			if(diff > 20 && !this.drawing_mode)
 				requestAnimationFrame(() => {
-				    if(layer_draw_mode) {
-				        self.edit_layer(self.selectedLayerItem.layer, true, x, y, brush_size);
-				    }
-				    else {
-                        self.maskCtx.beginPath();
-                        self.maskCtx.fillStyle = color;
-                        self.maskCtx.fillStyle = self.selectedColor;
-                        self.maskCtx.globalCompositeOperation = "source-over";
-                        self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
-                        self.maskCtx.fill();
+					if(layer_draw_mode) {
+						self.edit_layer(self.selectedLayerItem.layer, true, x, y, brush_size);
+					}
+					else {
+						self.maskCtx.beginPath();
+						self.maskCtx.fillStyle = color;
+						self.maskCtx.fillStyle = self.selectedColor;
+						self.maskCtx.globalCompositeOperation = "source-over";
+						self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
+						self.maskCtx.fill();
 					}
 
-                    self.lastx = x;
-                    self.lasty = y;
+					self.lastx = x;
+					self.lasty = y;
 				});
 			else
 				requestAnimationFrame(() => {
-                    var dx = x - self.lastx;
-                    var dy = y - self.lasty;
+					var dx = x - self.lastx;
+					var dy = y - self.lasty;
 
-                    var distance = Math.sqrt(dx * dx + dy * dy);
-                    var directionX = dx / distance;
-                    var directionY = dy / distance;
+					var distance = Math.sqrt(dx * dx + dy * dy);
+					var directionX = dx / distance;
+					var directionY = dy / distance;
 
-				    if(layer_draw_mode) {
-				        self.edit_layer_cont(self.selectedLayerItem.layer, true, directionX, directionY, distance, brush_size);
-				    }
-				    else {
-                        self.maskCtx.beginPath();
-                        self.maskCtx.fillStyle = color;
-                        self.maskCtx.globalCompositeOperation = "source-over";
+					if(layer_draw_mode) {
+						self.edit_layer_cont(self.selectedLayerItem.layer, true, directionX, directionY, distance, brush_size);
+					}
+					else {
+						self.maskCtx.beginPath();
+						self.maskCtx.fillStyle = color;
+						self.maskCtx.globalCompositeOperation = "source-over";
 
-                        for (var i = 0; i < distance; i+=5) {
-                            var px = self.lastx + (directionX * i);
-                            var py = self.lasty + (directionY * i);
-                            self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
-                            self.maskCtx.fill();
-                        }
-                    }
+						for (var i = 0; i < distance; i+=5) {
+							var px = self.lastx + (directionX * i);
+							var py = self.lasty + (directionY * i);
+							self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
+							self.maskCtx.fill();
+						}
+					}
 
-                    self.lastx = x;
-                    self.lasty = y;
+					self.lastx = x;
+					self.lasty = y;
 				});
 
 			self.lasttime = performance.now();
@@ -2898,41 +2897,41 @@ class ImageRefinerDialog extends ComfyDialog {
 
 			if(diff > 20 && !drawing_mode) // cannot tracking drawing_mode for touch event
 				requestAnimationFrame(() => {
-				    if(layer_draw_mode) {
-				        self.edit_layer(self.selectedLayerItem.layer, false, x, y, brush_size);
-				    }
-				    else {
-                        self.maskCtx.beginPath();
-                        self.maskCtx.globalCompositeOperation = "destination-out";
-                        self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
-                        self.maskCtx.fill();
-                        self.lastx = x;
-                        self.lasty = y;
+					if(layer_draw_mode) {
+						self.edit_layer(self.selectedLayerItem.layer, false, x, y, brush_size);
+					}
+					else {
+						self.maskCtx.beginPath();
+						self.maskCtx.globalCompositeOperation = "destination-out";
+						self.maskCtx.arc(x, y, brush_size, 0, Math.PI * 2, false);
+						self.maskCtx.fill();
+						self.lastx = x;
+						self.lasty = y;
 					}
 				});
 			else
 				requestAnimationFrame(() => {
-                    var dx = x - self.lastx;
-                    var dy = y - self.lasty;
+					var dx = x - self.lastx;
+					var dy = y - self.lasty;
 
-                    var distance = Math.sqrt(dx * dx + dy * dy);
-                    var directionX = dx / distance;
-                    var directionY = dy / distance;
+					var distance = Math.sqrt(dx * dx + dy * dy);
+					var directionX = dx / distance;
+					var directionY = dy / distance;
 
-				    if(layer_draw_mode) {
-				        self.edit_layer_cont(self.selectedLayerItem.layer, false, directionX, directionY, distance, brush_size);
-				    }
-				    else {
-                        self.maskCtx.beginPath();
-                        self.maskCtx.globalCompositeOperation = "destination-out";
+					if(layer_draw_mode) {
+						self.edit_layer_cont(self.selectedLayerItem.layer, false, directionX, directionY, distance, brush_size);
+					}
+					else {
+						self.maskCtx.beginPath();
+						self.maskCtx.globalCompositeOperation = "destination-out";
 
-                        for (var i = 0; i < distance; i+=5) {
-                            var px = self.lastx + (directionX * i);
-                            var py = self.lasty + (directionY * i);
-                            self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
-                            self.maskCtx.fill();
-                        }
-                    }
+						for (var i = 0; i < distance; i+=5) {
+							var px = self.lastx + (directionX * i);
+							var py = self.lasty + (directionY * i);
+							self.maskCtx.arc(px, py, brush_size, 0, Math.PI * 2, false);
+							self.maskCtx.fill();
+						}
+					}
 
 					self.lastx = x;
 					self.lasty = y;
