@@ -434,7 +434,7 @@ app.registerExtension({
                         if(node.inputs) {
                             for(let j in node.inputs) {
                                 if(node.inputs[j].widget) {
-                                    let config = node.inputs[j].widget.getConfig();
+                                    let config = node.inputs[j].widget.config;
 
                                     if(config[0] instanceof Array) {
                                         config = [[]];
