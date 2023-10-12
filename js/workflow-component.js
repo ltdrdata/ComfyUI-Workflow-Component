@@ -432,15 +432,26 @@ app.registerExtension({
                     for(let i in p.workflow.nodes) {
                         let node = p.workflow.nodes[i];
                         if(node.inputs) {
+                        	let name_to_config = {};
+                        	let widgets = app.graph._nodes_by_id[node.id].widgets;
+                        	for(const i in widgets) {
+                        		let w = widgets[i];
+                        		name_to_config[w.name] = w.__wc_config;
+                        	}
+
                             for(let j in node.inputs) {
-                                if(node.inputs[j].widget) {
-                                    let config = node.inputs[j].widget.config;
+                            	let w = node.inputs[j].widget;
+                                if(w) {
+                                	let config = name_to_config[w.name];
 
-                                    if(config[0] instanceof Array) {
-                                        config = [[]];
+									if(config != undefined) {
+										if(config[0] instanceof Array) {
+											config = [[]];
+										}
+
+										node.inputs[j].widget.config = config;
+										node.inputs[j].widget.__wc_config = undefined;
                                     }
-
-                                    node.inputs[j].widget.config = config;
                                 }
                             }
                         }
@@ -684,6 +695,15 @@ app.registerExtension({
 		ComponentInputNode.category = "ComponentBuilder";
 	},
 	nodeCreated(node, app) {
+		// restore config
+		const { nodeData } = node.constructor;
+		if(node.widgets) {
+			for (const w of node.widgets) {
+				w.__wc_config = nodeData?.input?.required[w.name] ?? nodeData?.input?.optional?.[w.name];
+			}
+		}
+
+		// components
 		Object.defineProperty(node, "title", {
 			set: function(value) {
 				node._title = value;
