@@ -1,5 +1,5 @@
 {
-  "last_node_id": 25,
+  "last_node_id": 27,
   "last_link_id": 36,
   "nodes": [
     {
@@ -245,7 +245,7 @@
       ],
       "size": {
         "0": 342.5999755859375,
-        "1": 138
+        "1": 162
       },
       "flags": {},
       "order": 10,
@@ -281,7 +281,8 @@
             "config": [
               "STRING",
               {
-                "multiline": true
+                "multiline": true,
+                "dynamicPrompts": false
               }
             ]
           },
@@ -311,7 +312,8 @@
       },
       "widgets_values": [
         "",
-        "Select the LoRA to add to the text"
+        "Select the LoRA to add to the text",
+        "Select the Wildcard to add to the text"
       ]
     },
     {
@@ -758,6 +760,7 @@
           0
         ],
         "Select to add LoRA": "Select the LoRA to add to the text",
+        "Select to add Wildcard": "Select the Wildcard to add to the text",
         "basic_pipe": [
           "3",
           0
