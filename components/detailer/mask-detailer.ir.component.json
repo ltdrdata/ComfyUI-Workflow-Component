@@ -1,6 +1,6 @@
 {
-  "last_node_id": 32,
-  "last_link_id": 67,
+  "last_node_id": 34,
+  "last_link_id": 69,
   "nodes": [
     {
       "id": 11,
@@ -106,7 +106,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 14,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -133,7 +133,7 @@
         "1": 130
       },
       "flags": {},
-      "order": 15,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -153,7 +153,7 @@
               {
                 "default": 3,
                 "min": 1,
-                "max": 10,
+                "max": 100,
                 "step": 0.1
               }
             ]
@@ -504,6 +504,33 @@
       "bgcolor": "#533"
     },
     {
+      "id": 9,
+      "type": "ComponentOutput",
+      "pos": [
+        1960,
+        220
+      ],
+      "size": {
+        "0": 178,
+        "1": 26
+      },
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 67,
+          "label": "IMAGE"
+        }
+      ],
+      "title": "2.Component Output",
+      "properties": {},
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
       "id": 32,
       "type": "DetailerForEachDebugPipe",
       "pos": [
@@ -515,7 +542,7 @@
         532
       ],
       "flags": {},
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -595,51 +622,23 @@
         },
         {
           "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2",
+          "type": "COMBO",
           "link": 61,
           "widget": {
             "name": "sampler_name",
             "config": [
-              [
-                "euler",
-                "euler_ancestral",
-                "heun",
-                "dpm_2",
-                "dpm_2_ancestral",
-                "lms",
-                "dpm_fast",
-                "dpm_adaptive",
-                "dpmpp_2s_ancestral",
-                "dpmpp_sde",
-                "dpmpp_sde_gpu",
-                "dpmpp_2m",
-                "dpmpp_2m_sde",
-                "dpmpp_2m_sde_gpu",
-                "dpmpp_3m_sde",
-                "dpmpp_3m_sde_gpu",
-                "ddpm",
-                "ddim",
-                "uni_pc",
-                "uni_pc_bh2"
-              ]
+              []
             ]
           }
         },
         {
           "name": "scheduler",
-          "type": "normal,karras,exponential,sgm_uniform,simple,ddim_uniform",
+          "type": "COMBO",
           "link": 62,
           "widget": {
             "name": "scheduler",
             "config": [
-              [
-                "normal",
-                "karras",
-                "exponential",
-                "sgm_uniform",
-                "simple",
-                "ddim_uniform"
-              ]
+              []
             ]
           }
         },
@@ -707,6 +706,21 @@
               }
             ]
           }
+        },
+        {
+          "name": "wildcard",
+          "type": "STRING",
+          "link": 69,
+          "widget": {
+            "name": "wildcard",
+            "config": [
+              "STRING",
+              {
+                "multiline": true,
+                "dynamicPrompts": false
+              }
+            ]
+          }
         }
       ],
       "outputs": [
@@ -717,7 +731,8 @@
             67
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "color": "#5940bb"
         },
         {
           "name": "segs",
@@ -778,31 +793,34 @@
       ]
     },
     {
-      "id": 9,
-      "type": "ComponentOutput",
+      "id": 34,
+      "type": "ComponentInput",
       "pos": [
-        1960,
-        220
+        40,
+        1470
       ],
       "size": {
         "0": 178,
         "1": 26
       },
       "flags": {},
-      "order": 17,
+      "order": 14,
       "mode": 0,
-      "inputs": [
+      "outputs": [
         {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "link": 67,
-          "label": "IMAGE"
+          "name": "wildcard",
+          "type": "STRING",
+          "links": [
+            69
+          ],
+          "slot_index": 0,
+          "label": "wildcard"
         }
       ],
-      "title": "2.Component Output",
+      "title": "22.Component Input",
       "properties": {},
-      "color": "#223",
-      "bgcolor": "#335"
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
@@ -884,7 +902,7 @@
       0,
       32,
       8,
-      "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2"
+      "COMBO"
     ],
     [
       62,
@@ -892,7 +910,7 @@
       0,
       32,
       9,
-      "normal,karras,exponential,sgm_uniform,simple,ddim_uniform"
+      "COMBO"
     ],
     [
       63,
@@ -933,6 +951,14 @@
       9,
       0,
       "IMAGE"
+    ],
+    [
+      69,
+      34,
+      0,
+      32,
+      14,
+      "STRING"
     ]
   ],
   "groups": [],
@@ -1052,7 +1078,10 @@
           "29",
           0
         ],
-        "wildcard": "",
+        "wildcard": [
+          "34",
+          0
+        ],
         "refiner_ratio": 0.2,
         "image": [
           "11",
@@ -1068,6 +1097,9 @@
         ]
       },
       "class_type": "DetailerForEachDebugPipe"
+    },
+    "34": {
+      "inputs": {}
     }
   }
 }
