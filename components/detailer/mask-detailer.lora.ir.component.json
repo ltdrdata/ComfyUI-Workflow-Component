@@ -98,7 +98,7 @@
       ],
       "size": {
         "0": 315,
-        "1": 130
+        "1": 150
       },
       "flags": {},
       "order": 15,
@@ -121,7 +121,7 @@
               {
                 "default": 3,
                 "min": 1,
-                "max": 10,
+                "max": 100,
                 "step": 0.1
               }
             ]
@@ -149,7 +149,8 @@
         false,
         3,
         false,
-        10
+        10,
+        false
       ]
     },
     {
@@ -595,14 +596,12 @@
         },
         {
           "name": "lora_name",
-          "type": "etc\\add_detail.safetensors,",
+          "type": "COMBO",
           "link": 58,
           "widget": {
             "name": "lora_name",
             "config": [
-              [
-                "etc\\add_detail.safetensors"
-              ]
+              []
             ]
           },
           "slot_index": 2,
@@ -618,8 +617,8 @@
               "FLOAT",
               {
                 "default": 1,
-                "min": -10,
-                "max": 10,
+                "min": -20,
+                "max": 20,
                 "step": 0.01
               }
             ]
@@ -637,8 +636,8 @@
               "FLOAT",
               {
                 "default": 1,
-                "min": -10,
-                "max": 10,
+                "min": -20,
+                "max": 20,
                 "step": 0.01
               }
             ]
@@ -834,10 +833,10 @@
         1450,
         210
       ],
-      "size": [
-        380,
-        530
-      ],
+      "size": {
+        "0": 380,
+        "1": 530
+      },
       "flags": {},
       "order": 20,
       "mode": 0,
@@ -918,51 +917,23 @@
         },
         {
           "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2",
+          "type": "COMBO",
           "link": 77,
           "widget": {
             "name": "sampler_name",
             "config": [
-              [
-                "euler",
-                "euler_ancestral",
-                "heun",
-                "dpm_2",
-                "dpm_2_ancestral",
-                "lms",
-                "dpm_fast",
-                "dpm_adaptive",
-                "dpmpp_2s_ancestral",
-                "dpmpp_sde",
-                "dpmpp_sde_gpu",
-                "dpmpp_2m",
-                "dpmpp_2m_sde",
-                "dpmpp_2m_sde_gpu",
-                "dpmpp_3m_sde",
-                "dpmpp_3m_sde_gpu",
-                "ddpm",
-                "ddim",
-                "uni_pc",
-                "uni_pc_bh2"
-              ]
+              []
             ]
           }
         },
         {
           "name": "scheduler",
-          "type": "normal,karras,exponential,sgm_uniform,simple,ddim_uniform",
+          "type": "COMBO",
           "link": 78,
           "widget": {
             "name": "scheduler",
             "config": [
-              [
-                "normal",
-                "karras",
-                "exponential",
-                "sgm_uniform",
-                "simple",
-                "ddim_uniform"
-              ]
+              []
             ]
           },
           "slot_index": 9
@@ -1158,7 +1129,7 @@
       0,
       28,
       2,
-      "etc\\add_detail.safetensors,"
+      "COMBO"
     ],
     [
       59,
@@ -1294,7 +1265,7 @@
       0,
       35,
       8,
-      "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2"
+      "COMBO"
     ],
     [
       78,
@@ -1302,7 +1273,7 @@
       0,
       35,
       9,
-      "normal,karras,exponential,sgm_uniform,simple,ddim_uniform"
+      "COMBO"
     ]
   ],
   "groups": [],
@@ -1353,6 +1324,7 @@
         ],
         "bbox_fill": false,
         "drop_size": 10,
+        "contour_fill": false,
         "mask": [
           "18",
           0

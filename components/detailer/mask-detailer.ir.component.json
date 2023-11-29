@@ -130,7 +130,7 @@
       ],
       "size": {
         "0": 315,
-        "1": 130
+        "1": 150
       },
       "flags": {},
       "order": 16,
@@ -181,7 +181,8 @@
         false,
         3,
         false,
-        10
+        10,
+        false
       ]
     },
     {
@@ -432,7 +433,7 @@
       "outputs": [
         {
           "name": "scheduler",
-          "type": "normal,karras,exponential,sgm_uniform,simple,ddim_uniform",
+          "type": "COMBO",
           "links": [
             62
           ],
@@ -461,7 +462,7 @@
       "outputs": [
         {
           "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2",
+          "type": "COMBO",
           "links": [
             61
           ],
@@ -537,10 +538,10 @@
         1050,
         220
       ],
-      "size": [
-        556.800048828125,
-        532
-      ],
+      "size": {
+        "0": 556.800048828125,
+        "1": 532
+      },
       "flags": {},
       "order": 17,
       "mode": 0,
@@ -1009,6 +1010,7 @@
         ],
         "bbox_fill": false,
         "drop_size": 10,
+        "contour_fill": false,
         "mask": [
           "18",
           0
