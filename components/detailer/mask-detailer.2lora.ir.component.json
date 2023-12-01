@@ -289,7 +289,7 @@
       "outputs": [
         {
           "name": "lora_name",
-          "type": "etc\\add_detail.safetensors,",
+          "type": "COMBO",
           "links": [
             58
           ],
@@ -488,7 +488,7 @@
       "outputs": [
         {
           "name": "lora_name",
-          "type": "etc\\add_detail.safetensors,",
+          "type": "COMBO",
           "links": [
             66
           ],
@@ -913,7 +913,7 @@
       "outputs": [
         {
           "name": "scheduler",
-          "type": "normal,karras,exponential,sgm_uniform,simple,ddim_uniform",
+          "type": "COMBO",
           "links": [
             85
           ],
@@ -942,7 +942,7 @@
       "outputs": [
         {
           "name": "sampler_name",
-          "type": "euler,euler_ancestral,heun,dpm_2,dpm_2_ancestral,lms,dpm_fast,dpm_adaptive,dpmpp_2s_ancestral,dpmpp_sde,dpmpp_sde_gpu,dpmpp_2m,dpmpp_2m_sde,dpmpp_2m_sde_gpu,dpmpp_3m_sde,dpmpp_3m_sde_gpu,ddpm,ddim,uni_pc,uni_pc_bh2",
+          "type": "COMBO",
           "links": [
             84
           ],
@@ -1198,7 +1198,8 @@
         true,
         true,
         "",
-        0.2
+        0.2,
+        1
       ]
     },
     {
@@ -1677,6 +1678,7 @@
         ],
         "wildcard": "",
         "refiner_ratio": 0.2,
+        "cycle": 1,
         "image": [
           "11",
           0

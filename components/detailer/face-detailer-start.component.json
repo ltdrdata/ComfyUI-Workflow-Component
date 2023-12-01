@@ -635,7 +635,8 @@
         0.7,
         "False",
         10,
-        0.2
+        0.2,
+        1
       ]
     }
   ],
@@ -858,6 +859,7 @@
         "sam_mask_hint_use_negative": "False",
         "drop_size": 10,
         "refiner_ratio": 0.2,
+        "cycle": 1,
         "image": [
           "11",
           0
