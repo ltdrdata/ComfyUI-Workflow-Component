@@ -29,7 +29,8 @@ import image_refiner.custom_server
 import workflow_component.custom_server
 # --------------------------------------------
 
-from workflow_component.custom_nodes import *
+from .workflow_component.custom_nodes import *
+from .image_refiner.ir_nodes import *
 
 NODE_CLASS_MAPPINGS = {
     "ExecutionSwitch": ExecutionSwitch,
@@ -44,6 +45,8 @@ NODE_CLASS_MAPPINGS = {
     "InputZip": InputZip,
     "InputUnzip": InputUnzip,
     "OptionalTest": OptionalTest,
+    "@IR_INPUT //WC": IR_Input,
+    "@IR_OUTPUT //WC": IR_Output,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {}

@@ -16,6 +16,7 @@ async def original_post_prompt(request):
     resp_code = 200
     out_string = ""
     json_data = await request.json()
+    json_data = server.PromptServer.instance.trigger_on_prompt(json_data)
 
     if "number" in json_data:
         number = float(json_data['number'])

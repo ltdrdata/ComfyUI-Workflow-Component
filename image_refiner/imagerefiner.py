@@ -9,6 +9,10 @@ import folder_paths
 from PIL import Image
 import uuid
 import comfy.model_management
+import workflow_component.workflow_execution as we
+
+
+ir_objs = {}
 
 def tensor2pil(image):
     return Image.fromarray(np.clip(255. * image.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
@@ -52,13 +56,53 @@ def make_basic_pipe(model, clip, vae, positive, negative):
     return model, clip, vae, positive, negative
 
 
-def prepare_input(class_def, merged_pil, mask_pil, prompt_data):
-    input_data_all = {'extra_pnginfo': [{'workflow': {'nodes': []}}], 'unique_id': ['-1'], 'used_output_names': [set()]}
+class IR_Input_Provider:
+    def __init__(self):
+        self.data = {}
+        self.image = None
+        self.latent = None
+        self.mask = None
+        self.output_data = {}
 
-    for name, type in zip(list(class_def.RETURN_NAMES), list(class_def.RETURN_TYPES)):
-        if type in ['IMAGE', 'LATENT']:
-            input_data_all['used_output_names'][0].add(name)
+    def add_input_image(self, value):
+        self.image = value
 
+    def add_input_latent(self, value):
+        self.latent = value
+
+    def add_input_mask(self, value):
+        self.mask = value
+
+    def add_input(self, key, value):
+        self.data[key] = (value,)
+
+    def add_input_mult(self, key, value):
+        self.data[key] = value
+
+    def get_input(self, key):
+        return self.data[key]
+
+    def add_output(self, slot, value):
+        self.output_data[slot] = value
+
+    def get_output(self, slot):
+        return self.output_data[slot]
+
+    def get_default_image_output(self):
+        image = self.output_data[-1]
+        image_json = nodes.PreviewImage().save_images(image, 'ImageRefiner/IR-GEN')['ui']
+        return image_json
+
+
+def prepare_prompt(class_def, component_name, merged_pil, mask_pil, prompt_id, prompt_data):
+    global ir_objs
+
+    next_id = 2
+    prompt = {}
+    ir_obj = IR_Input_Provider()
+    ir_objs[prompt_id] = ir_obj
+
+    # set input ----------------------------------------
     mask = np.array(mask_pil).astype(np.float32) / 255.0
     mask = 1. - torch.from_numpy(mask)
 
@@ -86,6 +130,7 @@ def prepare_input(class_def, merged_pil, mask_pil, prompt_data):
     unload_unused_checkpoints(used_checkpoints)
 
     # load checkpoints
+    component_inputs = {}
     for k, v in prompt_data.items():
         if 'type' not in v:
             continue
@@ -94,49 +139,90 @@ def prepare_input(class_def, merged_pil, mask_pil, prompt_data):
         if ty == 'BASIC_PIPE':
             model, clip, vae = load_checkpoint(v['checkpoint'])
             basic_pipe = make_basic_pipe(model, clip, vae, v['positive'], v['negative'])
-            input_data_all[k] = [basic_pipe]
+            ir_obj.add_input_mult(k, basic_pipe)
 
         elif ty == "MODEL":
             model, _, _ = load_checkpoint(v['checkpoint'])
-            input_data_all[k] = [model]
+            ir_obj.add_input(k, model)
 
         elif ty == "VAE":
             if 'checkpoint' in v:
                 _, _, vae = load_checkpoint(v['checkpoint'])
             else:
                 vae = load_vae(v['vae'])
-
-            input_data_all[k] = [vae]
+            ir_obj.add_input(k, vae)
 
         elif ty == "CONDITIONING":
             _, _, clip = load_checkpoint(v['checkpoint'])
-            input_data_all[k] = [model]
+            ir_obj.add_input(k, clip)
 
         elif ty == "INT":
-            input_data_all[k] = [int(v['value'])]
+            ir_obj.add_input(k, int(v['value']))
 
         elif ty == "FLOAT":
-            input_data_all[k] = [float(v['value'])]
+            ir_obj.add_input(k, float(v['value']))
 
         elif ty == "STRING":
-            input_data_all[k] = [v['value']]
+            ir_obj.add_input(k, v['value'])
 
         elif ty == "BOOLEAN":
-            input_data_all[k] = [v['value']]
+            ir_obj.add_input(k, v['value'])
 
         elif ty == "COMBO":
-            input_data_all[k] = [v['value']]
+            ir_obj.add_input(k, v['value'])
+        else:
+            continue
+
+        this_id = str(next_id)
+        prompt[this_id] = {'class_type': '@IR_INPUT //WC', 'inputs': {'prompt_id': prompt_id, 'key': k}}
+        component_inputs[k] = [this_id, 0]
+        next_id += 1
 
     # set image
     if 'IMAGE' in prompt_data['@IR_input_image']:
-        input_data_all[prompt_data['@IR_input_image']['IMAGE']] = [image]
+        k = prompt_data['@IR_input_image']['IMAGE']
+
+        ir_obj.add_input_image(image)
+        this_id = str(next_id)
+        prompt[this_id] = {'class_type': '@IR_INPUT //WC', 'inputs': {'prompt_id': prompt_id, 'key': k}}
+        component_inputs[k] = [this_id, 0]
+
+        next_id += 1
+
     else:
-        input_data_all[prompt_data['@IR_input_image']['LATENT']] = [image_to_latent(image)]
+        k = prompt_data['@IR_input_image']['LATENT']
+
+        ir_obj.add_input_latent(image_to_latent(image))
+        this_id = str(next_id)
+        prompt[this_id] = {'class_type': '@IR_INPUT //WC', 'inputs': {'prompt_id': prompt_id, 'key': k}}
+        component_inputs[k] = [this_id, 0]
+
+        next_id += 1
 
     if '@IR_mask' in prompt_data:
-        input_data_all[prompt_data['@IR_mask']] = [mask]
+        k = prompt_data['@IR_mask']['MASK']
 
-    return input_data_all
+        ir_obj.add_input_mask(mask)
+        this_id = str(next_id)
+        prompt[this_id] = {'class_type': '@IR_INPUT //WC', 'inputs': {'prompt_id': prompt_id, 'key': k}}
+        component_inputs[k] = [this_id, 0]
+
+        next_id += 1
+
+    # set output ----------------------------------------
+    slot = 0
+    for name, typ in zip(list(class_def.RETURN_NAMES), list(class_def.RETURN_TYPES)):
+        if typ in ['IMAGE', 'LATENT']:
+            prompt[str(next_id)] = {'class_type': '@IR_OUTPUT //WC', 'inputs': {'prompt_id': prompt_id, 'slot': -1, 'value': ['1', slot]}}
+            next_id += 1
+            slot += 1
+            break
+
+    # component
+
+    prompt['1'] = {'class_type': component_name, 'inputs': component_inputs}
+
+    return prompt
 
 
 def process_output(class_def, output_data):
@@ -159,6 +245,8 @@ def process_output(class_def, output_data):
 
 
 def generate(merged_pil, mask_pil, prompt_data):
+    prompt_id = str(uuid.uuid4())
+
     # create combo
     component_name = prompt_data['component_name']
 
@@ -172,8 +260,13 @@ def generate(merged_pil, mask_pil, prompt_data):
 
     class_def = nodes.NODE_CLASS_MAPPINGS[component_name]
 
-    input_data_all = prepare_input(class_def, merged_pil, mask_pil, prompt_data)
-    output_data, ui, subgraph = execution.get_output_data(class_def(), input_data_all)
+    prompt = prepare_prompt(class_def, component_name, merged_pil, mask_pil, prompt_id, prompt_data)
+    vsrv = we.VirtualServer(component_name, None, '1')
+    pe = execution.PromptExecutor(vsrv)
+
+    pe.execute(prompt, prompt_id)
+
+    output_data = ir_objs[prompt_id].get_default_image_output()
 
     # todo handling subgraph in output_data
 

@@ -38,7 +38,7 @@ class VirtualServer:
             data['executed'] = []
             self.occurred_event = event, data, sid
 
-        elif event == "executing":
+        elif event == "executing" and self.internal_id_name_map is not None:
             data['executed'] = []
 
             if data['node'] is not None:
