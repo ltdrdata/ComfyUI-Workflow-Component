@@ -430,12 +430,22 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 		}
 	}
 
-	prompt_data.component_name = component_name;
+	prompt_data.component_prompt = get_prompt(component_prompt);
 
 	formData.append('mask', blob);
 	formData.append('prompt_data', JSON.stringify(prompt_data));
 
 	return formData;
+}
+
+function get_prompt(component_name) {
+	const vapp = new ComfyApp();
+	vapp.graph = new LGraph();
+//	const node = LiteGraph.createNode('workflow/Impact::MAKE_BASIC_PIPE');
+	const node = LiteGraph.createNode(component_name);
+	vapp.graph.add(node);
+	let data = await vapp.graphToPrompt();
+	return data.output;
 }
 
 function prepare_export_data_layer(formData, layer) {

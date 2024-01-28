@@ -9,10 +9,12 @@ import folder_paths
 from PIL import Image
 import uuid
 import comfy.model_management
-import workflow_component.workflow_execution as we
+from ..workflow_component import workflow_execution as we
+from execution import PromptExecutor
 
 
 ir_objs = {}
+
 
 def tensor2pil(image):
     return Image.fromarray(np.clip(255. * image.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
@@ -225,7 +227,7 @@ def prepare_prompt(class_def, component_name, merged_pil, mask_pil, prompt_id, p
     return prompt
 
 
-def process_output(class_def, output_data):
+def process_output(return_id, output_data):
     l = list(zip(list(class_def.RETURN_NAMES), list(class_def.RETURN_TYPES)))
 
     output = None
@@ -248,32 +250,32 @@ def generate(merged_pil, mask_pil, prompt_data):
     prompt_id = str(uuid.uuid4())
 
     # create combo
-    component_name = prompt_data['component_name']
-
-    if component_name == "none":
-        print(f"[WARN] Workflow-Component: there is no selected component")
-        return None
-
-    if component_name not in nodes.NODE_CLASS_MAPPINGS:
-        print(f"[WARN] Workflow-Component: invalid component name '{component_name}'")
-        return None 
-
-    class_def = nodes.NODE_CLASS_MAPPINGS[component_name]
-
-    prompt = prepare_prompt(class_def, component_name, merged_pil, mask_pil, prompt_id, prompt_data)
-    vsrv = we.VirtualServer(component_name, None, '1')
+    prompt = prompt_data['prompt']
+    vsrv = we.VirtualServer( None, '1')
     pe = execution.PromptExecutor(vsrv)
 
     pe.execute(prompt, prompt_id)
 
     output_data = ir_objs[prompt_id].get_default_image_output()
-
-    # todo handling subgraph in output_data
-
     comfy.model_management.cleanup_models()
 
     # retrieve output
-    return process_output(class_def, output_data)
+    return process_output(prompt_id, output_data)
 
 
+class VirtualServer:
+    def __init__(self,):
+        pass
 
+    def update_node_status(self, text, progress=None):
+        pass
+
+    def send_sync(self, event, data, sid=None):
+        pass
+
+
+executor = PromptExecutor(VirtualServer())
+
+
+def execute_component(prompt, output_nodes):
+    executor.execute(prompt, str(uuid.uuid4()), {}, output_nodes)

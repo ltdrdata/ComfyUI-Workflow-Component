@@ -8,7 +8,7 @@ import datetime
 
 import server
 import folder_paths
-import image_refiner.imagerefiner as ir
+from . import imagerefiner as ir
 
 
 def get_path_from_fileitem(image):

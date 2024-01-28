@@ -1,5 +1,6 @@
 from .imagerefiner import ir_objs
 
+
 class IR_Input:
     @classmethod
     def INPUT_TYPES(self):
