@@ -7,7 +7,7 @@ comfy_path = os.path.dirname(folder_paths.__file__)
 this_extension_path = os.path.dirname(__file__)
 
 # DON'T REMOVE: load server APIs -------------
-import image_refiner.custom_server
+from .image_refiner import custom_server
 # --------------------------------------------
 
 from .image_refiner.ir_nodes import *

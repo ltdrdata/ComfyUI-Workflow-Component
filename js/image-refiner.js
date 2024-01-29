@@ -2,6 +2,7 @@ import { app, ComfyApp } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 import { ComfyDialog, $el } from "../../scripts/ui.js";
 import { ClipspaceDialog } from "../core/clipspace.js";
+import { getComponentList } from "../ComfyUI-Manager/components-manager.js"
 
 function itemToImagepath(data) {
 	let name = data.filename;
@@ -377,7 +378,7 @@ async function gen_flatten(base_image, layers) {
 }
 
 var unique_id = 0;
-function prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers) {
+async function prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers) {
 	const formData = new FormData();
 
 	const dataURL = mask_canvas.toDataURL();
@@ -430,7 +431,7 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 		}
 	}
 
-	prompt_data.component_prompt = get_prompt(component_prompt);
+	await resolveComponentPrompt(prompt_data, component_name);
 
 	formData.append('mask', blob);
 	formData.append('prompt_data', JSON.stringify(prompt_data));
@@ -438,14 +439,15 @@ function prepare_generate_data(component_name, prompt_data, mask_canvas, base_im
 	return formData;
 }
 
-function get_prompt(component_name) {
+async function resolveComponentPrompt(prompt_data, component_name) {
 	const vapp = new ComfyApp();
 	vapp.graph = new LGraph();
 //	const node = LiteGraph.createNode('workflow/Impact::MAKE_BASIC_PIPE');
 	const node = LiteGraph.createNode(component_name);
 	vapp.graph.add(node);
 	let data = await vapp.graphToPrompt();
-	return data.output;
+
+	prompt_data.component_prompt = data.output;
 }
 
 function prepare_export_data_layer(formData, layer) {
@@ -514,7 +516,7 @@ function prepare_export_data(component_name, prompt_data, mask_canvas, base_imag
 }
 
 async function generate(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers) {
-	let formData = prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers);
+	let formData = await prepare_generate_data(component_name, prompt_data, mask_canvas, base_image, layers, images_in_layers);
 
 	let response = await fetch('/imagerefiner/generate', {
 		method: 'POST',
@@ -683,13 +685,13 @@ function prepareRGB(image, backupCanvas, backupCtx) {
 	backupCtx.putImageData(backupData, 0, 0);
 }
 
-function is_available_component(class_def, name, component) {
+function is_available_component(name, component) {
 	var input_image_count = 0;
 	var input_latent_count = 0;
 	var input_mask_count = 0;
 
 	let inputs = [];
-	let outputs = class_def.output;
+	let outputs = component.external;
 	for(let name in class_def.input.required) {
 		let type = class_def.input.required[name][0];
 
@@ -1281,11 +1283,12 @@ class ImageRefinerDialog extends ComfyDialog {
 		if(this.componentSelectCombo) {
 			let listItems = [];
 
-			let components = JSON.parse(localStorage['loaded_components']);
+			let components = getComponentList();
 
 			let postponed = [];
 			for(let name in components) {
-				if(this.defs[name] && is_available_component(this.defs[name], name, components[name]))
+				let component_workflow = components[name].workflow;
+				if(is_available_component(name, component_workflow))
 					if(name.includes(".ir "))
 						listItems.push({ value: name, text: name });
 					else
@@ -1295,7 +1298,7 @@ class ImageRefinerDialog extends ComfyDialog {
 			listItems.push(...postponed);
 
 			if(!listItems.length) {
-				listItems.push({ value: "none", text: "N/A (.components.json)" });
+				listItems.push({ value: "none", text: "N/A" });
 			}
 
 			listItems.forEach(item => {

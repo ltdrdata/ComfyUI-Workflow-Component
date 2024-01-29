@@ -9,7 +9,6 @@ import folder_paths
 from PIL import Image
 import uuid
 import comfy.model_management
-from ..workflow_component import workflow_execution as we
 from execution import PromptExecutor
 
 
@@ -246,23 +245,6 @@ def process_output(return_id, output_data):
     return {'filename': filename, 'type': 'temp', 'subfolder': 'imagerefiner'}
 
 
-def generate(merged_pil, mask_pil, prompt_data):
-    prompt_id = str(uuid.uuid4())
-
-    # create combo
-    prompt = prompt_data['prompt']
-    vsrv = we.VirtualServer( None, '1')
-    pe = execution.PromptExecutor(vsrv)
-
-    pe.execute(prompt, prompt_id)
-
-    output_data = ir_objs[prompt_id].get_default_image_output()
-    comfy.model_management.cleanup_models()
-
-    # retrieve output
-    return process_output(prompt_id, output_data)
-
-
 class VirtualServer:
     def __init__(self,):
         pass
@@ -274,8 +256,24 @@ class VirtualServer:
         pass
 
 
-executor = PromptExecutor(VirtualServer())
+pe = PromptExecutor(VirtualServer())
+
+
+def generate(merged_pil, mask_pil, prompt_data):
+    global executor
+    prompt_id = str(uuid.uuid4())
+
+    # create combo
+    prompt = prompt_data['prompt']
+    pe.execute(prompt, prompt_id)
+
+    output_data = ir_objs[prompt_id].get_default_image_output()
+    comfy.model_management.cleanup_models()
+
+    # retrieve output
+    return process_output(prompt_id, output_data)
 
 
 def execute_component(prompt, output_nodes):
-    executor.execute(prompt, str(uuid.uuid4()), {}, output_nodes)
+    pe.execute(prompt, str(uuid.uuid4()), {}, output_nodes)
+
