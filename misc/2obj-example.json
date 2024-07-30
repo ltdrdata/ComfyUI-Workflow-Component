@@ -276,7 +276,7 @@
         },
         {
           "id": 35,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             740
@@ -338,7 +338,7 @@
           ],
           "title": "obj1 W",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -347,7 +347,7 @@
         },
         {
           "id": 42,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             840
@@ -409,7 +409,7 @@
           ],
           "title": "obj1 H",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -418,7 +418,7 @@
         },
         {
           "id": 44,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             1040
@@ -480,7 +480,7 @@
           ],
           "title": "obj1 Y",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -830,7 +830,7 @@
         },
         {
           "id": 43,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             940
@@ -892,7 +892,7 @@
           ],
           "title": "obj1 X",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -1062,7 +1062,7 @@
         },
         {
           "id": 70,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             1370
@@ -1124,7 +1124,7 @@
           ],
           "title": "obj2 W",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -1133,7 +1133,7 @@
         },
         {
           "id": 71,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             1470
@@ -1195,7 +1195,7 @@
           ],
           "title": "obj2 H",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -1204,7 +1204,7 @@
         },
         {
           "id": 72,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             1570
@@ -1266,7 +1266,7 @@
           ],
           "title": "obj2 X",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -1275,7 +1275,7 @@
         },
         {
           "id": 73,
-          "type": "Multiply",
+          "type": "DF_Multiply",
           "pos": [
             620,
             1670
@@ -1337,7 +1337,7 @@
           ],
           "title": "obj2 Y",
           "properties": {
-            "Node name for S&R": "Multiply"
+            "Node name for S&R": "DF_Multiply"
           },
           "widgets_values": [
             1,
@@ -3873,7 +3873,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "39": {
           "inputs": {
@@ -3904,7 +3904,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "43": {
           "inputs": {
@@ -3917,7 +3917,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "44": {
           "inputs": {
@@ -3930,7 +3930,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "47": {
           "inputs": {
@@ -4087,7 +4087,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "71": {
           "inputs": {
@@ -4100,7 +4100,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "72": {
           "inputs": {
@@ -4113,7 +4113,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "73": {
           "inputs": {
@@ -4126,7 +4126,7 @@
               0
             ]
           },
-          "class_type": "Multiply"
+          "class_type": "DF_Multiply"
         },
         "74": {
           "inputs": {
